@@ -389,7 +389,7 @@ class IVCommon():
         else:
             fig.legend(figlegend)
 
-        plt.tight_layout()
+        #plt.tight_layout()
         return fig,ax
 
     def get_value_at_rn_frac(self,rn_fracs,arr,ro):
@@ -701,7 +701,7 @@ class IVCurveAnalyzeSingle():
             ax[ii].axvspan(xmin=self.v_tes[0],xmax=self.v_tes[self.sc_idx],alpha=0.1,color='r')
             ax[ii].axvspan(xmin=self.v_tes[self.sc_idx],xmax=self.v_tes[self.turn_idx],alpha=0.1)
             ax[ii].axvspan(xmin=self.v_tes[self.turn_idx],xmax=self.v_tes[self.normal_idx],alpha=0.1,color='y')
-        plt.tight_layout()
+        # plt.tight_layout() please for the love of sanity use constrained layout instead
         return fig,ax
 
 class IVCurveColumnDataExplore(IVCommon):
@@ -804,9 +804,13 @@ class IVCurveColumnDataExplore(IVCommon):
         return self._get_dac_at_rfrac_method_(rn_frac_list,self.x_raw,self.ro)
 
     # plotting methods --------------------------------------
-    def __handle_row_input__(self,row):
+    def __handle_row_input(self,row):
         ''' magic method to allow plotting functions to accept a single row to plot as input 
             or a list.  NOTE THAT ROW HERE MEANS THE ROW INDEX!!!
+
+        NOTE: This was renamed from __handle_row_input__ because names starting and ending with 2 
+        underscores should be reserved for special functions like initialization and deconstruction and 
+        defining object behavior with operators like >, <, ==, not, +-*/ etc
         '''
         if type(row)==int:
             row=[row]
@@ -816,7 +820,7 @@ class IVCurveColumnDataExplore(IVCommon):
 
     def plot_raw(self,row='all',include_legend=True,fig=None,ax=None):
         fig,ax = self._handle_figax(fig,ax)  
-        row = self.__handle_row_input__(row)
+        row = self.__handle_row_input(row)
         for ii in row:
             ax.plot(self.x_raw,self.y_raw[:,ii])
         plt.xlabel('Vb [dac]')
@@ -831,7 +835,7 @@ class IVCurveColumnDataExplore(IVCommon):
 
     def plot_iv(self,row='all',fig=None,ax=None):
         fig,ax = self._handle_figax(fig,ax) 
-        row = self.__handle_row_input__(row)
+        row = self.__handle_row_input(row)
         for ii in row:
             plt.plot(self.v[:,ii],self.i[:,ii],label='%02d'%ii)
         plt.xlabel(self.labels['iv']['x'])
@@ -841,7 +845,7 @@ class IVCurveColumnDataExplore(IVCommon):
 
     def plot_responsivity(self,row='all',fig=None,ax=None):
         fig,ax = self._handle_figax(fig,ax) 
-        row = self.__handle_row_input__(row)
+        row = self.__handle_row_input(row)
         v,r = self.get_responsivity()
         for ii in row:
             plt.plot(v[:,ii],r[:,ii])
@@ -852,7 +856,7 @@ class IVCurveColumnDataExplore(IVCommon):
 
     def plot_dy(self,row='all',fig=None,ax=None):
         fig,ax = self._handle_figax(fig,ax) 
-        row = self.__handle_row_input__(row)
+        row = self.__handle_row_input(row)
         dy = np.diff(self.i,axis=0)
         for ii in row:
             plt.plot(self.v[0:-1,ii],dy[:,ii],label='%02d'%ii)
@@ -863,7 +867,7 @@ class IVCurveColumnDataExplore(IVCommon):
 
     def plot_prn_v_dac(self,row='all',fig=None,ax=None):
         fig,ax = self._handle_figax(fig,ax) 
-        row = self.__handle_row_input__(row)
+        row = self.__handle_row_input(row)
         for ii in row:
             ax.plot(self.x_raw,self.ro[:,ii])
         ax.set_ylim(0,1.1)
@@ -1084,7 +1088,8 @@ class IVversusADRTempOneRow(IVSetAnalyzeRow):
     def plot_iv(self):
         plt.figure()
         for i,temperature in enumerate(self.temp_list_k):
-            plt.plot(self.v_clean, self.i_clean, label=f"T={temperature} K")
+            plt.plot(self.v_clean[:,i], self.i_clean[:,i], label=f"T={temperature} K")
+        plt.legend()
 
     def plot_pr(self):
         pPlot = self.get_value_at_rn_frac([0.995],arr=self.p,ro=self.ro)
@@ -1238,6 +1243,8 @@ class IVversusADRTempOneRow(IVSetAnalyzeRow):
             iv_circuit=iv_circuit,
             **kwargs
         )
+
+
 def ktn_fit_func(v,t):
     K, T, n = v
     return K*(T**n-t**n)
