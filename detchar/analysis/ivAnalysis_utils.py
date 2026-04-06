@@ -461,12 +461,13 @@ class IVCurveAnalyzeSingle():
             to_i_tes: convert y to current through TES
     
         '''
-        self.x_raw = np.array(x) # commanded voltage bias
-        self.y_raw = np.array(y) # measured current in some arbitrary units
+        self.x_raw = np.ma.array(x) # commanded voltage bias
+        self.y_raw = np.ma.array(y) # measured current in some arbitrary units
         self.rsh_ohm = rsh_ohm 
         self.rx_ohm = rx_ohm 
         self.to_i_tes = to_i_tes  
         self.to_i_bias = to_i_bias
+        self.good_idxs=[0,len(self.y_raw)]
 
         # get basic quantities of interest
         # here things are flipped into ascending order in voltage bias
@@ -562,14 +563,16 @@ class IVCurveAnalyzeSingle():
     
         # place in ascending order
         if self.x_raw[1]-self.x_raw[0] < 0:
-            x=np.copy(self.x_raw[::-1])
-            y=np.copy(self.y_raw[::-1])
+            x=np.ma.copy(self.x_raw[::-1])
+            y=np.ma.copy(self.y_raw[::-1])
+            a,b=self.good_idxs
+            self.good_idxs = [len(x)-b, len(x)-a]
         else:
-            x=np.copy(self.x_raw) 
-            y=np.copy(self.y_raw) 
-        
+            x=np.ma.copy(self.x_raw) 
+            y=np.ma.copy(self.y_raw) 
+        b = self.good_idxs[1]
         # determine IV polarity. if negative, flip
-        pval = np.polyfit(x[-10:],y[-10:],1)
+        pval = np.ma.polyfit(x[b-10:b],y[b-10:b],1)
         if pval[0] < 0: y=y*-1
         
         # take derivatives
@@ -943,19 +946,23 @@ class IVSetAnalyzeRow(IVCommon):
             self.fb_align, self.v, self.i, self.p, self.r = self._package_iv_globals_(self.ivs)
 
     def _package_iv_globals_(self,ivs):
-        result = []
-        for iv in ivs:
-            result_ii=[]
-            for foo in [iv.y,iv.v_tes,iv.i_tes,iv.p_tes,iv.r_tes]:
-                result_ii.append(foo)
-            result.append(result_ii)
-        result=np.array(result) # shape of result : num_sweeps x num_params x num_dacs
-        fb_align = result[:,0,:].transpose()[::-1,:]
-        v = result[:,1,:].transpose()[::-1,:]
-        i = result[:,2,:].transpose()[::-1,:]
-        p = result[:,3,:].transpose()[::-1,:]
-        r = result[:,4,:].transpose()[::-1,:]
-        return fb_align, v, i, p, r
+        """
+        Make all the data from individual IVCurveAnalyzeSingle objects into arrays
+        """
+        v_tes = np.ma.zeros((ivs[0].y.shape[0], len(ivs)))
+        i_tes = np.ma.zeros_like(v_tes)
+        p_tes = np.ma.zeros_like(v_tes)
+        r_tes = np.ma.zeros_like(v_tes)
+        fb = np.ma.zeros_like(v_tes)
+
+        for i,iv in enumerate(ivs):
+            v_tes[:,i] = iv.v_tes[::-1] # I'm not *exactly* sure why we're reversing these arrays, but ok
+            i_tes[:,i] = iv.i_tes[::-1] # values now DECREASING with increasing index, like in the raw data.
+            p_tes[:,i] = iv.p_tes[::-1]
+            r_tes[:,i] = iv.r_tes[::-1]
+            fb[:,i] = iv.y[::-1]
+
+        return fb, v_tes, i_tes, p_tes, r_tes
 
     def power_difference_analysis(self,fig=None,ax=None):
 
@@ -1138,14 +1145,18 @@ class IVversusADRTempOneRow(IVSetAnalyzeRow):
             Returns pfits, a num_rn_fracs x 3 array.
             Rows are for each Rn cut; columns are for K,T,n in that order
         '''
-        pfits=np.empty((self.num_rn_fracs,3))
+        pfits=np.zeros((self.num_rn_fracs,3))
         for ii in range(self.num_rn_fracs):
             t_arr = np.array(self.temp_list_k)
-            good_idx = np.isfinite(self.p_at_rnfrac[ii])
+            if type(self.p_at_rnfrac[ii]) is np.ma.core.MaskedArray:
+                good_idx = np.isfinite(self.p_at_rnfrac[ii].filled(fill_value=np.nan))
+            else:
+                good_idx = np.isfinite(self.p_at_rnfrac[ii])
             t_i = t_arr[good_idx]
             p_i = self.p_at_rnfrac[ii,good_idx]
-            pfit,pcov = self.fit_pvt(t_i,p_i)
-            pfits[ii,:]=pfit
+            if len(p_i) > 2:
+                pfit,pcov = self.fit_pvt(t_i,p_i)
+                pfits[ii,:]=pfit
         return pfits
 
 
@@ -1164,7 +1175,8 @@ class IVversusADRTempOneRow(IVSetAnalyzeRow):
             fit coefficients
             covarience matrix (diagonals are variance of fit parameters)
         '''
-
+        print(t)
+        print(p)
         lsq = leastsq(ktn_err_func,init_guess, args=(t,p),full_output=1)
         pfit, pcov, infodict, errmsg, success = lsq
         if success > 4:
