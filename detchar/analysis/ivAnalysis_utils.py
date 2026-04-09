@@ -594,13 +594,13 @@ class IVCurveAnalyzeSingle():
         p_norm = np.polyfit(x[self.normal_idx:self.good_idxs[1]],y[self.normal_idx:self.good_idxs[1]],1)
         if self.sc_idx == 0: 
             print('WARNING: no superconducting branch found.')
-            y-=p_norm[1] # subtract arbitrary offset using normal branch
+            y[:self.good_idxs[1]] -= p_norm[1] # subtract arbitrary offset using normal branch
             p_sc = None
             
         else:
             # fit superconducting branches 
             p_sc = np.polyfit(x[:self.sc_idx+1],y[:self.sc_idx+1],1)
-            y-=p_norm[1] # subtract arbitrary offset using normal branch
+            y[:self.good_idxs[1]] -= p_norm[1] # subtract arbitrary offset using normal branch
             offset_diff = abs(100*(p_norm[1]-p_sc[1])/p_norm[1])
             if offset_diff > 5: 
                 #print('superconducting and normal branch offsets differ by: %.2f%%.  Applying separate DC offset to superconducting branch.'%(offset_diff))
@@ -679,7 +679,7 @@ class IVCurveAnalyzeSingle():
         ax[0].set_ylabel('I')
             
         ax[1].plot(self.v_tes,self.r_tes*1e3,color=colors[0])
-        
+
         ax[1].set_ylabel(r'R (m$\Omega$)')
             
         ax[2].plot(self.v_tes[self.sc_idx:-1],self.si[self.sc_idx:],color=colors[0])
