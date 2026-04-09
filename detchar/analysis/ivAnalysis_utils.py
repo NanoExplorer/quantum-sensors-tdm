@@ -551,14 +551,17 @@ class IVCurveAnalyzeSingle():
         
         # take derivatives
         dfb = np.diff(y)
-        ddfb = np.diff(dfb)
+        ddfb = np.diff(np.diff(y))
     
         # Define IV curve regimes: superconducting, in transition, normal
         sc_idx = np.argmax(abs(ddfb))+1 # superconducting index determined from maximum of 2nd derivative 
-        turn_idx = np.argmin(abs(dfb[sc_idx:]))+sc_idx+1 # "turn index" where slope = 0
-        n_idx = int(N-(N-turn_idx)/2) # defined has half way from IV turn-around to highest Vbias point
 
-        self.sc_idx=sc_idx; self.turn_idx=turn_idx; self.normal_idx = n_idx
+        turn_idx = np.argmin(abs(dfb[sc_idx:]))+sc_idx+1 # "turn index" where slope = 0
+        n_idx = b-(b-turn_idx)//2 # defined has half way from IV turn-around to highest Vbias point
+        #print(b, turn_idx, n_idx, self.good_idxs)
+        self.sc_idx=sc_idx
+        self.turn_idx=turn_idx
+        self.normal_idx = n_idx
 
         if plot:
         # plot raw data
@@ -1129,6 +1132,7 @@ class IVversusADRTempOneRow(IVSetAnalyzeRow):
         ''' Fit power versus Tbath curves to P=K(T^n-Tb^n) for each rn_fraction cut.
             Returns pfits, a num_rn_fracs x 3 array.
             Rows are for each Rn cut; columns are for K,T,n in that order
+            self.p_at_rnfrac should have the shape (num_rn_fracs, len(temp_list_k))
         '''
         pfits=np.zeros((self.num_rn_fracs,3))
         for ii in range(self.num_rn_fracs):
