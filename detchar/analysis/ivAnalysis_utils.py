@@ -664,12 +664,19 @@ class IVCurveAnalyzeSingle():
         ax[0].plot(self.v_tes[self.sc_idx],self.i_tes[self.sc_idx],'r.')
         ax[0].plot(self.v_tes[self.turn_idx],self.i_tes[self.turn_idx],'r.')
         ax[0].plot(self.v_tes[self.normal_idx],self.i_tes[self.normal_idx],'r.')
-        if self.p_norm is not None: ax[0].plot(self.v_tes,np.polyval([self.p_norm[0],0],self.x)*self.to_i_tes,linestyle='--',color=colors[1])
+        if self.p_norm is not None: 
+            # not_quite_a_line = (self.p_norm[0] * self.x)*self.to_i_tes
+            # ax[0].plot(self.v_tes, not_quite_a_line ,linestyle='--', color=colors[1])
+            # What are we plotting here?
+            # Something about the above formula breaks, and the normal line fit flattens to slope=0 at
+            # low V_tes. I think that's just because v_tes is not directly proportional to v_bias or self.x
+
+            ax[0].plot(self.v_tes, self.v_tes/self.rn,linestyle='--', color=colors[1])
         if self.p_sc is not None: ax[0].plot(self.v_tes[:self.sc_idx],np.polyval([self.p_sc[0],0],self.x[:self.sc_idx])*self.to_i_tes,linestyle='--',color=colors[1])
         ax[0].set_ylabel('I')
             
         ax[1].plot(self.v_tes,self.r_tes*1e3,color=colors[0])
-        ax[1].axvspan(xmin=self.v_tes[self.sc_idx],xmax=self.v_tes[self.turn_idx],alpha=0.1)
+        
         ax[1].set_ylabel(r'R (m$\Omega$)')
             
         ax[2].plot(self.v_tes[self.sc_idx:-1],self.si[self.sc_idx:],color=colors[0])
