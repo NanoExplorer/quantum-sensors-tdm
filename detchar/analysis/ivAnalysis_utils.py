@@ -376,7 +376,7 @@ class IVCommon():
         return: len(rn_fracs) x M array of the interpolated values
 
         '''
-        # ensure rn_fracs is a np.array
+        # ensure rn_fracs is a np.array. Note incompatibility with masked array.
         if type(rn_fracs)!=np.ndarray:
             rn_fracs = np.array(rn_fracs)
         assert len(np.where(rn_fracs>1)[0])==0, ('rn_fracs values must be < 1')
@@ -439,7 +439,7 @@ class IVCurveAnalyzeSingle():
         self.rx_ohm = rx_ohm 
         self.to_i_tes = to_i_tes  
         self.to_i_bias = to_i_bias
-        self.good_idxs=[0,len(self.y_raw)]
+        self.good_idxs=[0,len(self.y_raw)] # potentially modified by subclasses...
 
         # get basic quantities of interest
         # here things are flipped into ascending order in voltage bias
@@ -452,12 +452,12 @@ class IVCurveAnalyzeSingle():
     def analyze_iv(self,plot=False,beta=0):
         ''' based on algorithm in pySmurf from Ari Cukierman 
 
-            creates class globals:
+            creates member variables:
             v,i,p,r _tes, in ascending order
             si: responsivity
             rn: normal resistance (a single number, not vector)
             rl: load resistance in equivalent circuit
-            x: same as x_raw.  Why am I saving this?
+            x: same as x_raw (but probably in reverse order. indices of x match those of v, i, p, r, and y.)
             y: dc offset removed tes current in computer units
         
         '''
@@ -505,6 +505,8 @@ class IVCurveAnalyzeSingle():
 
         #At least for beta = 0 and Taurus style bolometers in Velma, the equations produce almost identical results.
 
+        # I don't think rL or r0 can always be trusted though, so maybe we have garbage-in-garbage-out regardless of algorithm.
+
         self.v_tes=v_tes
         self.i_tes=i_tes
         self.p_tes=p_tes
@@ -524,14 +526,15 @@ class IVCurveAnalyzeSingle():
         ''' Place data in ascending order, make IV curve right-side-up, determine 3 IV regimes: superconducting, in-transition, normal. 
             based on algorithm in pySmurf from Ari Cukierman
 
-            return: x,y,[sc_idx,turn_idx,normal_idx] 
+            return: x,y,
             x: (voltage) in ascending order
             y: (current) in ascending order that is right-side up.  Offset is not subtracted
+
+            set member variables:
             sc_idx: index that marks the end of the superconducting regime
             turn_idx: index that marks the slope=0 point
             normal_idx: index that marks the normal branch.  Indices > normal_idx are in the normal branch
         '''
-        N=len(self.x_raw)
     
         # place in ascending order
         if self.x_raw[1]-self.x_raw[0] < 0:
@@ -930,8 +933,8 @@ class IVSetAnalyzeRow(IVCommon):
         for i,iv in enumerate(ivs):
             v_tes[:,i] = iv.v_tes[::-1] # I'm not *exactly* sure why we're reversing these arrays, but ok
             i_tes[:,i] = iv.i_tes[::-1] # values now DECREASING with increasing index, like in the raw data.
-            p_tes[:,i] = iv.p_tes[::-1]
-            r_tes[:,i] = iv.r_tes[::-1]
+            p_tes[:,i] = iv.p_tes[::-1] #Answer: The iv_common class has a lot of similar methods to the ivAnalyzeSingle
+            r_tes[:,i] = iv.r_tes[::-1] # class, but they all assume the data is in experimental order (high to low bias)
             fb[:,i] = iv.y[::-1]
 
         return fb, v_tes, i_tes, p_tes, r_tes
