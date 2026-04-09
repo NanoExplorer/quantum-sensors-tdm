@@ -606,7 +606,8 @@ class IVCurveAnalyzeSingle():
                 #print('superconducting and normal branch offsets differ by: %.2f%%.  Applying separate DC offset to superconducting branch.'%(offset_diff))
                 y[0:self.sc_idx+1]-=p_sc[1]-p_norm[1] 
 
-        self.p_norm=p_norm; self.p_sc = p_sc 
+        self.p_norm = p_norm
+        self.p_sc = p_sc 
 
         if plot:
             fig,ax=plt.subplots()
