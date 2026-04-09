@@ -124,22 +124,6 @@ class IVCommon():
             plt.show()
         return dex#,val
 
-    #def get_number_of_normal_branch_pts(self,dac,fb,frac_above_turn):
-    #    ''' Determine the number of points to use in the normal branch for
-    #        dc offset removal in a smart way
-    #    '''
-
-    # def find_band_data_index_new(self,dac,fb,threshold,showplot=False):
-    #     assert True,'unfinished!!!'
-    #     # take derivatives
-    #     dfb = np.diff(y)
-    #     ddfb = np.diff(dfb)
-    
-    #     # Define IV curve regimes: superconducting, in transition, normal
-    #     sc_idx = np.argmax(abs(ddfb))+1 # find superconducting index
-    #     turn_idx = np.argmin(abs(dfb[sc_idx:]))+sc_idx+1
-    #     n_idx = int(N-(N-turn_idx)/2) # defined has half way from IV turn-around to highest Vbias point
-
     def find_bad_data_index(self,dac,fb,threshold=0.5,showplot=False):
         ''' Return the index where IV curve misbehaves.
             dac and fb(dac) must be in descending order
@@ -184,18 +168,6 @@ class IVCommon():
                 plt.plot([dex],[fb[dex]],'go')
                 plt.plot(fb[0:dex+1],'r*')
 
-                # plt.figure(2)
-                # plt.xlabel('index')
-                # plt.ylabel('$\Delta$fb')
-                # plt.plot(x,'bo-')
-                # plt.plot([dex],[x[dex]],'go')
-                #
-                # plt.figure(3)
-                # plt.xlabel('index')
-                # plt.ylabel('$\Delta$ $\Delta$ fb')
-                # plt.plot(ddfb,'bo-')
-                # plt.plot(smooth(ddfb,3))
-                # plt.plot([dex-1],[ddfb[dex-1]],'go')
                 plt.show()
         return dex, success
 
