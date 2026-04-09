@@ -471,15 +471,14 @@ class IVCurveAnalyzeSingle():
         v_tes = i_tes*r_tes # voltage over TES
         p_tes = i_tes*v_tes # electrical power on TES
 
-        R_n = np.mean(r_tes[self.normal_idx:]) # normal resistance, is it better to just use the fit?
-        R_L = np.mean(r_tes[1:self.sc_idx]) # load resistance, is it better to just use the fit?
+        R_n = np.mean(r_tes[self.normal_idx:self.good_idxs[1]]) # normal resistance, is it better to just use the fit?
+        R_L = np.mean(r_tes[1:self.sc_idx]) # load resistance, is it better to just use the fit? or the measured values 
+        # in the case that the superconducting region is full of flux jumps?
     
         # smooth the data
         smooth_dist = 5
-        w_len = 2*smooth_dist + 1
-        w = (1./float(w_len))*np.ones(w_len) # window
-        i_tes_smooth = np.convolve(i_tes, w, mode='same')
-        v_tes_smooth = np.convolve(v_tes, w, mode='same')
+        i_tes_smooth = smooth(i_tes, box_pts=smooth_dist)
+        v_tes_smooth = smooth(v_tes, box_pts=smooth_dist)
         r_tes_smooth = v_tes_smooth/i_tes_smooth
 
         # Take derivatives
@@ -589,7 +588,7 @@ class IVCurveAnalyzeSingle():
             self.sc_idx = 1 
 
         # fit normal regime, remove the offset
-        p_norm = np.polyfit(x[self.normal_idx:],y[self.normal_idx:],1)
+        p_norm = np.polyfit(x[self.normal_idx:self.good_idxs[1]],y[self.normal_idx:self.good_idxs[1]],1)
         if self.sc_idx == 0: 
             print('WARNING: no superconducting branch found.')
             y-=p_norm[1] # subtract arbitrary offset using normal branch
@@ -620,19 +619,23 @@ class IVCurveAnalyzeSingle():
     ### ---------------------------------------------------------------------------------
 
     def get_virp_at_rfrac(self,rfrac):
-        idx = np.argmin(abs(self.r_tes/self.rn - rfrac)) 
+        i1,i2 = self.good_idxs
+        idx = np.argmin(abs(self.r_tes[i1:i2]/self.rn - rfrac)) + i1 
         return self.v_tes[idx], self.i_tes[idx], self.r_tes[idx], self.p_tes[idx] 
 
     def get_dac_at_rfrac(self,rfrac):
-        idx = np.argmin(abs(self.r_tes/self.rn - rfrac)) 
+        i1,i2 = self.good_idxs
+        idx = np.argmin(abs(self.r_tes[i1:i2]/self.rn - rfrac)) + i1 
         return self.x[idx]
 
     def get_si_at_dac(self,dac):
-        idx = np.argmin(abs(self.x-dac))
+        i1,i2 = self.good_idxs
+        idx = np.argmin(abs(self.x[i1:i2]-dac))+ i1 
         return self.si[idx]
 
     def get_r_for_dac(self,dac,frac=True):
-        idx = np.argmin(abs(self.x-dac))
+        i1,i2 = self.good_idxs
+        idx = np.argmin(abs(self.x[i1:i2]-dac)) + i1 
         if frac: return self.r_tes[idx]/self.rn
         else: return self.r_tes[idx]
 
@@ -1150,8 +1153,6 @@ class IVversusADRTempOneRow(IVSetAnalyzeRow):
             fit coefficients
             covarience matrix (diagonals are variance of fit parameters)
         '''
-        print(t)
-        print(p)
         lsq = leastsq(ktn_err_func,init_guess, args=(t,p),full_output=1)
         pfit, pcov, infodict, errmsg, success = lsq
         if success > 4:
