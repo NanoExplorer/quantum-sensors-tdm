@@ -1,7 +1,5 @@
 import sys
 import optparse
-import struct
-import time
 
 from PyQt5 import QtGui, QtCore, QtWidgets
 from PyQt5.QtGui import *
@@ -12,8 +10,8 @@ from . import badrap
 from . import sv_array
 from cringe.shared import terminal_colors as tc
 from cringe.shared import log
-import cringe.DFBx2.dprcal as dprcal
 from cringe.shared.rack_transport import write_wreg
+import cringe.DFBx2.dprcal as dprcal
 
 
 class badcard(QWidget):

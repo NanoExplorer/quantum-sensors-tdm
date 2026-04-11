@@ -1,11 +1,9 @@
 import sys
-import time
 
 from PyQt5 import QtGui, QtCore, QtWidgets
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
-import struct
 from cringe.shared import terminal_colors as tc
 from cringe.shared import log
 from cringe.shared.rack_transport import write_wreg

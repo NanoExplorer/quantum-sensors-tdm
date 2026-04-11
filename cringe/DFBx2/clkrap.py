@@ -1,7 +1,6 @@
 #-*- coding: utf-8 -*-
 import sys
 import optparse
-import struct
 import time
 
 from PyQt5 import QtGui, QtCore, QtWidgets

@@ -336,7 +336,7 @@ class badChn(QWidget):
         wregval = wreg | (self.d2a_lo_slider.value() << 8)
         self.sendReg(wregval)
         
-    def sendReg(self, wregval): 
+    def sendReg(self, wregval):
         write_wreg(self.serialport, wregval, self.address)
         
     def packChannel(self):

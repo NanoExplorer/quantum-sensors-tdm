@@ -1,4 +1,3 @@
-import struct
 import named_serial
 from cringe.shared import terminal_colors as tc
 from cringe.shared import log

@@ -1,7 +1,5 @@
 import sys
 import optparse
-import struct
-import time
 
 from PyQt5 import QtGui, QtCore, QtWidgets
 from PyQt5.QtGui import *

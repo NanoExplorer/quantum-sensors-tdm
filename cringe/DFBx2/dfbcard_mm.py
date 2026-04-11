@@ -1,6 +1,3 @@
-import sys
-import struct
-import time
 import named_serial
 
 from PyQt5 import QtGui, QtCore, QtWidgets
@@ -9,6 +6,7 @@ from PyQt5.QtWidgets import *
 
 from cringe.shared import terminal_colors as tc
 from cringe.shared import log
+from cringe.shared.rack_transport import write_wreg
 
 
 class dfbcardMM(object):
@@ -394,14 +392,7 @@ class dfbcardMM(object):
             log.debug("update WREG5:", self.wreg5[stIdx])
                 
     def sendReg(self, wregval):
-        log.debug(tc.COMMAND + "send to address", self.address, ":", tc.BOLD, wregval, tc.ENDC)
-        b0 = (wregval & 0x7f ) << 1             # 1st 7 bits shifted up 1
-        b1 = ((wregval >> 7) & 0x7f) <<  1     # 2nd 7 bits shifted up 1
-        b2 = ((wregval >> 14) & 0x7f) << 1     # 3rd 7 bits shifted up 1
-        b3 = ((wregval >> 21) & 0x7f) << 1     # 4th 7 bits shifted up 1
-        b4 = (self.address << 1) + 1         # Address shifted up 1 bit with address bit set
-
-        msg = struct.pack('BBBBB', b0, b1, b2, b3, b4)
-        self.serialport.write(msg)
+        # Pre-refactor sendReg here had no time.sleep after the write.
+        write_wreg(self.serialport, wregval, self.address, sleep_after=0)
         
 

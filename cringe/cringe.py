@@ -2,7 +2,6 @@
 import sys
 
 import argparse
-import struct
 import time
 import pickle
 import json
