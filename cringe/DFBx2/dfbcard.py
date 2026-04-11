@@ -1,8 +1,6 @@
 #-*- coding: utf-8 -*-
 import sys
 import optparse
-import struct
-import time
 
 from PyQt5 import QtGui, QtCore, QtWidgets
 from PyQt5.QtGui import *
@@ -13,6 +11,8 @@ from . import dfbrap
 from . import dprcal
 from cringe.shared import terminal_colors as tc
 from cringe.shared import log
+from cringe.shared.rack_transport import write_wreg
+
 
 class dfbcard(QWidget):
 
@@ -370,15 +370,7 @@ class dfbcard(QWidget):
         
 
     def sendReg(self, wregval):
-        log.debug(tc.COMMAND + "send to address", self.address, ":", tc.BOLD, wregval, tc.ENDC)
-        b0 = (wregval & 0x7f ) << 1			# 1st 7 bits shifted up 1
-        b1 = ((wregval >> 7) & 0x7f) <<  1	 # 2nd 7 bits shifted up 1
-        b2 = ((wregval >> 14) & 0x7f) << 1	 # 3rd 7 bits shifted up 1
-        b3 = ((wregval >> 21) & 0x7f) << 1	 # 4th 7 bits shifted up 1
-        b4 = (self.address << 1) + 1		   # Address shifted up 1 bit with address bit set
-        msg = struct.pack('BBBBB', b0, b1, b2, b3, b4)
-        self.serialport.write(msg)
-        time.sleep(0.001)
+        write_wreg(self.serialport, wregval, self.address)
 
     def packCARDglobals(self):
         self.CARDglobals = {	'LED'	:	self.LED_button.isChecked(),
