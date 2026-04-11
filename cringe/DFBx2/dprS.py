@@ -206,35 +206,19 @@ class dprS(QWidget):
         self.send_cmd(24, 0)
         log.debug("GPI25: send phase trim coefficient:", 0)
         self.send_cmd(25, 0)
-        
-        
+
     def sendSlot(self):
         log.debug(tc.FCTCALL + "GPI24: send slot:", self.slot, tc.ENDC)
         
         self.send_cmd(24, self.slot)
                 
     def sendReg(self, wregval):
-        log.debug(tc.COMMAND + "send to address", self.address, ":", tc.BOLD, wregval, tc.ENDC)
-        b0 = (wregval & 0x7f ) << 1          # 1st 7 bits shifted up 1
-        b1 = ((wregval >> 7) & 0x7f) <<  1   # 2nd 7 bits shifted up 1
-        b2 = ((wregval >> 14) & 0x7f) << 1   # 3rd 7 bits shifted up 1
-        b3 = ((wregval >> 21) & 0x7f) << 1   # 4th 7 bits shifted up 1
-        b4 = (self.address << 1) + 1         # Address shifted up 1 bit with address bit set
-
-        msg = struct.pack('BBBBB', b0, b1, b2, b3, b4)
-        self.serialport.write(msg)
+        write_wreg(self.serialport, wregval, self.address, sleep_after=0)
         
     def send_cmd(self, GPI, val): 
-        wregval = (GPI << 20) | val
         log.debug(tc.COMMAND + "send to card address", self.address, "/ GPI", GPI, ":", tc.BOLD, wregval, "(", val, ")",tc.ENDC)
-        b0 = (wregval & 0x7f ) << 1             # 0-6 bits shifted up 1
-        b1 = ((wregval >> 7) & 0x7f) <<  1      # 7-13 bits shifted up 1
-        b2 = ((wregval >> 14) & 0x7f) << 1      # 14-19 bits shifted up 1
-        b3 = ((wregval >> 21) & 0x7f) << 1      # 4th 7 bits shifted up 1
-        b4 = (self.address << 1) + 1            # Address shifted up 1 bit with address bit set
-        msg = struct.pack('BBBBB', b0, b1, b2, b3, b4)
-        self.serialport.write(msg)
-        time.sleep(0.001)
+        wregval = (GPI << 20) | val
+        write_wreg(self.serialport, wregval, self.address)
         
     def packCal(self):
         for idx in range(self.counters):
@@ -243,6 +227,7 @@ class dprS(QWidget):
     def unpackCal(self, CalCoeffs):
         for idx in range(self.counters):
             self.phase_counters[idx].cal_offset.setText(CalCoeffs['coeff%i'%idx])
+
 
 def main():
     

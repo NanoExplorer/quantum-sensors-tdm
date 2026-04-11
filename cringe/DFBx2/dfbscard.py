@@ -334,14 +334,7 @@ class dfbscard(QWidget):
     def send_cmd(self, GPI, val): 
         wregval = (GPI << 20) | val
         log.debug(tc.COMMAND + "send to card address", self.address, "/ GPI", GPI, ":", tc.BOLD, wregval, "(", val, ")",tc.ENDC)
-        b0 = (wregval & 0x7f ) << 1             # 0-6 bits shifted up 1
-        b1 = ((wregval >> 7) & 0x7f) <<  1      # 7-13 bits shifted up 1
-        b2 = ((wregval >> 14) & 0x7f) << 1      # 14-19 bits shifted up 1
-        b3 = ((wregval >> 21) & 0x7f) << 1      # 4th 7 bits shifted up 1
-        b4 = (self.address << 1) + 1            # Address shifted up 1 bit with address bit set
-        msg = struct.pack('BBBBB', b0, b1, b2, b3, b4)
-        self.serialport.write(msg)
-        time.sleep(0.001)
+        write_wreg(self.serialport, wregval, self.address)
         
     def packCARDglobals(self):
         self.CARDglobals = {    'LED'   :   self.LED_button.isChecked(),
