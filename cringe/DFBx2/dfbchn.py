@@ -1,12 +1,12 @@
 import sys
-import time
 from PyQt5 import QtGui, QtCore, QtWidgets
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
-import struct
+
 from cringe.shared import terminal_colors as tc
 from cringe.shared import log
+from cringe.shared.rack_transport import write_wreg
 
 
 class dfbChn(QWidget):
@@ -315,9 +315,6 @@ class dfbChn(QWidget):
             self.chn_send.clicked.connect(self.send_channel)
             self.lock_button.toggled.connect(self.lock_channel)
 
-#             self.a2d_lockpt_slider.mouseDoubleClickEvent()
-
-        
         '''
         call parent routines
         '''    
@@ -348,7 +345,7 @@ class dfbChn(QWidget):
         
     def triA_changed(self):
         self.triA = self.TriA_button.isChecked()
-        if self.triA ==1:
+        if self.triA == 1:
             self.TriA_button.setStyleSheet("background-color: #" + tc.green + ";")
         else:
             self.TriA_button.setStyleSheet("background-color: #" + tc.red + ";")  
@@ -357,7 +354,7 @@ class dfbChn(QWidget):
             
     def triB_changed(self):
         self.triB = self.TriB_button.isChecked()
-        if self.triB ==1:
+        if self.triB == 1:
             self.TriB_button.setStyleSheet("background-color: #" + tc.green + ";")
         else:
             self.TriB_button.setStyleSheet("background-color: #" + tc.red + ";")  
@@ -386,12 +383,6 @@ class dfbChn(QWidget):
         
     def d2a_A_slider_changed(self):
         self.d2a_A_spin.setValue(self.d2a_A_slider.value())
-        
-#     def d2a_lo_setMin(self):
-#         self.d2a_lo_slider.setValue(0)
-#         
-#     def d2a_lo_setMax(self):
-#         self.d2a_lo_slider.setValue(16383)
 
     def d2a_B_spin_changed(self):
         self.d2a_B = self.d2a_B_spin.value()
@@ -405,7 +396,7 @@ class dfbChn(QWidget):
         
     def data_packet_changed(self):
         self.SM = self.data_packet.currentIndex()
-        if self.unlocked ==1:
+        if self.unlocked == 1:
             self.send_wreg0()
             self.send_wreg5()
             
@@ -449,13 +440,7 @@ class dfbChn(QWidget):
             self.ARL_button.setStyleSheet("background-color: #" + tc.red + ";")  
         self.send_wreg0()
         self.send_wreg3()
-        
-#     def d2a_hi_setMin(self):
-#         self.d2a_A_slider.setValue(0)
-#         
-#     def d2a_hi_setMax(self):
-#         self.d2a_A_slider.setValue(16383)
-        
+
     def send_channel(self):
         log.debug(tc.FCTCALL + "send DFB STATE parameters", self.state, ": index & arrayed register values", tc.ENDC)
         self.send_wreg0()
@@ -463,7 +448,6 @@ class dfbChn(QWidget):
         self.send_wreg2()
         self.send_wreg3()
         self.send_wreg5()
-        
 
     def lock_channel(self):
         self.unlocked = self.lock_button.isChecked()
@@ -479,21 +463,18 @@ class dfbChn(QWidget):
         wreg = 0 << 25
         wregval = wreg | (self.chn << 6) | self.state
         self.sendReg(wregval)
-        
 
     def send_wreg1(self):
         log.debug("DFB:WREG1: arrayed state variables: ADC lock point")
         wreg = 1 << 25
         wregval = wreg | self.a2d_lockpt
         self.sendReg(wregval)
-        
 
     def send_wreg2(self):
         log.debug("DFB:WREG2: arrayed state variables: triangle booleans & DAC offset A")
         wreg = 2 << 25
         wregval = wreg | (self.triA << 16) | (self.triB << 17) | self.d2a_A
         self.sendReg(wregval)
-        
 
     def send_wreg3(self):
         log.debug("DFB:WREG3: arrayed state feedback parameters: tri, arl, P, I")
@@ -504,7 +485,6 @@ class dfbChn(QWidget):
         wreg = wreg | ((int(self.P)&0x3ff) << 10)
         wregval = wreg | (int(self.I)&0x3ff)
         self.sendReg(wregval)
-        
 
     def send_wreg5(self):
         
@@ -512,22 +492,12 @@ class dfbChn(QWidget):
         wreg = 5 << 25
         wregval = wreg | (self.d2a_B << 11) | self.SM
         self.sendReg(wregval)
-        
-        
+
     def sendReg(self, wregval): 
-        log.debug(tc.COMMAND + "send to address", self.address, ":", tc.BOLD, wregval, tc.ENDC)
-        b0 = (wregval & 0x7f ) << 1            # 1st 7 bits shifted up 1
-        b1 = ((wregval >> 7) & 0x7f) <<  1     # 2nd 7 bits shifted up 1
-        b2 = ((wregval >> 14) & 0x7f) << 1     # 3rd 7 bits shifted up 1
-        b3 = ((wregval >> 21) & 0x7f) << 1     # 4th 7 bits shifted up 1
-        b4 = (self.address << 1) + 1           # Address shifted up 1 bit with address bit set
- 
-        msg = struct.pack('BBBBB', b0, b1, b2, b3, b4)
-        self.serialport.write(msg)
-        time.sleep(0.001)
+        write_wreg(self.serialport, wregval, self.address)
         
     def packState(self):
-        self.stateVector    =    {
+        self.stateVector = {
             'triA'          :    self.TriA_button.isChecked(),
             'triB'          :    self.TriB_button.isChecked(),
             'a2d_lockpt'    :    self.a2d_lockpt_spin.value(),
@@ -539,20 +509,21 @@ class dfbChn(QWidget):
             'FBA'           :    self.FBA_button.isChecked(),
             'FBB'           :    self.FBB_button.isChecked(),
             'ARL'           :    self.ARL_button.isChecked()
-                                }
+        }
         
     def unpackState(self, loadState):
-            self.TriA_button.setChecked(loadState['triA'])
-            self.TriB_button.setChecked(loadState['triB'])
-            self.a2d_lockpt_spin.setValue(loadState['a2d_lockpt'])
-            self.d2a_A_spin.setValue(loadState['d2a_A'])
-            self.d2a_B_spin.setValue(loadState['d2a_B'])
-            self.data_packet.setCurrentIndex(loadState['SM'])
-            self.P_spin.setValue(loadState['P'])
-            self.I_spin.setValue(loadState['I'])
-            self.FBA_button.setChecked(loadState['FBA'])
-            self.FBB_button.setChecked(loadState['FBB'])
-            self.ARL_button.setChecked(loadState['ARL'])
+        self.TriA_button.setChecked(loadState['triA'])
+        self.TriB_button.setChecked(loadState['triB'])
+        self.a2d_lockpt_spin.setValue(loadState['a2d_lockpt'])
+        self.d2a_A_spin.setValue(loadState['d2a_A'])
+        self.d2a_B_spin.setValue(loadState['d2a_B'])
+        self.data_packet.setCurrentIndex(loadState['SM'])
+        self.P_spin.setValue(loadState['P'])
+        self.I_spin.setValue(loadState['I'])
+        self.FBA_button.setChecked(loadState['FBA'])
+        self.FBB_button.setChecked(loadState['FBB'])
+        self.ARL_button.setChecked(loadState['ARL'])
+
 
 def main():
      
@@ -563,5 +534,6 @@ def main():
     ex = dfbChn()
     sys.exit(app.exec_())
  
+
 if __name__ == '__main__':
     main()

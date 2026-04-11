@@ -28,7 +28,7 @@ from cringe.calibration.caltab import CalTab
 
 from cringe.cringe_control import CRINGE_COMMANDS, build_zmq_addr
 from cringe.zmq_rep import ZmqRep
-
+from cringe.shared.rack_transport import write_wreg
 
 class Cringe(QtWidgets.QWidget):
     '''CRate Interface for NextGen Electronics'''
@@ -2267,17 +2267,7 @@ class Cringe(QtWidgets.QWidget):
         self.sendReg(wregval, self.card_addr)
 
     def sendReg(self, wregval, addr):
-        log.debug(tc.COMMAND + "send to address",
-                  addr, ":", tc.BOLD, wregval, tc.ENDC)
-        b0 = (wregval & 0x7f) << 1			# 1st 7 bits shifted up 1
-        b1 = ((wregval >> 7) & 0x7f) << 1	 # 2nd 7 bits shifted up 1
-        b2 = ((wregval >> 14) & 0x7f) << 1	 # 3rd 7 bits shifted up 1
-        b3 = ((wregval >> 21) & 0x7f) << 1	 # 4th 7 bits shifted up 1
-        # Address shifted up 1 bit with address bit set
-        b4 = (addr << 1) + 1
-        msg = struct.pack('BBBBB', b0, b1, b2, b3, b4)
-        self.serialport.write(msg)
-        time.sleep(0.001)
+        write_wreg(self.serialport, wregval, addr)
 
     def saveSettings(self):
         log.debug(tc.FCTCALL + "saving settings in pickle file:", tc.ENDC)
