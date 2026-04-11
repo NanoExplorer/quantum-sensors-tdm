@@ -39,7 +39,7 @@ def write_wreg(serialport, wregval, address, sleep_after=0.001):
     serialport : object with a .write(bytes) method
         Typically a ``named_serial.Serial`` configured for ``port='rack'``.
     wregval : int
-        25-bit register value. The top 4 bits typically encode the
+        25-bit register value + 3 most significant bits encoding the
         register index (e.g. ``3 << 25`` for WREG3); the lower 25 bits
         carry the per-register payload. The exact bit layout is
         card-specific and is the caller's responsibility.
@@ -65,8 +65,8 @@ def write_wreg(serialport, wregval, address, sleep_after=0.001):
     b0 = (wregval & 0x7f) << 1            # bits  0-6,  shifted up 1
     b1 = ((wregval >> 7) & 0x7f) << 1     # bits  7-13, shifted up 1
     b2 = ((wregval >> 14) & 0x7f) << 1    # bits 14-20, shifted up 1
-    b3 = ((wregval >> 21) & 0x7f) << 1    # bits 21-24 (+ pad), shifted up 1
-    b4 = (address << 1) + 1               # address shifted up 1, LSB = frame marker
+    b3 = ((wregval >> 21) & 0x7f) << 1    # bits 21-24 and register index
+    b4 = (address << 1) + 1               # address shifted up 1, LSB = address bit
     msg = struct.pack("BBBBB", b0, b1, b2, b3, b4)
 
     with _rack_lock:
