@@ -1,7 +1,5 @@
 import sys
 import optparse
-import struct
-import time
 
 from PyQt5 import QtGui, QtCore, QtWidgets
 from PyQt5.QtGui import *
@@ -215,9 +213,9 @@ class dprS(QWidget):
     def sendReg(self, wregval):
         write_wreg(self.serialport, wregval, self.address, sleep_after=0)
         
-    def send_cmd(self, GPI, val): 
-        log.debug(tc.COMMAND + "send to card address", self.address, "/ GPI", GPI, ":", tc.BOLD, wregval, "(", val, ")",tc.ENDC)
+    def send_cmd(self, GPI, val):
         wregval = (GPI << 20) | val
+        log.debug(tc.COMMAND + "send to card address", self.address, "/ GPI", GPI, ":", tc.BOLD, wregval, "(", val, ")", tc.ENDC)
         write_wreg(self.serialport, wregval, self.address)
         
     def packCal(self):
