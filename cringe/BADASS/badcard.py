@@ -1,7 +1,8 @@
+import os
 import sys
 import optparse
 
-from PyQt5 import QtGui, QtCore, QtWidgets
+from PyQt5 import QtGui, QtCore, QtWidgets, uic
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
@@ -61,91 +62,31 @@ class badcard(QWidget):
 
         log.debug(tc.INIT + "building BAD16 card: slot", self.slot,
                   "/ address", self.address, tc.ENDC)
-        '''
-        build widget for card INTERFACE PARAMETERS header
-        '''
-        self.class_interface_widget = QGroupBox(self)
-        self.class_interface_widget.setFixedWidth(1080)
-        self.class_interface_widget.setFocusPolicy(QtCore.Qt.NoFocus)
-        self.class_interface_widget.setTitle("CARD INTERFACE PARAMETERS")
 
-        self.controls_layout = QGridLayout(self.class_interface_widget)
-        self.controls_layout.setContentsMargins(5, 5, 5, 5)
-        self.controls_layout.setSpacing(5)
+        _glb = QWidget()
+        uic.loadUi(
+            os.path.join(os.path.dirname(__file__), '../shared/card_global.ui'),
+            _glb)
+        self.card_glb_widget = _glb.card_glb_widget
+        self.class_interface_widget = _glb.class_interface_widget
+        self.LED_button = _glb.LED_button
+        self.status_button = _glb.status_button
+        self.card_glb_send = _glb.card_glb_send
+        self.slot_indicator = _glb.slot_indicator
+        self.addr_indicator = _glb.addr_indicator
 
-        #       self.controls_widget = QWidget(self.layout_widget)
-        #       self.globals_layout = QGridLayout(self.globals_widget)
-
-        self.addr_indicator = QLineEdit()
-        self.addr_indicator.setReadOnly(True)
-        self.addr_indicator.setText(str(addr))
-        self.addr_indicator.setAlignment(QtCore.Qt.AlignRight)
-        self.addr_indicator.setFocusPolicy(QtCore.Qt.NoFocus)
-        self.controls_layout.addWidget(self.addr_indicator, 0, 2, 1, 1,
-                                       QtCore.Qt.AlignRight)
-
-        self.addr_label = QLabel("card address")
-        self.controls_layout.addWidget(self.addr_label, 0, 3, 1, 1,
-                                       QtCore.Qt.AlignLeft)
-
-        self.slot_indicator = QLineEdit()
-        self.slot_indicator.setReadOnly(True)
-        #       self.addr_indicator.setFixedWidth(40)
-        self.slot_indicator.setText('%2d' % slot)
-        self.slot_indicator.setAlignment(QtCore.Qt.AlignRight)
-        self.slot_indicator.setFocusPolicy(QtCore.Qt.NoFocus)
-        self.controls_layout.addWidget(self.slot_indicator, 0, 0, 1, 1,
-                                       QtCore.Qt.AlignRight)
-
-        self.slot_label = QLabel("card slot")
-        self.controls_layout.addWidget(self.slot_label, 0, 1, 1, 1,
-                                       QtCore.Qt.AlignLeft)
-
-        self.layout.addWidget(self.class_interface_widget, 0, 1, 1, 1,
-                              QtCore.Qt.AlignLeft)
-        '''
-        build widget for CARD GLOBAL VARIABLE control
-        '''
-        self.card_glb_widget = QGroupBox(self)
-        self.card_glb_widget.setTitle("CARD GLOBAL VARIABLES")
-        self.card_glb_layout = QGridLayout(self.card_glb_widget)
-        self.card_glb_layout.setContentsMargins(5, 5, 10, 5)
-        self.card_glb_layout.setSpacing(5)
-
-        self.LED_button = QToolButton(self, text='ON')
-        self.LED_button.setFixedHeight(25)
-        self.LED_button.setCheckable(1)
-        self.LED_button.setChecked(self.LED)
         self.LED_button.setStyleSheet("background-color: #" + tc.green + ";")
-        self.card_glb_layout.addWidget(self.LED_button, 0, 0, 1, 1)
         self.LED_button.toggled.connect(self.LED_changed)
-        self.LED_button.setEnabled(1)
-
-        self.led_lbl = QLabel("LED control")
-        self.card_glb_layout.addWidget(self.led_lbl, 0, 1, 1, 1,
-                                       QtCore.Qt.AlignLeft)
-
-        self.status_button = QToolButton(self, text='ST')
-        self.status_button.setFixedHeight(25)
-        self.status_button.setCheckable(1)
-        self.status_button.setChecked(self.ST)
         self.status_button.setStyleSheet("background-color: #" + tc.red + ";")
-        self.card_glb_layout.addWidget(self.status_button, 0, 2, 1, 1)
         self.status_button.toggled.connect(self.status_changed)
-
-        self.status_lbl = QLabel("status bit")
-        self.card_glb_layout.addWidget(self.status_lbl, 0, 3, 1, 1,
-                                       QtCore.Qt.AlignLeft)
-
-        self.card_glb_send = QPushButton(self, text="send CARD globals")
-        self.card_glb_send.setFixedHeight(25)
-        self.card_glb_send.setFixedWidth(200)
-        self.card_glb_layout.addWidget(self.card_glb_send, 0, 4, 1, 1,
-                                       QtCore.Qt.AlignRight)
         self.card_glb_send.clicked.connect(self.send_card_globals)
+        self.slot_indicator.setText('%2d' % slot)
+        self.addr_indicator.setText(str(addr))
 
         self.layout.addWidget(self.card_glb_widget, 0, 0, 1, 1,
                               QtCore.Qt.AlignRight)
+        self.layout.addWidget(self.class_interface_widget, 0, 1, 1, 1,
+                              QtCore.Qt.AlignLeft)
         '''
         create TAB widget for embedding BAD16 functional widgets
         '''
