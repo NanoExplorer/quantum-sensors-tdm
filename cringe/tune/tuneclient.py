@@ -14,16 +14,20 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
 import matplotlib.pyplot as plt
 import numpy as np
+
+
 def find(condition):
     res, = np.nonzero(np.ravel(condition))
     return res
 
+
 class TuneClient(QWidget):
+
     def __init__(self, parent):
         super(type(self), self).__init__(parent)
         self.layout = QHBoxLayout(self)
         self.statustext = QLabel("not connected to server")
-        self.startclientbutton = QPushButton(self, text = "startclient")
+        self.startclientbutton = QPushButton(self, text="startclient")
 
         self.layout.addWidget(self.statustext)
         self.layout.addWidget(self.startclientbutton)
@@ -38,15 +42,17 @@ class TuneClient(QWidget):
         # timer.start(4000)
         # self.startclient()
 
-
     def startclient(self):
         self.statustext.setText("connecting...")
-        QtCore.QCoreApplication.processEvents() # allows text change to actually happen before blocking
+        QtCore.QCoreApplication.processEvents(
+        )  # allows text change to actually happen before blocking
         self.client = nasa_client.EasyClient(clockmhz=125)
         self.getNewData = self.client.getNewData
-        try: # blocks for 1 second if server isn't there
+        try:  # blocks for 1 second if server isn't there
             self.client.setupAndChooseChannels()
-            self.statustext.setText("connected to server, lysnc=%g, ncol=%g, nrow=%g, nsamp=%g"%(self.lsync, self.ncol, self.nrow, self.nsamp))
+            self.statustext.setText(
+                "connected to server, lysnc=%g, ncol=%g, nrow=%g, nsamp=%g" %
+                (self.lsync, self.ncol, self.nrow, self.nsamp))
             return True
         except:
             self.statustext.setText("failed to connect to server")

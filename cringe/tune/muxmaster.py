@@ -3,8 +3,9 @@ from cringe.shared import log
 
 
 class MuxMaster():
-    def __init__(self,cringe):
-        self.cringe=cringe
+
+    def __init__(self, cringe):
+        self.cringe = cringe
         self.gatherAllCards()
 
     def gatherAllCards(self):
@@ -29,16 +30,17 @@ class MuxMaster():
         #log.debug(badraps)
         #log.debug(badstates)
         if dfb_clk is not None:
-            dfbraps.append(dfb_clk) # At least in the Velma system the dfb_clk is used for
+            dfbraps.append(
+                dfb_clk
+            )  # At least in the Velma system the dfb_clk is used for
             # column 3/C. In most systems it is not used at all, so it should not be the 0th value
-            # in the dfbraps array even if the dfbclk is the first card in the class vector. 
-            # in fact, the dfb_clk dfb was explicitly ignored until CTR added it in Aug 2024. 
+            # in the dfbraps array even if the dfbclk is the first card in the class vector.
+            # in fact, the dfb_clk dfb was explicitly ignored until CTR added it in Aug 2024.
             # See the commented log.debug("don't care") The main branch puts dfb_clk into a separate
             # member variable
         self.dfbraps = dfbraps
         self.badraps = badraps
         self.badstates = badstates
-
 
     def setTowerChannelDAC(self, cardname, bayname, dacvalue):
         bay_index = self.cringe.tower_widget.get_bayindex(bayname)
@@ -48,21 +50,21 @@ class MuxMaster():
         self.cringe.tower_widget.set_card_dac(cardname, dacvalue)
 
     def relockFBAifLocked(self, col, row):
-        dfbrap=self.dfbraps[col]
+        dfbrap = self.dfbraps[col]
         chn = dfbrap.state_vectors[row]
         if chn.FBA_button.isChecked():
             chn.FBA_button.setChecked(False)
-            chn.FBA_button.setChecked(True)        
+            chn.FBA_button.setChecked(True)
 
     def relockFBA(self, col, row):
-        dfbrap=self.dfbraps[col]
+        dfbrap = self.dfbraps[col]
         chn = dfbrap.state_vectors[row]
         if chn.FBA_button.isChecked():
             chn.FBA_button.setChecked(False)
         chn.FBA_button.setChecked(True)
 
     def relockFBB(self, col, row):
-        dfbrap=self.dfbraps[col]
+        dfbrap = self.dfbraps[col]
         chn = dfbrap.state_vectors[row]
         if chn.FBB_button.isChecked():
             chn.FBB_button.setChecked(False)
@@ -73,14 +75,14 @@ class MuxMaster():
         for dfbrap in self.dfbraps:
             for dfbchn in dfbrap.state_vectors:
                 dacAoffsets.append(dfbchn.d2a_A_spin.value())
-        log.debug("muxmaster:dacAoffsets",dacAoffsets)
+        log.debug("muxmaster:dacAoffsets", dacAoffsets)
 
     def getdacBoffsets(self):
         dacBoffsets = []
         for dfbrap in self.dfbraps:
             for dfbchn in dfbrap.state_vectors:
                 dacBoffsets.append(dfbchn.d2a_B_spin.value())
-        log.debug("muxmaster:dacBoffsets",dacBoffsets)
+        log.debug("muxmaster:dacBoffsets", dacBoffsets)
 
     def getadcLockpoints(self):
         adcLockpoints = []
@@ -90,9 +92,11 @@ class MuxMaster():
         return adcLockpoints
 
     def getbaddacHighs(self):
-        log.debug("muxmaster:self.getbadroworder()",self.getbadroworder())
+        log.debug("muxmaster:self.getbadroworder()", self.getbadroworder())
         baddacHighs = []
-        log.debug("muxmaster:len(self.badraps)",len(self.badraps), "len(self.badraps[0].chn_vectors", len(self.badraps[0].chn_vectors))
+        log.debug("muxmaster:len(self.badraps)", len(self.badraps),
+                  "len(self.badraps[0].chn_vectors",
+                  len(self.badraps[0].chn_vectors))
         for badrap in self.badraps:
             for chn in badrap.chn_vectors:
 
@@ -104,32 +108,50 @@ class MuxMaster():
             for chn in badrap.chn_vectors:
                 chn.d2a_hi_slider.setValue(val)
 
-
     def getbadroworder(self):
         roworder = []
-        for i,sv_array in enumerate(self.badstates):
+        for i, sv_array in enumerate(self.badstates):
             log.debug("a")
             for sv in sv_array.state_vectors[:self.seqln]:
                 checked = [button.isChecked() for button in sv.buttons]
-                assert(np.sum(checked)==1)
-                roworder.append(i*self.seqln+find(checked)[0])
-                log.debug("muxmaster:checked",checked)
+                assert (np.sum(checked) == 1)
+                roworder.append(i * self.seqln + find(checked)[0])
+                log.debug("muxmaster:checked", checked)
         return roworder
 
-    def changedfbrow(self,col=None,row=None,tria=None,trib=None,a2d=None,d2aA=None,d2aB=None,P=None,I=None,FBA=None,FBB=None,ARL=None,data_packet=None,dynamic=None):
+    def changedfbrow(self,
+                     col=None,
+                     row=None,
+                     tria=None,
+                     trib=None,
+                     a2d=None,
+                     d2aA=None,
+                     d2aB=None,
+                     P=None,
+                     I=None,
+                     FBA=None,
+                     FBB=None,
+                     ARL=None,
+                     data_packet=None,
+                     dynamic=None):
         """
-        setdfbrow(self,col=0,row=0,tria=0,trib=0,a2d=0,d2aA=0,d2aB=0,P=0,I=0,FBA=0,FBB=0,ARL=0,data_packet=0,dynamic=1)
-        set every possibly setting for a single dfbx2 row, all values have defaults of 0 or off, or FBA,ERR.
+    
+        set every possibly setting for a single dfbx2 row, all values have 
+        defaults of 0 or off, or FBA,ERR.
         dynamic has default on so that everything gets sent.
         goes through the gui so everything stays in sync
         """
-        dfbrap=self.dfbraps[col]
+        dfbrap = self.dfbraps[col]
         if row == "master":
             chn = dfbrap.master_vector
         else:
             chn = dfbrap.state_vectors[row]
         if dynamic is not None:
-            chn.lock_button.setChecked(dynamic) #this is the dynamic button, when true all commands are send when gui is changed, the send all button should not be needed, do this first so I don't need to send manually
+            chn.lock_button.setChecked(
+                dynamic
+            )  # this is the dynamic button, when true all commands are send 
+            # when gui is changed, the send all button should not be needed, do 
+            # this first so I don't need to send manually
         if a2d is not None:
             chn.a2d_lockpt_spin.setValue(a2d)
         if d2aA is not None:
@@ -156,24 +178,42 @@ class MuxMaster():
     def lockAall(self, lock=True):
         for col in range(len(self.dfbraps)):
             for row in range(self.seqln):
-                dfbrap=self.dfbraps[col]
+                dfbrap = self.dfbraps[col]
                 chn = dfbrap.state_vectors[row]
                 chn.FBA_button.setChecked(lock)
 
-
-    def setdfbrow(self,col=0,row=0,tria=0,trib=0,a2d=0,d2aA=0,d2aB=0,P=0,I=0,FBA=0,FBB=0,ARL=0,data_packet=0,dynamic=1):
+    def setdfbrow(self,
+                  col=0,
+                  row=0,
+                  tria=0,
+                  trib=0,
+                  a2d=0,
+                  d2aA=0,
+                  d2aB=0,
+                  P=0,
+                  I=0,
+                  FBA=0,
+                  FBB=0,
+                  ARL=0,
+                  data_packet=0,
+                  dynamic=1):
         """
-        setdfbrow(self,col=0,row=0,tria=0,trib=0,a2d=0,d2aA=0,d2aB=0,P=0,I=0,FBA=0,FBB=0,ARL=0,data_packet=0,dynamic=1)
-        set every possibly setting for a single dfbx2 row, all values have defaults of 0 or off, or FBA,ERR.
+
+        set every possibly setting for a single dfbx2 row, all values have 
+        defaults of 0 or off, or FBA,ERR.
         dynamic has default on so that everything gets sent.
         goes through the gui so everything stays in sync
         """
-        dfbrap=self.dfbraps[col]
+        dfbrap = self.dfbraps[col]
         if row == "master":
             chn = dfbrap.master_vector
         else:
             chn = dfbrap.state_vectors[row]
-        chn.lock_button.setChecked(dynamic) #this is the dynamic button, when true all commands are send when gui is changed, the send all button should not be needed, do this first so I don't need to send manually
+        chn.lock_button.setChecked(
+            dynamic
+        )  # this is the dynamic button, when true all commands are send when 
+        # gui is changed, the send all button should not be needed, do this 
+        # first so I don't need to send manually
         chn.a2d_lockpt_spin.setValue(a2d)
         chn.d2a_A_spin.setValue(d2aA)
         chn.d2a_B_spin.setValue(d2aB)
@@ -186,33 +226,65 @@ class MuxMaster():
         chn.FBA_button.setChecked(FBA)
         chn.FBB_button.setChecked(FBB)
 
-    def setdfballrow(self,col=0,tria=0,trib=0,a2d=0,d2aA=0,d2aB=0,P=0,I=0,FBA=0,FBB=0,ARL=0,data_packet=0,dynamic=1):
-        #rows = range(len(self.dfbraps[col].state_vectors))+["master"]
+    def setdfballrow(self,
+                     col=0,
+                     tria=0,
+                     trib=0,
+                     a2d=0,
+                     d2aA=0,
+                     d2aB=0,
+                     P=0,
+                     I=0,
+                     FBA=0,
+                     FBB=0,
+                     ARL=0,
+                     data_packet=0,
+                     dynamic=1):
+        # rows = range(len(self.dfbraps[col].state_vectors))+["master"]
         rows = list(range(self.seqln))
         for row in rows:
-            self.setdfbrow(col,row,tria,trib,a2d,d2aA,d2aB,P,I,FBA,FBB,ARL,data_packet,dynamic)
+            self.setdfbrow(col, row, tria, trib, a2d, d2aA, d2aB, P, I, FBA,
+                           FBB, ARL, data_packet, dynamic)
 
-    def setdfball(self,tria=0,trib=0,a2d=0,d2aA=0,d2aB=0,P=0,I=0,FBA=0,FBB=0,ARL=0,data_packet=0,dynamic=1):
+    def setdfball(self,
+                  tria=0,
+                  trib=0,
+                  a2d=0,
+                  d2aA=0,
+                  d2aB=0,
+                  P=0,
+                  I=0,
+                  FBA=0,
+                  FBB=0,
+                  ARL=0,
+                  data_packet=0,
+                  dynamic=1):
         for col in range(len(self.dfbraps)):
-            self.setdfballrow(col,tria,trib,a2d,d2aA,d2aB,P,I,FBA,FBB,ARL,data_packet,dynamic)
+            self.setdfballrow(col, tria, trib, a2d, d2aA, d2aB, P, I, FBA, FBB,
+                              ARL, data_packet, dynamic)
 
     def setdfbrow_d2a(self, col, row, d2aA):
-        dfbrap=self.dfbraps[col]
+        dfbrap = self.dfbraps[col]
         if row == "master":
             chn = dfbrap.master_vector
         else:
             chn = dfbrap.state_vectors[row]
         chn.d2a_A_spin.setValue(d2aA)
 
-    def settriangleparams(self,dwell=0,steps=10,stepsize=8,timebase=1):
+    def settriangleparams(self, dwell=0, steps=10, stepsize=8, timebase=1):
         # timebase = 0 gives lsync, timebase = 1 gives frame
         # frame is wanted for all tuning,it makes all rows have same values in triangle
         self.cringe.dwell.setValue(dwell)
-        self.cringe.range.setValue(steps) # carl has some annoyingly inconsistent names
+        self.cringe.range.setValue(
+            steps)  # carl has some annoyingly inconsistent names
         self.cringe.step.setValue(stepsize)
         self.cringe.tri_idx_button.setChecked(timebase)
 
-    def settiming(self,sett=12,dfbpropdelay=3, dfbcarddelay=0, bad16carddelay=5):
+    def settiming(self,
+                  sett=12,
+                  dfbpropdelay=3,
+                  dfbcarddelay=0,
+                  bad16carddelay=5):
         self.cringe.SETT_spin.setValue(sett)
         self.cringe.prop_delay_spin.setValue(dfbpropdelay)
         self.cringe.dfb_delay_spin.setValue(dfbcarddelay)
@@ -236,8 +308,8 @@ class MuxMaster():
             self.cringe.SETT_spin.setValue(sett)
             self.cringe.change_SETT()
 
-    def setFluxJumpThreshold(self,flux_jump_threshold):
-        flux_jump_threshold= int(flux_jump_threshold)
+    def setFluxJumpThreshold(self, flux_jump_threshold):
+        flux_jump_threshold = int(flux_jump_threshold)
         if flux_jump_threshold != self.flux_jump_threshold:
             self.cringe.ARLsense_spin.setValue(flux_jump_threshold)
             self.cringe.change_ARLsense()
@@ -245,21 +317,27 @@ class MuxMaster():
     @property
     def seqln(self):
         return self.cringe.seqln
+
     @property
     def lsync(self):
         return self.cringe.lsync
+
     @property
     def SETT(self):
         return self.cringe.SETT
+
     @property
     def NSAMP(self):
         return self.cringe.NSAMP
+
     @property
     def prop_delay(self):
         return self.cringe.prop_delay
+
     @property
     def dfb_delay(self):
         return self.cringe.dfb_delay
+
     @property
     def bad_delay(self):
         return self.cringe.bad_delay

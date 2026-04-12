@@ -17,8 +17,8 @@ from cringe.shared.rack_transport import write_wreg
 
 class clkrap(QWidget):
 
-# 	def __init__(self, parent=None, **kwargs):
-# 		print kwargs
+    #   def __init__(self, parent=None, **kwargs):
+    #       print kwargs
     def __init__(self, parent=None, addr=0, slot=1, seqln=None, lsync=40):
 
         super(clkrap, self).__init__()
@@ -29,13 +29,11 @@ class clkrap(QWidget):
         self.seqln = seqln
         self.lsync = lsync
 
-        self.serialport = named_serial.Serial(port='rack', shared = True)
-
+        self.serialport = named_serial.Serial(port='rack', shared=True)
         '''global booleans'''
 
         self.ST = 0
         self.CLKstate = 1
-
         '''global variables'''
 
         self.lsync = lsync
@@ -44,15 +42,19 @@ class clkrap(QWidget):
         uic.loadUi(os.path.join(os.path.dirname(__file__), 'clkrap.ui'), self)
 
         # Apply stylesheets that depend on runtime color values
-        self.resync_button.setStyleSheet("background-color: #" + tc.green + ";")
-        self.CLKstate_button.setStyleSheet("background-color: #" + tc.green + ";")
+        self.resync_button.setStyleSheet("background-color: #" + tc.green +
+                                         ";")
+        self.CLKstate_button.setStyleSheet("background-color: #" + tc.green +
+                                           ";")
 
         # Set computed initial indicator text
         self.lsync_indicator.setText(str(self.lsync))
-        self.line_period_indicator.setText(str(8*(self.lsync)))
-        self.line_freq_indicator.setText(str(125/(self.lsync))[:6])
-        self.frame_period_indicator.setText(str(self.seqln*0.008*self.lsync)[:6])
-        self.frame_freq_indicator.setText(str(125000/(self.lsync*self.seqln))[:6])
+        self.line_period_indicator.setText(str(8 * (self.lsync)))
+        self.line_freq_indicator.setText(str(125 / (self.lsync))[:6])
+        self.frame_period_indicator.setText(
+            str(self.seqln * 0.008 * self.lsync)[:6])
+        self.frame_freq_indicator.setText(
+            str(125000 / (self.lsync * self.seqln))[:6])
 
         # Connect signals
         self.lsync_indicator.textChanged.connect(self.lsync_changed)
@@ -62,9 +64,10 @@ class clkrap(QWidget):
     '''
     self called methods
     '''
+
     def lsync_changed(self):
         self.lsync = int(self.lsync_indicator.text())
-# 		print tc.WARNING + "Line period changed:", self.lsync*8, "ns", tc.ENDC
+        #       print tc.WARNING + "Line period changed:", self.lsync*8, "ns", tc.ENDC
         self.lsync_minus1 = self.lsync - 1
         self.line_period_changed()
         self.frame_period_changed()
@@ -82,69 +85,74 @@ class clkrap(QWidget):
 
     def CLKstate_changed(self):
         self.CLKstate = self.CLKstate_button.isChecked()
-        self.notCLKstate = not(self.CLKstate)
+        self.notCLKstate = not (self.CLKstate)
         if self.CLKstate == 1:
             log.debug(tc.FCTCALL + "line clock enabled:", tc.ENDC)
-            self.CLKstate_button.setStyleSheet("background-color: #" + tc.green + ";")
+            self.CLKstate_button.setStyleSheet("background-color: #" +
+                                               tc.green + ";")
             self.CLKstate_button.setText('RUN')
-            self.resync_button.setStyleSheet("background-color: #" + tc.green + ";")
+            self.resync_button.setStyleSheet("background-color: #" + tc.green +
+                                             ";")
         else:
             log.debug(tc.FCTCALL + "line clock disabled:", tc.ENDC)
-            self.CLKstate_button.setStyleSheet("background-color: #" + tc.red + ";")
+            self.CLKstate_button.setStyleSheet("background-color: #" + tc.red +
+                                               ";")
             self.CLKstate_button.setText('STOP')
-            self.resync_button.setStyleSheet("background-color: #" + tc.red + ";")
+            self.resync_button.setStyleSheet("background-color: #" + tc.red +
+                                             ";")
         self.send_wreg1()
 
     def resync(self):
         if self.CLKstate == 1:
             log.debug(tc.FCTCALL + "resynchronize system:", tc.ENDC)
-            
+
             self.CLKstate_button.click()
             time.sleep(1)
             self.CLKstate_button.click()
         else:
-            log.debug(tc.FAIL + "line clock must be enabled for RESYNC:", tc.ENDC)
-            
+            log.debug(tc.FAIL + "line clock must be enabled for RESYNC:",
+                      tc.ENDC)
 
     def line_period_changed(self):
-        self.line_period_indicator.setText(str(8*(self.lsync)))
-        self.line_freq_indicator.setText(str(125.0/(self.lsync))[:6])
+        self.line_period_indicator.setText(str(8 * (self.lsync)))
+        self.line_freq_indicator.setText(str(125.0 / (self.lsync))[:6])
 
     def frame_period_changed(self):
-        self.frame_period_indicator.setText(str(self.seqln*0.008*self.lsync)[:6])
-        self.frame_freq_indicator.setText(str(125000/(self.lsync*self.seqln))[:6])
-# 		self.send_wreg7()
+        self.frame_period_indicator.setText(
+            str(self.seqln * 0.008 * self.lsync)[:6])
+        self.frame_freq_indicator.setText(
+            str(125000 / (self.lsync * self.seqln))[:6])
 
+
+#       self.send_wreg7()
 
     def send_wreg1(self):
         log.debug("CLK:WREG1: clock state:", self.CLKstate)
         wreg = 1 << 25
         wregval = wreg | (self.notCLKstate << 24) | (self.CLKstate << 23)
         self.sendReg(wregval)
-        
 
     def send_wreg2(self):
         log.debug("CLK:WREG2: LSYNC-1:", self.lsync_minus1)
         wreg = 2 << 25
         wregval = wreg | self.lsync_minus1
         self.sendReg(wregval)
-        
 
     def send_wreg7(self):
         log.debug("CLK:WREG7: sequence length:", self.seqln)
         wreg = 7 << 25
         wregval = wreg | (self.seqln << 8)
         self.sendReg(wregval)
-        
 
     def sendReg(self, wregval):
         write_wreg(self.serialport, wregval, self.address)
+
 
 def main():
 
     app = QApplication(sys.argv)
     app.setStyle("plastique")
-    app.setStyleSheet("""	QPushbutton{font: 10px; padding: 6px}
+    app.setStyleSheet("""   QPushbutton{font: 10px; padding: 6px}
                             QToolButton{font: 10px; padding: 6px}
                             QLineEdit {background-color: #FFFFCC;}
                             QToolTip {background-color: #FFFFCC;}""")
@@ -155,22 +163,33 @@ def main():
 
 if __name__ == '__main__':
     p = optparse.OptionParser()
-# 	p.add_option('-C','--card_type', action='store', dest='ctype', type='str',
-# 				 help='Type of card to calibrate (default=DFBx2).')
-    p.add_option('-A','--card_address', action='store', dest='addr', type='int',
+    #   p.add_option('-C','--card_type', action='store', dest='ctype', type='str',
+    #                help='Type of card to calibrate (default=DFBx2).')
+    p.add_option('-A',
+                 '--card_address',
+                 action='store',
+                 dest='addr',
+                 type='int',
                  help='Hardware address of card (default=32).')
-    p.add_option('-S','--slot', action='store', dest='slot', type='int',
+    p.add_option('-S',
+                 '--slot',
+                 action='store',
+                 dest='slot',
+                 type='int',
                  help='Host slot in crate (default=9)')
-    p.add_option('-L','--length', action='store', dest='seqln', type='int',
+    p.add_option('-L',
+                 '--length',
+                 action='store',
+                 dest='seqln',
+                 type='int',
                  help='Number of states in sequence (default=4')
-# 	p.set_defaults(ctype="DFBx2")
+    #   p.set_defaults(ctype="DFBx2")
     p.set_defaults(addr=0)
     p.set_defaults(slot=1)
     p.set_defaults(seqln=4)
     opt, args = p.parse_args()
-# 	ctype = opt.ctype
+    #   ctype = opt.ctype
     addr = opt.addr
     slot = opt.slot
     seqln = opt.seqln
     main()
-

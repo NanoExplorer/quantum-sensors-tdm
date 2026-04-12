@@ -1,15 +1,17 @@
 import zmq
 
-from PyQt5 import  QtCore, QtWidgets
+from PyQt5 import QtCore, QtWidgets
 
 #import cringe
 from cringe.shared import log
+
 
 class ZmqRep(QtWidgets.QWidget):
     ''' ZMQ server (reply socket) for use with cringe
     You can find a nice simple example example of how to talk to 
     this at https://zeromq.org/languages/python/'''
     gotMessage = QtCore.Signal(str)
+
     def __init__(self, parent, address_with_port):
         llog = log.child("ZmqRep: __init__:")
         log.debug("__init__")
@@ -23,10 +25,10 @@ class ZmqRep(QtWidgets.QWidget):
         self._timer = QtCore.QTimer()
         self._timer.start(100)
         self._timer.timeout.connect(self.handleTimeout)
-        self._i=0
+        self._i = 0
 
     def handleTimeout(self):
-        self._i+=1
+        self._i += 1
         llog = log.child("ZmqRep: handleTimeout:")
         # llog.debug("start", self._i)
         self.emit_if_has_message()
