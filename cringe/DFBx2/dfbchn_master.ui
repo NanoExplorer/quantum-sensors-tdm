@@ -200,8 +200,7 @@
      <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
      <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
      <property name="toolTip"><string>DAC channel number (corresponds to front panel)</string></property>
-     <property name="frameShape"><enum>QFrame::Panel</enum></property>
-     <property name="frameShadow"><enum>QFrame::Plain</enum></property>
+
      <property name="alignment"><set>Qt::AlignHCenter|Qt::AlignVCenter</set></property>
      <property name="styleSheet"><string>background-color: #6A6A6A; color: #EFEFEF</string></property>
     </widget>
@@ -212,8 +211,7 @@
      <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
      <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
      <property name="toolTip"><string>select DC mode, HI/LO level for DC mode, and/or TRI output</string></property>
-     <property name="frameShape"><enum>QFrame::Panel</enum></property>
-     <property name="frameShadow"><enum>QFrame::Plain</enum></property>
+
      <property name="alignment"><set>Qt::AlignHCenter|Qt::AlignVCenter</set></property>
      <property name="styleSheet"><string>background-color: #6A6A6A; color: #EFEFEF</string></property>
     </widget>
@@ -223,8 +221,7 @@
      <property name="text"><string>ADC lock point</string></property>
      <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
      <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
-     <property name="frameShape"><enum>QFrame::Panel</enum></property>
-     <property name="frameShadow"><enum>QFrame::Plain</enum></property>
+
      <property name="alignment"><set>Qt::AlignHCenter|Qt::AlignVCenter</set></property>
      <property name="styleSheet"><string>background-color: #6A6A6A; color: #EFEFEF</string></property>
     </widget>
@@ -234,8 +231,7 @@
      <property name="text"><string>DAC A offset</string></property>
      <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
      <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
-     <property name="frameShape"><enum>QFrame::Panel</enum></property>
-     <property name="frameShadow"><enum>QFrame::Plain</enum></property>
+
      <property name="alignment"><set>Qt::AlignHCenter|Qt::AlignVCenter</set></property>
      <property name="styleSheet"><string>background-color: #6A6A6A; color: #EFEFEF</string></property>
     </widget>
@@ -245,8 +241,7 @@
      <property name="text"><string>DAC B offset</string></property>
      <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
      <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
-     <property name="frameShape"><enum>QFrame::Panel</enum></property>
-     <property name="frameShadow"><enum>QFrame::Plain</enum></property>
+
      <property name="alignment"><set>Qt::AlignHCenter|Qt::AlignVCenter</set></property>
      <property name="styleSheet"><string>background-color: #6A6A6A; color: #EFEFEF</string></property>
     </widget>
@@ -256,8 +251,7 @@
      <property name="text"><string>send mode</string></property>
      <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
      <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
-     <property name="frameShape"><enum>QFrame::Panel</enum></property>
-     <property name="frameShadow"><enum>QFrame::Plain</enum></property>
+
      <property name="alignment"><set>Qt::AlignHCenter|Qt::AlignVCenter</set></property>
      <property name="styleSheet"><string>background-color: #6A6A6A; color: #EFEFEF</string></property>
     </widget>
@@ -267,8 +261,7 @@
      <property name="text"><string>P</string></property>
      <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
      <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
-     <property name="frameShape"><enum>QFrame::Panel</enum></property>
-     <property name="frameShadow"><enum>QFrame::Plain</enum></property>
+
      <property name="alignment"><set>Qt::AlignHCenter|Qt::AlignVCenter</set></property>
      <property name="styleSheet"><string>background-color: #6A6A6A; color: #EFEFEF</string></property>
     </widget>
@@ -278,8 +271,7 @@
      <property name="text"><string>I</string></property>
      <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
      <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
-     <property name="frameShape"><enum>QFrame::Panel</enum></property>
-     <property name="frameShadow"><enum>QFrame::Plain</enum></property>
+
      <property name="alignment"><set>Qt::AlignHCenter|Qt::AlignVCenter</set></property>
      <property name="styleSheet"><string>background-color: #6A6A6A; color: #EFEFEF</string></property>
     </widget>
@@ -289,8 +281,7 @@
      <property name="text"><string>feedback</string></property>
      <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
      <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
-     <property name="frameShape"><enum>QFrame::Panel</enum></property>
-     <property name="frameShadow"><enum>QFrame::Plain</enum></property>
+
      <property name="alignment"><set>Qt::AlignHCenter|Qt::AlignVCenter</set></property>
      <property name="styleSheet"><string>background-color: #6A6A6A; color: #EFEFEF</string></property>
     </widget>
@@ -300,8 +291,7 @@
      <property name="text"><string>command</string></property>
      <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
      <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
-     <property name="frameShape"><enum>QFrame::Panel</enum></property>
-     <property name="frameShadow"><enum>QFrame::Plain</enum></property>
+
      <property name="alignment"><set>Qt::AlignHCenter|Qt::AlignVCenter</set></property>
      <property name="styleSheet"><string>background-color: #6A6A6A; color: #EFEFEF</string></property>
     </widget>
@@ -311,8 +301,7 @@
      <property name="text"><string>track</string></property>
      <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
      <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
-     <property name="frameShape"><enum>QFrame::Panel</enum></property>
-     <property name="frameShadow"><enum>QFrame::Plain</enum></property>
+
      <property name="alignment"><set>Qt::AlignHCenter|Qt::AlignVCenter</set></property>
      <property name="styleSheet"><string>background-color: #6A6A6A; color: #EFEFEF</string></property>
     </widget>
