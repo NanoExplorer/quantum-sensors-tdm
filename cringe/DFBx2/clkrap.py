@@ -1,9 +1,10 @@
 #-*- coding: utf-8 -*-
+import os
 import sys
 import optparse
 import time
 
-from PyQt5 import QtGui, QtCore, QtWidgets
+from PyQt5 import QtGui, QtCore, QtWidgets, uic
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
@@ -40,111 +41,23 @@ class clkrap(QWidget):
         self.lsync = lsync
         self.lsync_minus1 = self.lsync - 1
 
-        self.setWindowTitle("CRAP")	# CLK register address program
-        self.setGeometry(30,30,400,200)
-        self.setContentsMargins(0,0,0,0)
+        uic.loadUi(os.path.join(os.path.dirname(__file__), 'clkrap.ui'), self)
 
-        self.layout_widget = QWidget(self)
-        self.layout = QGridLayout(self)
-
-        self.lp_title = QLabel("LSYNC")
-        self.layout.addWidget(self.lp_title,0,0,1,1,QtCore.Qt.AlignLeft)
-
-# 		self.lsync_spin = QSpinBox(self)
-# 		self.lsync_spin.setRange(20,256)
-# 		self.lsync_spin.setSingleStep(1)
-# 		self.lsync_spin.setKeyboardTracking(0)
-# 		self.lsync_spin.setFocusPolicy(QtCore.Qt.StrongFocus)
-# 		self.lsync_spin.setValue(self.lsync)
-# 		self.lsync_spin.setAlignment(QtCore.Qt.AlignRight)
-# 		self.layout.addWidget(self.lsync_spin,1,0,1,1)
-# 		self.lsync_spin.valueChanged.connect(self.lsync_changed)
-
-        self.lsync_indicator = QLineEdit()
-        self.lsync_indicator.setReadOnly(True)
-        self.lsync_indicator.setFixedHeight(25)
-        self.lsync_indicator.setText(str(self.lsync))
-        self.lsync_indicator.setAlignment(QtCore.Qt.AlignRight)
-        self.lsync_indicator.setFocusPolicy(QtCore.Qt.NoFocus)
-        self.layout.addWidget(self.lsync_indicator, 1,0,1,1,QtCore.Qt.AlignRight)
-        self.lsync_indicator.textChanged.connect(self.lsync_changed)
-
-        self.lsync_lbl = QLabel("MCLK cycles")
-        self.layout.addWidget(self.lsync_lbl,1,1,1,1,QtCore.Qt.AlignLeft)
-
-        self.lp_title = QLabel("line period")
-        self.layout.addWidget(self.lp_title,2,0,1,1,QtCore.Qt.AlignLeft)
-
-        self.line_period_indicator = QLineEdit()
-        self.line_period_indicator.setReadOnly(True)
-        self.line_period_indicator.setFixedHeight(25)
-        self.line_period_indicator.setText(str(8*(self.lsync)))
-        self.line_period_indicator.setAlignment(QtCore.Qt.AlignRight)
-        self.line_period_indicator.setFocusPolicy(QtCore.Qt.NoFocus)
-        self.layout.addWidget(self.line_period_indicator, 3,0,1,1,QtCore.Qt.AlignRight)
-
-        self.line_period_lbl = QLabel("ns")
-        self.layout.addWidget(self.line_period_lbl,3,1,1,1,QtCore.Qt.AlignLeft)
-
-        self.lp_title = QLabel("line rate")
-        self.layout.addWidget(self.lp_title,4,0,1,1,QtCore.Qt.AlignLeft)
-
-        self.line_freq_indicator = QLineEdit()
-        self.line_freq_indicator.setReadOnly(True)
-        self.line_freq_indicator.setFixedHeight(25)
-        self.line_freq_indicator.setText(str(125/(self.lsync))[:6])
-        self.line_freq_indicator.setAlignment(QtCore.Qt.AlignRight)
-        self.line_freq_indicator.setFocusPolicy(QtCore.Qt.NoFocus)
-        self.layout.addWidget(self.line_freq_indicator, 5,0,1,1,QtCore.Qt.AlignRight)
-
-        self.line_freq_lbl = QLabel("MHz")
-        self.layout.addWidget(self.line_freq_lbl,5,1,1,1,QtCore.Qt.AlignLeft)
-
-        self.lp_title = QLabel("frame period")
-        self.layout.addWidget(self.lp_title,2,2,1,1,QtCore.Qt.AlignLeft)
-
-        self.frame_period_indicator = QLineEdit()
-        self.frame_period_indicator.setReadOnly(True)
-        self.frame_period_indicator.setFixedHeight(25)
-        self.frame_period_indicator.setText(str(self.seqln*0.008*self.lsync)[:6])
-        self.frame_period_indicator.setAlignment(QtCore.Qt.AlignRight)
-        self.frame_period_indicator.setFocusPolicy(QtCore.Qt.NoFocus)
-        self.layout.addWidget(self.frame_period_indicator,3,2,1,1,QtCore.Qt.AlignRight)
-
-        self.frame_period_lbl = QLabel("\u00B5s")
-        self.layout.addWidget(self.frame_period_lbl,3,3,1,1,QtCore.Qt.AlignLeft)
-
-        self.lp_title = QLabel("frame rate")
-        self.layout.addWidget(self.lp_title,4,2,1,1,QtCore.Qt.AlignLeft)
-
-        self.frame_freq_indicator = QLineEdit()
-        self.frame_freq_indicator.setReadOnly(True)
-        self.frame_freq_indicator.setFixedHeight(25)
-        self.frame_freq_indicator.setText(str(125000/(self.lsync*self.seqln))[:6])
-        self.frame_freq_indicator.setAlignment(QtCore.Qt.AlignRight)
-        self.frame_freq_indicator.setFocusPolicy(QtCore.Qt.NoFocus)
-        self.layout.addWidget(self.frame_freq_indicator, 5,2,1,1,QtCore.Qt.AlignRight)
-
-        self.frame_freq_lbl = QLabel("kHz")
-        self.layout.addWidget(self.frame_freq_lbl,5,3,1,1,QtCore.Qt.AlignLeft)
-
-        self.resync_button = QPushButton(self, text = "RESYNC")
-        self.resync_button.setFixedWidth(125)
-        self.resync_button.setFixedHeight(25)
+        # Apply stylesheets that depend on runtime color values
         self.resync_button.setStyleSheet("background-color: #" + tc.green + ";")
-        self.layout.addWidget(self.resync_button,3,5,1,2,QtCore.Qt.AlignRight)
-        self.resync_button.clicked.connect(self.resync)
-
-        self.CLKstate_button = QToolButton(self, text = 'RUN')
-        self.CLKstate_button.setFixedHeight(25)
-        self.CLKstate_button.setCheckable(1)
-        self.CLKstate_button.setChecked(self.CLKstate)
         self.CLKstate_button.setStyleSheet("background-color: #" + tc.green + ";")
-        self.layout.addWidget(self.CLKstate_button,5,5,1,1,QtCore.Qt.AlignLeft)
-        self.CLKstate_button.toggled.connect(self.CLKstate_changed)
 
-        self.CLKstate_lbl = QLabel("line clock")
-        self.layout.addWidget(self.CLKstate_lbl,5,6,1,1,QtCore.Qt.AlignLeft)
+        # Set computed initial indicator text
+        self.lsync_indicator.setText(str(self.lsync))
+        self.line_period_indicator.setText(str(8*(self.lsync)))
+        self.line_freq_indicator.setText(str(125/(self.lsync))[:6])
+        self.frame_period_indicator.setText(str(self.seqln*0.008*self.lsync)[:6])
+        self.frame_freq_indicator.setText(str(125000/(self.lsync*self.seqln))[:6])
+
+        # Connect signals
+        self.lsync_indicator.textChanged.connect(self.lsync_changed)
+        self.resync_button.clicked.connect(self.resync)
+        self.CLKstate_button.toggled.connect(self.CLKstate_changed)
 
     '''
     self called methods
