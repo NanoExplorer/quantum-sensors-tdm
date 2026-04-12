@@ -89,6 +89,11 @@ class dfbcard(QWidget):
         log.debug(tc.INIT + "building DFBx2 card: slot", self.slot,
                   "/ address", self.address, tc.ENDC)
 
+        # this is a workaround to keep the layout the same
+        # under the constraint that the top level of the UI
+        # file gets loaded into the .layout member variable
+        # To avoid breaking things, .layout should stay a QGridLayout
+        # But as I understand it, a .ui file can't have a QGridLayout as its top level item
         _glb = QWidget()
         uic.loadUi(
             os.path.join(os.path.dirname(__file__), '../shared/card_global.ui'), _glb)
