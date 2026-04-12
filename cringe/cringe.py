@@ -9,7 +9,7 @@ import os
 
 import IPython  # ADDED JG
 
-from PyQt5 import QtGui, QtCore, QtWidgets
+from PyQt5 import QtGui, QtCore, QtWidgets, uic
 
 import named_serial
 
@@ -134,103 +134,69 @@ class Cringe(QtWidgets.QWidget):
         # 		self.cal_coeffs = [0,0,0,0,0,0,0]
         # 		self.appTrim =[0,0,0,0,0,0,0]
 
-        self.setWindowTitle("CRINGE: Save Before Exit Edition")  # Phase Offset Widget
-        self.setGeometry(30, 30, 800, 1000)
-        self.setContentsMargins(0, 0, 0, 0)
-        # 		self.setFixedWidth(1400)
-
-        self.layout_widget = QtWidgets.QWidget(self)
-        self.layout = QtWidgets.QGridLayout(self)
+        uic.loadUi(os.path.join(my_directory, 'cringe.ui'), self)
 
         log.debug(tc.INIT + tc.BOLD + "building GUI" + tc.ENDC)
 
-        '''
-        build widget for file management controls
-        '''
-        self.file_mgmt_widget = QtWidgets.QGroupBox(self)
-        # 		self.file_mgmt_widget.setFlat(1)
-        self.file_mgmt_widget.setFixedWidth(1080)
-        self.file_mgmt_widget.setFocusPolicy(QtCore.Qt.NoFocus)
-        self.file_mgmt_widget.setTitle("FILE MANAGEMENT INTERFACE")
+        # Apply stylesheets that depend on runtime color values
+        self.crate_power.setStyleSheet("background-color: #" + tc.green + ";")
+        self.server_lock.setStyleSheet("background-color: #" + tc.green + ";")
+        self.PS_button.setStyleSheet("background-color: #" + tc.red + ";")
+        self.tri_idx_button.setStyleSheet("background-color: #" + tc.red + ";")
 
-        self.file_mgmt_layout = QtWidgets.QGridLayout(self.file_mgmt_widget)
-        self.file_mgmt_layout.setContentsMargins(5, 5, 5, 5)
-        self.file_mgmt_layout.setSpacing(5)
-
-        self.loadsetup = QtWidgets.QPushButton(self, text="load setup")
-        self.loadsetup.setFixedHeight(25)
-        self.loadsetup.setEnabled(1)
-        self.file_mgmt_layout.addWidget(
-            self.loadsetup, 0, 0, 1, 1, QtCore.Qt.AlignLeft)
-        self.loadsetup.clicked.connect(self.loadSettings)
-
-        self.savesetup = QtWidgets.QPushButton(self, text="save setup")
-        self.savesetup.setFixedHeight(25)
-        self.savesetup.setEnabled(1)
-        self.file_mgmt_layout.addWidget(
-            self.savesetup, 0, 1, 1, 1, QtCore.Qt.AlignLeft)
-        self.savesetup.clicked.connect(self.saveSettings)
-
-        self.sendsetup = QtWidgets.QPushButton(self, text="re-assert setup")
-        self.sendsetup.setFixedHeight(25)
-        self.sendsetup.setEnabled(1)
-        self.file_mgmt_layout.addWidget(
-            self.sendsetup, 0, 2, 1, 1, QtCore.Qt.AlignLeft)
-        self.sendsetup.clicked.connect(self.assertSettings)
-
-        self.filenameEdit = QtWidgets.QLineEdit()
-        self.filenameEdit.setReadOnly(True)
-        self.file_mgmt_layout.addWidget(self.filenameEdit, 0, 4, 1, 4)
-
-        self.filename_label = QtWidgets.QLabel("file")
-        self.file_mgmt_layout.addWidget(
-            self.filename_label, 0, 3, 1, 1, QtCore.Qt.AlignRight)
-
-        self.layout.addWidget(self.file_mgmt_widget, 0, 0, 1, 2)
-
-        '''
-        build widget for SYSTEM GLOBALS header
-        '''
-        self.sys_glob_hdr_widget = QtWidgets.QGroupBox(self)
-        self.sys_glob_hdr_widget.setFixedWidth(1080)
-        self.sys_glob_hdr_widget.setFocusPolicy(QtCore.Qt.NoFocus)
-        self.sys_glob_hdr_widget.setTitle("SYSTEM GLOBALS")
-
-        self.sys_glob_layout = QtWidgets.QGridLayout(self.sys_glob_hdr_widget)
-        self.sys_glob_layout.setContentsMargins(5, 5, 5, 5)
-        self.sys_glob_layout.setSpacing(5)
-
-        self.seqln_spin = QtWidgets.QSpinBox()
-        self.seqln_spin.setRange(4, 64)
-        # 		self.seqln_spin.setFixedWidth(45)
-        self.seqln_spin.setSingleStep(1)
-        self.seqln_spin.setKeyboardTracking(0)
-        self.seqln_spin.setFocusPolicy(QtCore.Qt.StrongFocus)
+        # Set initial values from constructor arguments (override .ui defaults)
         self.seqln_spin.setValue(self.seqln)
-        self.seqln_spin.setAlignment(QtCore.Qt.AlignRight)
-        self.sys_glob_layout.addWidget(self.seqln_spin, 0, 0, 1, 1)
-        self.seqln_spin.valueChanged.connect(self.seqln_changed)
-
-        self.seqln_lbl = QtWidgets.QLabel("sequence length")
-        # 		self.seqln_lbl.setAlignment(QtCore.Qt.AlignLeft)
-        self.sys_glob_layout.addWidget(
-            self.seqln_lbl, 0, 1, 1, 1, QtCore.Qt.AlignLeft)
-
-        self.lsync_spin = QtWidgets.QSpinBox()
-        self.lsync_spin.setRange(20, 256)
-        # 		self.lsync_spin.setFixedWidth(45)
-        self.lsync_spin.setSingleStep(1)
-        self.lsync_spin.setKeyboardTracking(0)
-        self.lsync_spin.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.lsync_spin.setValue(self.lsync)
-        self.lsync_spin.setAlignment(QtCore.Qt.AlignRight)
-        self.sys_glob_layout.addWidget(self.lsync_spin, 0, 2, 1, 1)
+        self.server_lock.setChecked(self.locked)
+        self.RLD_frame.setChecked(self.RLD_track_state)
+        self.RLD_time.setChecked(not self.RLD_track_state)
+
+        # Set computed indicator text
+        self.ARLsense_eng_indicator.setText(str((self.ARLsense)/16.383)[:6])
+        self.RLDpos_eng_indicator.setText(str((self.RLDpos)*self.frame_period)[:6])
+        self.RLDneg_eng_indicator.setText(str(self.RLDneg*self.frame_period)[:6])
+        self.period_indicator.setText(str(2*(2**self.dwell_val)*(2**self.range_val)))
+        self.period_eng_indicator.setText(str(int(self.period_indicator.text())*self.lsync*0.008))
+        self.amp_indicator.setText(str((2**self.range_val)*self.step_val))
+        self.amp_eng_indicator.setText(str(int(self.amp_indicator.text())/16.383)[:6])
+        self.freq_eng_indicator.setText(str(1000/float(self.period_eng_indicator.text()))[:6])
+
+        # Connect signals
+        self.loadsetup.clicked.connect(self.loadSettings)
+        self.savesetup.clicked.connect(self.saveSettings)
+        self.sendsetup.clicked.connect(self.assertSettings)
+        self.seqln_spin.valueChanged.connect(self.seqln_changed)
         self.lsync_spin.valueChanged.connect(self.lsync_changed)
+        self.sys_glob_send.clicked.connect(self.send_all_sys_globals)
+        self.crate_power.toggled.connect(self.cratePower)
+        self.server_lock.toggled.connect(self.lockServer)
+        self.send_all_globals.clicked.connect(self.send_ALL_globals)
+        self.send_all_states_chns.clicked.connect(self.send_ALL_states_chns)
+        self.cal_system.clicked.connect(self.phcal_system)
+        self.resync_system.clicked.connect(self.system_resync)
+        self.full_init_button.clicked.connect(self.full_crate_init)
+        self.SETT_spin.valueChanged.connect(self.SETT_changed)
+        self.NSAMP_spin.valueChanged.connect(self.NSAMP_changed)
+        self.prop_delay_spin.valueChanged.connect(self.prop_delay_changed)
+        self.dfb_delay_spin.valueChanged.connect(self.dfb_delay_changed)
+        self.bad_delay_spin.valueChanged.connect(self.bad_delay_changed)
+        self.dfbx2_xpt_mode.currentIndexChanged.connect(self.dfbx2_XPT_changed)
+        self.tp_mode.currentIndexChanged.connect(self.TP_changed)
+        self.class_glb_send.clicked.connect(self.send_all_class_globals)
+        self.dfbclk_xpt_mode.currentIndexChanged.connect(self.dfbclk_XPT_changed)
+        self.PS_button.toggled.connect(self.PS_changed)
+        self.ARLsense_spin.valueChanged.connect(self.ARLsense_changed)
+        self.RLDpos_spin.valueChanged.connect(self.RLDpos_changed)
+        self.RLDneg_spin.valueChanged.connect(self.RLDneg_changed)
+        self.RLD_frame.clicked.connect(self.track_changed)
+        self.RLD_time.clicked.connect(self.track_changed)
+        self.dwell.valueChanged.connect(self.dwell_changed)
+        self.range.valueChanged.connect(self.range_changed)
+        self.step.valueChanged.connect(self.step_changed)
+        self.tri_idx_button.toggled.connect(self.tri_idx_changed)
+        self.tri_send.clicked.connect(self.send_triangle)
 
-        self.seqln_lbl = QtWidgets.QLabel("line period")
-        self.sys_glob_layout.addWidget(
-            self.seqln_lbl, 0, 3, 1, 2, QtCore.Qt.AlignLeft)
-
+        # Conditional debug button (not in .ui — depends on runtime verbosity)
         if log.verbosity >= logging.VERBOSITY_DEBUG:
             self.debug_full_tune_button = QtWidgets.QPushButton("debug: extern tune")
             self.debug_full_tune_button.setFixedHeight(25)
@@ -238,557 +204,11 @@ class Cringe(QtWidgets.QWidget):
                 self.debug_full_tune_button, 0, 3, 1, 2, QtCore.Qt.AlignLeft)
             self.debug_full_tune_button.clicked.connect(self.extern_tune)
 
-        self.sys_glob_send = QtWidgets.QPushButton(self, text="send system globals")
-        self.sys_glob_send.setFixedHeight(25)
-        # 		self.sys_glob_send.setFixedWidth(160)
-        self.sys_glob_layout.addWidget(
-            self.sys_glob_send, 0, 5, 1, 2, QtCore.Qt.AlignRight)
-        self.sys_glob_send.clicked.connect(self.send_all_sys_globals)
-
-        self.layout.addWidget(self.sys_glob_hdr_widget, 1,
-                              0, 1, 1, QtCore.Qt.AlignLeft)
-
-        '''
-        build widget for SYSTEM CONTROL header
-        '''
-        self.sys_control_hdr_widget = QtWidgets.QGroupBox(self)
-        self.sys_control_hdr_widget.setFixedWidth(1080)
-        self.sys_control_hdr_widget.setFocusPolicy(QtCore.Qt.NoFocus)
-        self.sys_control_hdr_widget.setTitle("SYSTEM CONTROL")
-
-        self.sys_control_layout = QtWidgets.QGridLayout(self.sys_control_hdr_widget)
-        self.sys_control_layout.setContentsMargins(5, 5, 5, 5)
-        self.sys_control_layout.setSpacing(5)
-
-        self.crate_power = QtWidgets.QToolButton(self, text='crate power ON')
-        self.crate_power.setFixedHeight(25)
-        self.crate_power.setCheckable(1)
-        self.crate_power.setChecked(1)
-        self.crate_power.setStyleSheet("background-color: #" + tc.green + ";")
-        # 		self.crate_power.setFixedWidth(160)
-        self.sys_control_layout.addWidget(
-            self.crate_power, 0, 0, 1, 1, QtCore.Qt.AlignLeft)
-        # 		self.crate_power.setEnabled(0)
-        self.crate_power.toggled.connect(self.cratePower)
-
-        self.server_lock = QtWidgets.QToolButton(self, text="server LOCK OFF")
-        self.server_lock.setToolTip(
-            "engage when SERVER is running to prevent changing of critical parameters")
-        self.server_lock.setFixedHeight(25)
-        self.server_lock.setCheckable(1)
-        self.server_lock.setChecked(self.locked)
-        self.server_lock.setStyleSheet("background-color: #" + tc.green + ";")
-        # 		self.resync_system.setFixedWidth(160)
-        self.sys_control_layout.addWidget(
-            self.server_lock, 0, 1, 1, 1)  # , QtCore.Qt.AlignLeft)
-        self.server_lock.toggled.connect(self.lockServer)
-
-        self.send_all_globals = QtWidgets.QPushButton(self, text="send globals")
-        self.send_all_globals.setFixedHeight(25)
-        # 		self.send_all_globals.setFixedWidth(160)
-        self.sys_control_layout.addWidget(
-            self.send_all_globals, 0, 2, 1, 1)  # , QtCore.Qt.AlignLeft)
-        self.send_all_globals.clicked.connect(self.send_ALL_globals)
-
-        self.send_all_states_chns = QtWidgets.QPushButton(self, text="send arrayed")
-        self.send_all_states_chns.setFixedHeight(25)
-        # 		self.send_all_states_chns.setFixedWidth(160)
-        self.sys_control_layout.addWidget(
-            self.send_all_states_chns, 0, 3, 1, 1)  # , QtCore.Qt.AlignLeft)
-        self.send_all_states_chns.clicked.connect(self.send_ALL_states_chns)
-
-        self.cal_system = QtWidgets.QPushButton(self, text="CALIBRATE")
-        self.cal_system.setFixedHeight(25)
-        # 		self.cal_system.setFixedWidth(160)
-        self.sys_control_layout.addWidget(
-            self.cal_system, 0, 4, 1, 1)  # , QtCore.Qt.AlignLeft)
-        self.cal_system.clicked.connect(self.phcal_system)
-
-        self.resync_system = QtWidgets.QPushButton(self, text="RESYNC")
-        self.resync_system.setFixedHeight(25)
-        # 		self.resync_system.setFixedWidth(160)
-        self.sys_control_layout.addWidget(
-            self.resync_system, 0, 5, 1, 1)  # , QtCore.Qt.AlignLeft)
-        self.resync_system.clicked.connect(self.system_resync)
-
-        self.full_init_button = QtWidgets.QPushButton(self, text="init")
-        self.full_init_button.setFixedHeight(25)
-        self.sys_control_layout.addWidget(self.full_init_button, 0, 6, 1, 1)
-        self.full_init_button.clicked.connect(self.full_crate_init)
-
-        self.layout.addWidget(self.sys_control_hdr_widget,
-                              1, 1, 1, 1, QtCore.Qt.AlignRight)
-
-        '''
-        build widget for CLASS GLOBALS header
-        '''
-        self.class_glob_hdr_widget = QtWidgets.QGroupBox(self)
-        self.class_glob_hdr_widget.setFixedWidth(1080)
-        self.class_glob_hdr_widget.setFocusPolicy(QtCore.Qt.NoFocus)
-        self.class_glob_hdr_widget.setTitle("DFB/BAD CLASS GLOBALS")
-
-        self.class_glob_layout = QtWidgets.QGridLayout(self.class_glob_hdr_widget)
-        self.class_glob_layout.setContentsMargins(5, 5, 5, 5)
-        self.class_glob_layout.setSpacing(5)
-
-        self.SETT_spin = QtWidgets.QSpinBox()
-        self.SETT_spin.setRange(0, 255)
-        self.SETT_spin.setSingleStep(1)
-        self.SETT_spin.setKeyboardTracking(0)
-        self.SETT_spin.setFocusPolicy(QtCore.Qt.StrongFocus)
-        self.SETT_spin.setValue(self.SETT)
-        self.SETT_spin.setAlignment(QtCore.Qt.AlignRight)
-        self.class_glob_layout.addWidget(self.SETT_spin, 0, 0, 1, 1)
-        self.SETT_spin.valueChanged.connect(self.SETT_changed)
-
-        self.SETT_spin_lbl = QtWidgets.QLabel("SETT")
-        self.class_glob_layout.addWidget(
-            self.SETT_spin_lbl, 0, 1, 1, 1, QtCore.Qt.AlignLeft)
-
-        self.NSAMP_spin = QtWidgets.QSpinBox()
-        self.NSAMP_spin.setRange(0, 255)
-        self.NSAMP_spin.setSingleStep(1)
-        self.NSAMP_spin.setKeyboardTracking(0)
-        self.NSAMP_spin.setFocusPolicy(QtCore.Qt.StrongFocus)
-        self.NSAMP_spin.setAlignment(QtCore.Qt.AlignRight)
-        self.NSAMP_spin.setValue(self.NSAMP)
-        self.class_glob_layout.addWidget(self.NSAMP_spin, 1, 0, 1, 1)
-        self.NSAMP_spin.valueChanged.connect(self.NSAMP_changed)
-
-        self.NSAMP_spin_lbl = QtWidgets.QLabel("NSAMP (SETT+NSAMP+2<=line period)")
-        self.class_glob_layout.addWidget(
-            self.NSAMP_spin_lbl, 1, 1, 1, 1, QtCore.Qt.AlignLeft)
-
-        self.prop_delay_spin = QtWidgets.QSpinBox()
-        self.prop_delay_spin.setRange(0, 15)
-        self.prop_delay_spin.setSingleStep(1)
-        self.prop_delay_spin.setKeyboardTracking(0)
-        self.prop_delay_spin.setFocusPolicy(QtCore.Qt.StrongFocus)
-        self.prop_delay_spin.setValue(self.prop_delay)
-        self.prop_delay_spin.setAlignment(QtCore.Qt.AlignRight)
-        self.class_glob_layout.addWidget(self.prop_delay_spin, 0, 2, 1, 1)
-        self.prop_delay_spin.valueChanged.connect(self.prop_delay_changed)
-
-        self.prop_delay_lbl = QtWidgets.QLabel("DFB prop delay")
-        self.class_glob_layout.addWidget(
-            self.prop_delay_lbl, 0, 3, 1, 1, QtCore.Qt.AlignLeft)
-
-        self.dfb_delay_spin = QtWidgets.QSpinBox()
-        self.dfb_delay_spin.setRange(0, 15)
-        self.dfb_delay_spin.setSingleStep(1)
-        self.dfb_delay_spin.setKeyboardTracking(0)
-        self.dfb_delay_spin.setFocusPolicy(QtCore.Qt.StrongFocus)
-        self.dfb_delay_spin.setValue(self.dfb_delay)
-        self.dfb_delay_spin.setAlignment(QtCore.Qt.AlignRight)
-        self.class_glob_layout.addWidget(self.dfb_delay_spin, 0, 4, 1, 1)
-        self.dfb_delay_spin.valueChanged.connect(self.dfb_delay_changed)
-
-        self.card_delay_lbl = QtWidgets.QLabel("DFB card delay")
-        self.class_glob_layout.addWidget(
-            self.card_delay_lbl, 0, 5, 1, 1, QtCore.Qt.AlignLeft)
-
-        self.bad_delay_spin = QtWidgets.QSpinBox()
-        self.bad_delay_spin.setRange(0, 15)
-        self.bad_delay_spin.setSingleStep(1)
-        self.bad_delay_spin.setKeyboardTracking(0)
-        self.bad_delay_spin.setFocusPolicy(QtCore.Qt.StrongFocus)
-        self.bad_delay_spin.setValue(self.bad_delay)
-        self.bad_delay_spin.setAlignment(QtCore.Qt.AlignRight)
-        self.class_glob_layout.addWidget(self.bad_delay_spin, 1, 4, 1, 1)
-        self.bad_delay_spin.valueChanged.connect(self.bad_delay_changed)
-
-        self.card_delay_lbl = QtWidgets.QLabel("BAD16 card delay")
-        self.class_glob_layout.addWidget(
-            self.card_delay_lbl, 1, 5, 1, 1, QtCore.Qt.AlignLeft)
-
-        self.dfbx2_xpt_mode = QtWidgets.QComboBox()
-        self.dfbx2_xpt_mode.setFixedHeight(25)
-        self.dfbx2_xpt_mode.addItem('0: A-C-B-D')
-        self.dfbx2_xpt_mode.addItem('1: C-A-D-B')
-        self.dfbx2_xpt_mode.addItem('2: B-D-A-C')
-        self.dfbx2_xpt_mode.addItem('3: D-B-C-A')
-        self.dfbx2_xpt_mode.addItem('4: A-B-C-D')
-        self.dfbx2_xpt_mode.addItem('5: C-D-A-B')
-        self.dfbx2_xpt_mode.addItem('6: B-A-D-C')
-        self.dfbx2_xpt_mode.addItem('7: D-C-B-A')
-        self.class_glob_layout.addWidget(self.dfbx2_xpt_mode, 0, 6, 1, 1)
-        self.dfbx2_xpt_mode.currentIndexChanged.connect(self.dfbx2_XPT_changed)
-
-        self.status_lbl = QtWidgets.QLabel("DFBx2 XPT mode")
-        self.class_glob_layout.addWidget(
-            self.status_lbl, 0, 7, 1, 1, QtCore.Qt.AlignLeft)
-
-        self.tp_mode = QtWidgets.QComboBox()
-        self.tp_mode.setFixedHeight(25)
-        self.tp_mode.addItem('DEADBEEF')
-        self.tp_mode.addItem('55555555')
-        self.tp_mode.addItem('AAAAAAAA')
-        self.tp_mode.addItem('33333333')
-        self.tp_mode.addItem('0F0F0F0F')
-        self.tp_mode.addItem('00FF00FF')
-        self.tp_mode.addItem('0000FFFF')
-        self.tp_mode.addItem('00000000')
-        self.tp_mode.addItem('FFFFFFFF')
-        self.tp_mode.addItem('8BADF00D')
-        self.class_glob_layout.addWidget(self.tp_mode, 0, 8, 1, 1)
-        self.tp_mode.currentIndexChanged.connect(self.TP_changed)
-
-        self.status_lbl = QtWidgets.QLabel("test pattern")
-        self.class_glob_layout.addWidget(
-            self.status_lbl, 0, 9, 1, 1, QtCore.Qt.AlignLeft)
-
-        self.class_glb_send = QtWidgets.QPushButton(self, text="send class globals")
-        self.class_glb_send.setFixedHeight(25)
-        self.class_glb_send.setFixedWidth(200)
-        self.class_glob_layout.addWidget(
-            self.class_glb_send, 0, 10, 1, 1, QtCore.Qt.AlignLeft)
-        self.class_glb_send.clicked.connect(self.send_all_class_globals)
-
-        self.dfbclk_xpt_mode = QtWidgets.QComboBox()
-        self.dfbclk_xpt_mode.setFixedHeight(25)
-        self.dfbclk_xpt_mode.setToolTip(
-            "MCLK & LSYNC are hard wired to data pipes 1 & 2, choose mode 5 to get CH1 data on A/B")
-        self.dfbclk_xpt_mode.addItem('0: FANOUT')
-        self.dfbclk_xpt_mode.addItem('1: BKPLN')
-        self.dfbclk_xpt_mode.addItem('2: SYNC25')
-        self.dfbclk_xpt_mode.addItem('3: SYNC10')
-        self.dfbclk_xpt_mode.addItem('4: M-L-C-D')
-        self.dfbclk_xpt_mode.addItem('5: M-L-A-B')
-        self.dfbclk_xpt_mode.addItem('6: M-L-D-C')
-        self.dfbclk_xpt_mode.addItem('7: M-L-B-A')
-        self.dfbclk_xpt_mode.setToolTip(
-            "FANOUT = M-L-M-L, BKPLN = M-L-LSYNC-FRSYNC, SYNC25 = M-L-25-25, SYNC10 = M-L-10-10")
-        self.dfbclk_xpt_mode.setCurrentIndex(5)
-        self.class_glob_layout.addWidget(self.dfbclk_xpt_mode, 1, 6, 1, 1)
-        self.dfbclk_xpt_mode.currentIndexChanged.connect(
-            self.dfbclk_XPT_changed)
-
-        self.status_lbl = QtWidgets.QLabel("DFBCLK XPT mode")
-        self.class_glob_layout.addWidget(
-            self.status_lbl, 1, 7, 1, 1, QtCore.Qt.AlignLeft)
-
-        self.PS_button = QtWidgets.QToolButton(self, text='PS')
-        self.PS_button.setFixedHeight(25)
-        self.PS_button.setCheckable(1)
-        self.PS_button.setChecked(self.PS)
-        self.PS_button.setStyleSheet("background-color: #" + tc.red + ";")
-        self.class_glob_layout.addWidget(
-            self.PS_button, 1, 8, 1, 1, QtCore.Qt.AlignRight)
-        self.PS_button.toggled.connect(self.PS_changed)
-
-        self.status_lbl = QtWidgets.QLabel("parallel stream")
-        self.class_glob_layout.addWidget(
-            self.status_lbl, 1, 9, 1, 1, QtCore.Qt.AlignLeft)
-
-        self.layout.addWidget(self.class_glob_hdr_widget, 2, 0, 1, 2)
-
-        '''
-        build widget for ARL control
-        '''
-        self.arl_widget = QtWidgets.QGroupBox(self)
-        # 		self.tri_wvfm_widget.setFixedHeight(25)
-        self.arl_widget.setTitle("DFB AUTO RELOCK CONTROL")
-        self.arl_layout = QtWidgets.QGridLayout(self.arl_widget)
-        self.arl_layout.setContentsMargins(5, 5, 5, 5)
-        self.arl_layout.setSpacing(5)
-
-        ''' flux jump threshold '''
-
-        self.ARLsense_title = QtWidgets.QLabel("flux jump threshold")
-        self.arl_layout.addWidget(
-            self.ARLsense_title, 0, 0, 1, 1, QtCore.Qt.AlignRight)
-
-        # 		self.ARLsense_vernier = QRadioButton(self, text = "vernier")
-        # 		self.ARLsense_vernier.setCheckable(1)
-        # 		self.ARLsense_vernier.setChecked(0)
-        # 		self.arl_layout.addWidget(self.ARLsense_vernier,1,0,1,1,QtCore.Qt.AlignLeft)
-
-        self.ARLsense_spin = QtWidgets.QSpinBox()
-        self.ARLsense_spin.setRange(0, 16383)
-        self.ARLsense_spin.setFixedHeight(25)
-        self.ARLsense_spin.setSingleStep(256)
-        self.ARLsense_spin.setKeyboardTracking(0)
-        self.ARLsense_spin.setFocusPolicy(QtCore.Qt.StrongFocus)
-        self.ARLsense_spin.setValue(self.ARLsense)
-        self.arl_layout.addWidget(
-            self.ARLsense_spin, 1, 0, 1, 1, QtCore.Qt.AlignRight)
-        self.ARLsense_spin.valueChanged.connect(self.ARLsense_changed)
-
-        # 		self.ARLsense_lbl = QLabel("2^N index")
-        # 		self.arl_layout.addWidget(self.ARLsense_lbl,1,2,1,1,QtCore.Qt.AlignLeft)
-
-        # 		self.ARLsense_indicator = QLineEdit()
-        # 		self.ARLsense_indicator.setReadOnly(True)
-        # 		self.ARLsense_indicator.setFixedHeight(25)
-        # 		self.ARLsense_indicator.setText('%5i'%(self.ARLsense))
-        # 		self.ARLsense_indicator.setAlignment(QtCore.Qt.AlignRight)
-        # 		self.ARLsense_indicator.setFocusPolicy(QtCore.Qt.NoFocus)
-        # 		self.arl_layout.addWidget(self.ARLsense_indicator, 2,0,1,2,QtCore.Qt.AlignRight)
-
-        self.ARLsense_indicator_lbl = QtWidgets.QLabel("DAC units")
-        self.arl_layout.addWidget(
-            self.ARLsense_indicator_lbl, 1, 1, 1, 1, QtCore.Qt.AlignLeft)
-
-        self.ARLsense_eng_indicator = QtWidgets.QLineEdit()
-        self.ARLsense_eng_indicator.setReadOnly(True)
-        self.ARLsense_eng_indicator.setFixedHeight(25)
-        self.ARLsense_eng_indicator.setText(str((self.ARLsense)/16.383)[:6])
-        self.ARLsense_eng_indicator.setAlignment(QtCore.Qt.AlignRight)
-        self.ARLsense_eng_indicator.setFocusPolicy(QtCore.Qt.NoFocus)
-        self.arl_layout.addWidget(
-            self.ARLsense_eng_indicator, 2, 0, 1, 1, QtCore.Qt.AlignRight)
-
-        self.ARLsense_eng_indicator_lbl = QtWidgets.QLabel("mV")
-        self.arl_layout.addWidget(
-            self.ARLsense_eng_indicator_lbl, 2, 1, 1, 1, QtCore.Qt.AlignLeft)
-
-        ''' [+] event reset delay '''
-
-        self.RLDpos_title = QtWidgets.QLabel("[+] event reset delay")
-        self.arl_layout.addWidget(
-            self.RLDpos_title, 0, 2, 1, 1, QtCore.Qt.AlignRight)
-
-        self.RLDpos_spin = QtWidgets.QSpinBox()
-        self.RLDpos_spin.setRange(1, 65535)
-        self.RLDpos_spin.setFixedHeight(25)
-        self.RLDpos_spin.setSingleStep(16)
-        self.RLDpos_spin.setKeyboardTracking(0)
-        self.RLDpos_spin.setFocusPolicy(QtCore.Qt.StrongFocus)
-        self.RLDpos_spin.setValue(self.RLDpos)
-        self.arl_layout.addWidget(
-            self.RLDpos_spin, 1, 2, 1, 1, QtCore.Qt.AlignRight)
-        self.RLDpos_spin.valueChanged.connect(self.RLDpos_changed)
-
-        self.RLDpos_indicator_lbl = QtWidgets.QLabel("FRM units")
-        self.arl_layout.addWidget(
-            self.RLDpos_indicator_lbl, 1, 3, 1, 1, QtCore.Qt.AlignLeft)
-
-        self.RLDpos_eng_indicator = QtWidgets.QLineEdit()
-        self.RLDpos_eng_indicator.setReadOnly(True)
-        self.RLDpos_eng_indicator.setFixedHeight(25)
-        self.RLDpos_eng_indicator.setText(
-            str((self.RLDpos)*self.frame_period)[:6])
-        self.RLDpos_eng_indicator.setAlignment(QtCore.Qt.AlignRight)
-        self.RLDpos_eng_indicator.setFocusPolicy(QtCore.Qt.NoFocus)
-        self.arl_layout.addWidget(
-            self.RLDpos_eng_indicator, 2, 2, 1, 1, QtCore.Qt.AlignRight)
-        # 		self.RLDpos_eng_indicator.textChanged.connect(self.RLDwarning)
-
-        self.RLDpos_eng_indicator_lbl = QtWidgets.QLabel("\u00B5s")
-        self.arl_layout.addWidget(
-            self.RLDpos_eng_indicator_lbl, 2, 3, 1, 1, QtCore.Qt.AlignLeft)
-
-        ''' [-] event reset delay '''
-
-        self.RLDneg_title = QtWidgets.QLabel("[-] event reset delay")
-        self.arl_layout.addWidget(
-            self.RLDneg_title, 0, 4, 1, 1, QtCore.Qt.AlignRight)
-
-        self.RLDneg_spin = QtWidgets.QSpinBox()
-        self.RLDneg_spin.setRange(1, 65535)
-        self.RLDneg_spin.setFixedHeight(25)
-        self.RLDneg_spin.setSingleStep(16)
-        self.RLDneg_spin.setKeyboardTracking(0)
-        self.RLDneg_spin.setFocusPolicy(QtCore.Qt.StrongFocus)
-        self.RLDneg_spin.setValue(self.RLDneg)
-        self.arl_layout.addWidget(
-            self.RLDneg_spin, 1, 4, 1, 1, QtCore.Qt.AlignRight)
-        self.RLDneg_spin.valueChanged.connect(self.RLDneg_changed)
-
-        self.RLDneg_indicator_lbl = QtWidgets.QLabel("FRM units")
-        self.arl_layout.addWidget(
-            self.RLDneg_indicator_lbl, 1, 5, 1, 1, QtCore.Qt.AlignLeft)
-
-        self.RLDneg_eng_indicator = QtWidgets.QLineEdit()
-        self.RLDneg_eng_indicator.setReadOnly(True)
-        self.RLDneg_eng_indicator.setFixedHeight(25)
-        self.RLDneg_eng_indicator.setText(
-            str(self.RLDneg*self.frame_period)[:6])
-        self.RLDneg_eng_indicator.setAlignment(QtCore.Qt.AlignRight)
-        self.RLDneg_eng_indicator.setFocusPolicy(QtCore.Qt.NoFocus)
-        self.arl_layout.addWidget(
-            self.RLDneg_eng_indicator, 2, 4, 1, 1, QtCore.Qt.AlignRight)
-        # 		self.RLDneg_eng_indicator.textChanged.connect(self.RLDwarning)
-
-        self.RLDneg_eng_indicator_lbl = QtWidgets.QLabel("\u00B5s")
-        self.arl_layout.addWidget(
-            self.RLDneg_eng_indicator_lbl, 2, 5, 1, 1, QtCore.Qt.AlignLeft)
-
-        ''' track control '''
-
-        self.RLD_track = QtWidgets.QLabel("track")
-        self.arl_layout.addWidget(
-            self.RLD_track, 0, 6, 1, 1, QtCore.Qt.AlignLeft)
-
-        self.RLD_frame = QtWidgets.QRadioButton(self, text="frame")
-        self.RLD_frame.setCheckable(1)
-        self.RLD_frame.setChecked(self.RLD_track_state)
-        self.arl_layout.addWidget(
-            self.RLD_frame, 1, 6, 1, 1, QtCore.Qt.AlignLeft)
-        self.RLD_frame.clicked.connect(self.track_changed)
-
-        self.RLD_time = QtWidgets.QRadioButton(self, text="time")
-        self.RLD_time.setCheckable(1)
-        self.RLD_time.setChecked(not(self.RLD_track_state))
-        self.arl_layout.addWidget(
-            self.RLD_time, 2, 6, 1, 1, QtCore.Qt.AlignLeft)
-        self.RLD_time.clicked.connect(self.track_changed)
-
-        self.layout.addWidget(self.arl_widget, 3, 0, 1, 1)
-
-        '''
-        build widget for Triangle Waveform Generator
-        '''
-        self.tri_wvfm_widget = QtWidgets.QGroupBox(self)
-        self.tri_wvfm_widget.setTitle("DFB/BAD TRIANGLE WAVEFORM GENERATOR")
-        self.tri_wvfm_layout = QtWidgets.QGridLayout(self.tri_wvfm_widget)
-        self.tri_wvfm_layout.setContentsMargins(5, 5, 5, 5)
-        self.tri_wvfm_layout.setSpacing(5)
-
-        self.dwell = QtWidgets.QSpinBox()
-        self.dwell.setRange(0, 15)
-        self.dwell.setFixedHeight(25)
-        self.dwell.setSingleStep(1)
-        self.dwell.setKeyboardTracking(0)
-        self.dwell.setFocusPolicy(QtCore.Qt.StrongFocus)
-        self.dwell.setValue(self.dwell_val)
-        self.tri_wvfm_layout.addWidget(
-            self.dwell, 0, 0, 1, 1, QtCore.Qt.AlignRight)
-        self.dwell.valueChanged.connect(self.dwell_changed)
-
-        self.dwell_lbl = QtWidgets.QLabel("dwell (2^N)")
-        self.tri_wvfm_layout.addWidget(
-            self.dwell_lbl, 0, 1, 1, 1, QtCore.Qt.AlignLeft)
-
-        self.range = QtWidgets.QSpinBox()
-        self.range.setRange(1, 14)
-        self.range.setFixedHeight(25)
-        self.range.setSingleStep(1)
-        self.range.setKeyboardTracking(0)
-        self.range.setFocusPolicy(QtCore.Qt.StrongFocus)
-        self.range.setValue(self.range_val)
-        self.tri_wvfm_layout.addWidget(
-            self.range, 0, 2, 1, 1, QtCore.Qt.AlignRight)
-        self.range.valueChanged.connect(self.range_changed)
-
-        self.range_lbl = QtWidgets.QLabel("steps (2^N)")
-        self.tri_wvfm_layout.addWidget(
-            self.range_lbl, 0, 3, 1, 1, QtCore.Qt.AlignLeft)
-
-        self.step = QtWidgets.QSpinBox()
-        self.step.setRange(1, 16383)
-        self.step.setFixedHeight(25)
-        self.step.setSingleStep(1)
-        self.step.setKeyboardTracking(0)
-        self.step.setFocusPolicy(QtCore.Qt.StrongFocus)
-        self.step.setValue(self.step_val)
-        self.tri_wvfm_layout.addWidget(
-            self.step, 0, 4, 1, 1, QtCore.Qt.AlignRight)
-        self.step.valueChanged.connect(self.step_changed)
-
-        self.step_lbl = QtWidgets.QLabel("step size")
-        self.tri_wvfm_layout.addWidget(
-            self.step_lbl, 0, 5, 1, 1, QtCore.Qt.AlignLeft)
-
-        self.period_indicator = QtWidgets.QLineEdit()
-        self.period_indicator.setReadOnly(True)
-        # 		self.period_indicator.setFixedWidth(120)
-        self.period_indicator.setText(
-            str(2*(2**self.dwell_val)*(2**self.range_val)))
-        self.period_indicator.setAlignment(QtCore.Qt.AlignRight)
-        self.period_indicator.setFocusPolicy(QtCore.Qt.NoFocus)
-        self.tri_wvfm_layout.addWidget(
-            self.period_indicator, 2, 0, 1, 1, QtCore.Qt.AlignRight)
-
-        self.period_indicator_lbl =QtWidgets. QLabel("period")
-        self.tri_wvfm_layout.addWidget(
-            self.period_indicator_lbl, 2, 1, 1, 1, QtCore.Qt.AlignLeft)
-
-        self.period_eng_indicator = QtWidgets.QLineEdit()
-        self.period_eng_indicator.setReadOnly(True)
-        # 		self.period_eng_indicator.setFixedWidth(120)
-        # 		self.period_eng_indicator.setText(str(2*(2**self.dwell_val)*(2**self.range_val)))
-        self.period_eng_indicator.setText(
-            str(int(self.period_indicator.text())*self.lsync*0.008))
-        self.period_eng_indicator.setAlignment(QtCore.Qt.AlignRight)
-        self.period_eng_indicator.setFocusPolicy(QtCore.Qt.NoFocus)
-        self.tri_wvfm_layout.addWidget(
-            self.period_eng_indicator, 3, 0, 1, 1, QtCore.Qt.AlignRight)
-
-        self.period_eng_indicator_lbl = QtWidgets.QLabel("period [""\u00B5s]")
-        self.tri_wvfm_layout.addWidget(
-            self.period_eng_indicator_lbl, 3, 1, 1, 1, QtCore.Qt.AlignLeft)
-
-        self.amp_indicator = QtWidgets.QLineEdit()
-        self.amp_indicator.setReadOnly(True)
-        # 		self.amp_indicator.setFixedWidth(80)
-        self.amp_indicator.setText(str((2**self.range_val)*self.step_val))
-        self.amp_indicator.setAlignment(QtCore.Qt.AlignRight)
-        self.amp_indicator.setFocusPolicy(QtCore.Qt.NoFocus)
-        self.tri_wvfm_layout.addWidget(
-            self.amp_indicator, 2, 2, 1, 1, QtCore.Qt.AlignRight)
-
-        self.amp_indicator_lbl = QtWidgets.QLabel("amplitude")
-        self.tri_wvfm_layout.addWidget(
-            self.amp_indicator_lbl, 2, 3, 1, 1, QtCore.Qt.AlignLeft)
-
-        self.amp_eng_indicator = QtWidgets.QLineEdit()
-        self.amp_eng_indicator.setReadOnly(True)
-        # 		self.amp_eng_indicator.setFixedWidth(80)
-        self.amp_eng_indicator.setText(
-            str(int(self.amp_indicator.text())/16.383)[:6])
-        self.amp_eng_indicator.setAlignment(QtCore.Qt.AlignRight)
-        self.amp_eng_indicator.setFocusPolicy(QtCore.Qt.NoFocus)
-        self.tri_wvfm_layout.addWidget(
-            self.amp_eng_indicator, 3, 2, 1, 1, QtCore.Qt.AlignRight)
-
-        self.amp_eng_indicator_lbl = QtWidgets.QLabel("amplitude [mV]")
-        self.tri_wvfm_layout.addWidget(
-            self.amp_eng_indicator_lbl, 3, 3, 1, 1, QtCore.Qt.AlignLeft)
-
-        self.tri_idx_button = QtWidgets.QToolButton(self, text='LSYNC')
-        self.tri_idx_button.setFixedHeight(25)
-        self.tri_idx_button.setCheckable(1)
-        self.tri_idx_button.setChecked(self.tri_idx)
-        self.tri_idx_button.setStyleSheet("background-color: #" + tc.red + ";")
-        self.tri_wvfm_layout.addWidget(
-            self.tri_idx_button, 0, 6, 1, 1, QtCore.Qt.AlignRight)
-        self.tri_idx_button.toggled.connect(self.tri_idx_changed)
-
-        self.tri_idx_lbl = QtWidgets.QLabel("timebase")
-        self.tri_wvfm_layout.addWidget(
-            self.tri_idx_lbl, 0, 7, 1, 1, QtCore.Qt.AlignLeft)
-
-        self.tri_send = QtWidgets.QPushButton(self, text="send triangle")
-        self.tri_send.setFixedHeight(25)
-        self.tri_send.setFixedWidth(200)
-        self.tri_wvfm_layout.addWidget(
-            self.tri_send, 2, 4, 1, 4, QtCore.Qt.AlignRight)
-        self.tri_send.clicked.connect(self.send_triangle)
-
-        self.freq_eng_indicator = QtWidgets.QLineEdit()
-        self.freq_eng_indicator.setReadOnly(True)
-        # 		self.freq_eng_indicator.setFixedWidth(80)
-        self.freq_eng_indicator.setText(
-            str(1000/float(self.period_eng_indicator.text()))[:6])
-        self.freq_eng_indicator.setAlignment(QtCore.Qt.AlignRight)
-        self.freq_eng_indicator.setFocusPolicy(QtCore.Qt.NoFocus)
-        self.tri_wvfm_layout.addWidget(
-            self.freq_eng_indicator, 3, 4, 1, 1, QtCore.Qt.AlignRight)
-
-        self.amp_eng_indicator_lbl = QtWidgets.QLabel("freq [kHz]")
-        self.tri_wvfm_layout.addWidget(
-            self.amp_eng_indicator_lbl, 3, 5, 1, 1, QtCore.Qt.AlignLeft)
-
-        self.layout.addWidget(self.tri_wvfm_widget, 3, 1,
-                              1, 1, QtCore.Qt.AlignRight)
+        log.debug(tc.INIT + tc.BOLD + "building GUI" + tc.ENDC)
 
         '''
         build tab widget for crate cards
         '''
-        self.crate_widget = QtWidgets.QTabWidget(self)
-        self.crate_widget.setTabShape(1)
-
         for idx, val in enumerate(self.class_vector):
             if val == "DFBCLK":
                 self.card_widget = dfbclkcard(
@@ -796,17 +216,13 @@ class Cringe(QtWidgets.QWidget):
                 tab_lbl = " DFBx1CLK: " + \
                     str(self.slot_vector[idx]) + "/" + \
                     str(self.addr_vector[idx]) + " "
-                self.scale_factor = self.card_widget.dfbclk_widget1.state_vectors[0].width(
-                )
+                self.scale_factor = self.card_widget.dfbclk_widget1.state_vectors[0].width()
             if val == "DFBx2":
                 self.card_widget = dfbcard(
                     parent=self, addr=self.addr_vector[idx], slot=self.slot_vector[idx], seqln=self.seqln, lsync=self.lsync)
-                # 				self.card_widget.setStyleSheet("background-color: #" + tc.grey + ";color : #" + tc.white)
                 tab_lbl = " DFBx2: " + \
                     str(self.slot_vector[idx]) + "/" + \
                     str(self.addr_vector[idx]) + " "
-            # 				tab_lbl.setStyleSheet("background-color: #" + tc.grey + ";color : #" + tc.white)
-            # 				self.scale_factor = self.card_widget.dfbx2_widget1.state_vectors[0].width()
             if val == "BAD16":
                 self.card_widget = badcard(
                     parent=self, addr=self.addr_vector[idx], slot=self.slot_vector[idx], seqln=self.seqln, lsync=self.lsync)
@@ -843,41 +259,9 @@ class Cringe(QtWidgets.QWidget):
 
         log.debug("code checkpoint 1")
 
-        # 		'''
-        # 		create TABs for embedding DFBx1CLK functional widget
-        # 		'''
-        # 		self.card_widget = dfbclkcard(parent=self, addr=1, slot=1, seqln=self.seqln, lsync=self.lsync)
-        # 		self.crate_widgets.append(self.card_widget)
-        # 		self.crate_widget.addTab(self.card_widget, "DFBx1CLK: 1/1")
-        #
-        # 		'''
-        # 		create TABs for embedding DFBx2 functional widgets
-        # 		'''
-        # 		self.card_widget = dfbcard(parent=self, addr=3, slot=3, seqln=self.seqln, lsync=self.lsync)
-        # # 		self.scale_factor = self.card_widget.dfbx2_widget1.width()
-        # 		self.scale_factor = self.card_widget.dfbx2_widget1.state_vectors[0].width()
-        # 		self.crate_widgets.append(self.card_widget)
-        # 		self.crate_widget.addTab(self.card_widget, "DFBx2:3/3")
-        #
-        # 		self.card_widget = dfbcard(parent=self, addr=5, slot=4, seqln=self.seqln, lsync=self.lsync)
-        # 		self.crate_widgets.append(self.card_widget)
-        # 		self.crate_widget.addTab(self.card_widget, "DFBx2:4/5")
-        #
-        # 		'''
-        # 		create TAB for embedding BAD16 functional widgets
-        # 		'''
-        # 		self.card_widget = badcard(parent=self, addr=33, slot=10, seqln=self.seqln, lsync=self.lsync)
-        # 		self.crate_widgets.append(self.card_widget)
-        # 		self.crate_widget.addTab(self.card_widget, "BAD16:10/33")
-
-        '''build crate TAB widget'''
-        self.layout.addWidget(self.crate_widget, 4, 0, 1, 2)
-
         '''
         resize widgets for relative, platform dependent variability
         '''
-        # 		self.scale_factor = self.dfbcard_widget1.dfbx2_widget1.width()
-        # 		print self.scale_factor
         rm = 90
         self.file_mgmt_widget.setFixedWidth(int(self.scale_factor + rm))
         self.sys_glob_hdr_widget.setFixedWidth(int(self.scale_factor/2 + rm/3))
@@ -886,8 +270,6 @@ class Cringe(QtWidgets.QWidget):
         self.class_glob_hdr_widget.setFixedWidth(int(self.scale_factor + rm))
         self.arl_widget.setFixedWidth(int(self.scale_factor/2+rm/3))
         self.tri_wvfm_widget.setFixedWidth(int(self.scale_factor/2+rm/3))
-        # 		self.card_glb_widget.setFixedWidth(self.dfbx2card_widget1.width()/2+10)
-        # 		self.class_interface_widget.setFixedWidth(self.dfbx2card_widget1.width()/2+10)
         self.setFixedWidth(int(self.scale_factor + rm + 20))
         self.setFixedHeight(1000)
 
