@@ -38,13 +38,11 @@ class TowerCard(QWidget):
 
         self.towerchannels = []
         for i in range(8):
-            tc = towerchannel.TowerChannel(
-                parent=self,
-                chn=i,
-                cardaddr=self.address,
-                serialport=serialport,
-                shockvalue=shockvalue
-            )
+            tc = towerchannel.TowerChannel(parent=self,
+                                           chn=i,
+                                           cardaddr=self.address,
+                                           serialport=serialport,
+                                           shockvalue=shockvalue)
             self.layout.addWidget(tc, 0, i + 2, 1, 1)
             self.towerchannels.append(tc)
 
@@ -53,8 +51,7 @@ class TowerCard(QWidget):
             chn=-1,
             cardaddr=self.address,
             serialport=serialport,
-            dummy=True
-        )
+            dummy=True)
         self.layout.addWidget(self.allcontrolchannel, 0, 10, 1, 1)
 
         self.shockbutton = QPushButton("shock")
@@ -79,11 +76,10 @@ class TowerCard(QWidget):
         oldvalues = [tcard.dacspin.value() for tcard in self.towerchannels]
         for tcard in self.towerchannels:
             tcard.dacspin.setValue(tcard.shockvalue)
-        log.debug(("sleeping for %0.2f seconds"%self.shocksleepseconds))
+        log.debug(("sleeping for %0.2f seconds" % self.shocksleepseconds))
         time.sleep(self.shocksleepseconds)
         for (tcard, oldvalue) in zip(self.towerchannels, oldvalues):
             tcard.dacspin.setValue(oldvalue)
-
 
     def gored(self):
         self.shockbutton.setStyleSheet("background-color: #" + tc.red + ";")
@@ -102,6 +98,6 @@ class TowerCard(QWidget):
             'chn': self.a2d_lockpt_spin.value(),
             'serialport': self.d2a_A_spin.value()
         }
+
     def unpackState(self, loadState):
         self.TriA_button.setChecked(loadState['triA'])
-

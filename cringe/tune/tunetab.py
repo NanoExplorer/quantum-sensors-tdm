@@ -1,7 +1,4 @@
 # -*- coding: utf-8 -*-
-import sys
-import optparse
-import struct
 import time
 import pickle
 import os.path
@@ -10,8 +7,8 @@ from PyQt5 import QtGui, QtCore, QtWidgets
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
-#from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
-#from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as NavigationToolbar
+# from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
+# from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as NavigationToolbar
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
 
@@ -204,8 +201,8 @@ class VPhiDemo(QWidget):
         for i, dfbrap in enumerate(self.mm.dfbraps):
             self.mm.setdfballrow(col=i, d2aA=i)
         data = self.c.getNewData(0.1, minimumNumPoints=1)
-        fba = data[0, 0, :, 1]  # feedback
-        err = data[0, 0, :, 0]  # error
+        # fba = data[0, 0, :, 1]  # feedback
+        # err = data[0, 0, :, 0]  # error
         np.save(get_savepath("last_learn_columns_data"), data)
         new_dfbraps = []
         for col in range(data.shape[0]):
@@ -237,8 +234,8 @@ class VPhiDemo(QWidget):
         self.mm.settriangleparams(tridwell, tristeps, tristepsize)
         self.mm.setdfball(tria=1)
         data = self.c.getNewData(0.1, minimumNumPoints=4096*60)
-        fba = data[0, 0, :, 1]  # triangle
-        err = data[0, 0, :, 0]  # signal
+        # fba = data[0, 0, :, 1]  # triangle
+        # err = data[0, 0, :, 0]  # signal
         np.save(get_savepath("last_fba_vphi"), data)
 
         outtriangle, outsigsup, outsigsdown = analysis.conditionvphis(
@@ -252,8 +249,8 @@ class VPhiDemo(QWidget):
         # Triangle feedback on FB[B], SendMode : FBB, ERR
         self.mm.setdfball(trib=1, data_packet=1)
         data = self.c.getNewData(0.1, minimumNumPoints=4096*60)
-        fbb = data[0, 0, :, 1]  # triangle
-        err = data[0, 0, :, 0]  # signal
+        # fbb = data[0, 0, :, 1]  # triangle
+        # err = data[0, 0, :, 0]  # signal
         np.save(get_savepath("last_fbb_vphi"), data)
 
         outtriangle, outsigsup, outsigsdown = analysis.conditionvphis(
@@ -270,8 +267,8 @@ class VPhiDemo(QWidget):
                           FBB=1, I=I, d2aB=d2aB, a2d=a2d)
 
         data = self.c.getNewData(0.1, minimumNumPoints=4096*60, sendMode=2)
-        fba = data[0, 0, :, 1]  # signal
-        fbb = data[0, 0, :, 0]  # triangle
+        # fba = data[0, 0, :, 1]  # signal
+        # fbb = data[0, 0, :, 0]  # triangle
         np.save(get_savepath("last_locked_fba_vphi"), data)
 
         outtriangle, outsigsup, outsigsdown = analysis.conditionvphis(
