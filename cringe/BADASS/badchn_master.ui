@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>badChn</class>
+ <widget class="QWidget" name="badChn">
+  <layout class="QGridLayout" name="row_layout">
+   <property name="leftMargin"><number>0</number></property>
+   <property name="topMargin"><number>0</number></property>
+   <property name="rightMargin"><number>0</number></property>
+   <property name="bottomMargin"><number>0</number></property>
+   <property name="spacing"><number>5</number></property>
+
+   <!-- row 0: control widgets (identical to badchn.ui) -->
+
+   <item row="0" column="0">
+    <widget class="QLineEdit" name="counter_label">
+     <property name="minimumSize"><size><width>36</width><height>0</height></size></property>
+     <property name="maximumSize"><size><width>36</width><height>16777215</height></size></property>
+     <property name="alignment"><set>Qt::AlignRight</set></property>
+     <property name="readOnly"><bool>true</bool></property>
+     <property name="focusPolicy"><enum>Qt::NoFocus</enum></property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QToolButton" name="dc_button">
+     <property name="text"><string>dc</string></property>
+     <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
+     <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
+     <property name="checkable"><bool>true</bool></property>
+     <property name="checked"><bool>false</bool></property>
+    </widget>
+   </item>
+   <item row="0" column="2">
+    <widget class="QToolButton" name="LoHi_button">
+     <property name="text"><string>HI</string></property>
+     <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
+     <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
+     <property name="checkable"><bool>true</bool></property>
+     <property name="checked"><bool>true</bool></property>
+    </widget>
+   </item>
+   <item row="0" column="3">
+    <widget class="QToolButton" name="Tri_button">
+     <property name="text"><string>tri</string></property>
+     <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
+     <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
+     <property name="checkable"><bool>true</bool></property>
+     <property name="checked"><bool>false</bool></property>
+    </widget>
+   </item>
+   <item row="0" column="4">
+    <widget class="QSpinBox" name="d2a_lo_spin">
+     <property name="minimumSize"><size><width>80</width><height>25</height></size></property>
+     <property name="maximumSize"><size><width>80</width><height>25</height></size></property>
+     <property name="focusPolicy"><enum>Qt::StrongFocus</enum></property>
+     <property name="keyboardTracking"><bool>false</bool></property>
+     <property name="minimum"><number>0</number></property>
+     <property name="maximum"><number>16383</number></property>
+     <property name="singleStep"><number>1</number></property>
+    </widget>
+   </item>
+   <item row="0" column="5">
+    <widget class="QPushButton" name="d2a_lo_min_button">
+     <property name="text"><string>&lt;</string></property>
+     <property name="minimumSize"><size><width>25</width><height>25</height></size></property>
+     <property name="maximumSize"><size><width>25</width><height>25</height></size></property>
+    </widget>
+   </item>
+   <item row="0" column="6">
+    <widget class="QSlider" name="d2a_lo_slider">
+     <property name="minimumSize"><size><width>150</width><height>25</height></size></property>
+     <property name="maximumSize"><size><width>150</width><height>25</height></size></property>
+     <property name="focusPolicy"><enum>Qt::StrongFocus</enum></property>
+     <property name="minimum"><number>0</number></property>
+     <property name="maximum"><number>16383</number></property>
+     <property name="singleStep"><number>32</number></property>
+     <property name="pageStep"><number>512</number></property>
+     <property name="tickPosition"><enum>QSlider::TicksBelow</enum></property>
+     <property name="tickInterval"><number>1024</number></property>
+     <property name="tracking"><bool>true</bool></property>
+     <property name="orientation"><enum>Qt::Horizontal</enum></property>
+    </widget>
+   </item>
+   <item row="0" column="7">
+    <widget class="QPushButton" name="d2a_lo_max_button">
+     <property name="text"><string>&gt;</string></property>
+     <property name="minimumSize"><size><width>25</width><height>25</height></size></property>
+     <property name="maximumSize"><size><width>25</width><height>25</height></size></property>
+    </widget>
+   </item>
+   <item row="0" column="8">
+    <widget class="QSpinBox" name="d2a_hi_spin">
+     <property name="minimumSize"><size><width>80</width><height>25</height></size></property>
+     <property name="maximumSize"><size><width>80</width><height>25</height></size></property>
+     <property name="focusPolicy"><enum>Qt::StrongFocus</enum></property>
+     <property name="keyboardTracking"><bool>false</bool></property>
+     <property name="minimum"><number>0</number></property>
+     <property name="maximum"><number>16383</number></property>
+     <property name="singleStep"><number>1</number></property>
+    </widget>
+   </item>
+   <item row="0" column="9">
+    <widget class="QPushButton" name="d2a_hi_min_button">
+     <property name="text"><string>&lt;</string></property>
+     <property name="minimumSize"><size><width>25</width><height>25</height></size></property>
+     <property name="maximumSize"><size><width>25</width><height>25</height></size></property>
+    </widget>
+   </item>
+   <item row="0" column="10">
+    <widget class="QSlider" name="d2a_hi_slider">
+     <property name="minimumSize"><size><width>150</width><height>25</height></size></property>
+     <property name="maximumSize"><size><width>150</width><height>25</height></size></property>
+     <property name="focusPolicy"><enum>Qt::StrongFocus</enum></property>
+     <property name="minimum"><number>0</number></property>
+     <property name="maximum"><number>16383</number></property>
+     <property name="singleStep"><number>32</number></property>
+     <property name="pageStep"><number>512</number></property>
+     <property name="tickPosition"><enum>QSlider::TicksBelow</enum></property>
+     <property name="tickInterval"><number>1024</number></property>
+     <property name="tracking"><bool>true</bool></property>
+     <property name="orientation"><enum>Qt::Horizontal</enum></property>
+    </widget>
+   </item>
+   <item row="0" column="11">
+    <widget class="QPushButton" name="d2a_hi_max_button">
+     <property name="text"><string>&gt;</string></property>
+     <property name="minimumSize"><size><width>25</width><height>25</height></size></property>
+     <property name="maximumSize"><size><width>25</width><height>25</height></size></property>
+    </widget>
+   </item>
+   <item row="0" column="12">
+    <widget class="QPushButton" name="chn_send">
+     <property name="text"><string>send channel</string></property>
+     <property name="minimumSize"><size><width>160</width><height>25</height></size></property>
+     <property name="maximumSize"><size><width>160</width><height>25</height></size></property>
+    </widget>
+   </item>
+   <item row="0" column="13">
+    <widget class="QToolButton" name="lock_button">
+     <property name="text"><string>dynamic</string></property>
+     <property name="minimumSize"><size><width>50</width><height>25</height></size></property>
+     <property name="maximumSize"><size><width>50</width><height>25</height></size></property>
+     <property name="checkable"><bool>true</bool></property>
+     <property name="checked"><bool>true</bool></property>
+    </widget>
+   </item>
+
+   <!-- row 1: column header labels (tc.grey=#808080, tc.white=#FFFFFF are fixed constants) -->
+
+   <item row="1" column="0">
+    <widget class="QLabel" name="chn_lbl">
+     <property name="text"><string>CHN</string></property>
+     <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
+     <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
+     <property name="toolTip"><string>DAC channel number (corresponds to front panel)</string></property>
+     <property name="alignment"><set>Qt::AlignHCenter|Qt::AlignVCenter</set></property>
+     <property name="styleSheet"><string>background-color: #808080; color: #FFFFFF</string></property>
+    </widget>
+   </item>
+   <item row="1" column="1" colspan="3">
+    <widget class="QLabel" name="bool_lbl">
+     <property name="text"><string>booleans</string></property>
+     <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
+     <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
+     <property name="toolTip"><string>select DC mode, HI/LO level for DC mode, and/or TRI output</string></property>
+     <property name="alignment"><set>Qt::AlignHCenter|Qt::AlignVCenter</set></property>
+     <property name="styleSheet"><string>background-color: #808080; color: #FFFFFF</string></property>
+    </widget>
+   </item>
+   <item row="1" column="4" colspan="4">
+    <widget class="QLabel" name="DAClo_lbl">
+     <property name="text"><string>DAC low level</string></property>
+     <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
+     <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
+     <property name="alignment"><set>Qt::AlignHCenter|Qt::AlignVCenter</set></property>
+     <property name="styleSheet"><string>background-color: #808080; color: #FFFFFF</string></property>
+    </widget>
+   </item>
+   <item row="1" column="8" colspan="4">
+    <widget class="QLabel" name="DAChi_lbl">
+     <property name="text"><string>DAC high level</string></property>
+     <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
+     <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
+     <property name="alignment"><set>Qt::AlignHCenter|Qt::AlignVCenter</set></property>
+     <property name="styleSheet"><string>background-color: #808080; color: #FFFFFF</string></property>
+    </widget>
+   </item>
+   <item row="1" column="12">
+    <widget class="QLabel" name="command_lbl">
+     <property name="text"><string>command</string></property>
+     <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
+     <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
+     <property name="alignment"><set>Qt::AlignHCenter|Qt::AlignVCenter</set></property>
+     <property name="styleSheet"><string>background-color: #808080; color: #FFFFFF</string></property>
+    </widget>
+   </item>
+   <item row="1" column="13">
+    <widget class="QLabel" name="mode_lbl">
+     <property name="text"><string>mode</string></property>
+     <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
+     <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
+     <property name="alignment"><set>Qt::AlignHCenter|Qt::AlignVCenter</set></property>
+     <property name="styleSheet"><string>background-color: #808080; color: #FFFFFF</string></property>
+    </widget>
+   </item>
+
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
