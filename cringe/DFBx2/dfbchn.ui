@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>dfbChn</class>
+ <widget class="QWidget" name="dfbChn">
+  <layout class="QGridLayout" name="row_layout">
+   <property name="leftMargin"><number>0</number></property>
+   <property name="topMargin"><number>0</number></property>
+   <property name="rightMargin"><number>0</number></property>
+   <property name="bottomMargin"><number>0</number></property>
+   <property name="spacing"><number>5</number></property>
+
+   <!-- col 0: state index display -->
+   <item row="0" column="0">
+    <widget class="QLineEdit" name="counter_label">
+     <property name="minimumSize"><size><width>36</width><height>0</height></size></property>
+     <property name="maximumSize"><size><width>36</width><height>16777215</height></size></property>
+     <property name="alignment"><set>Qt::AlignRight</set></property>
+     <property name="readOnly"><bool>true</bool></property>
+     <property name="focusPolicy"><enum>Qt::NoFocus</enum></property>
+     <!-- stylesheet (tc.yellow) applied in Python -->
+    </widget>
+   </item>
+
+   <!-- col 1: triangle A toggle -->
+   <item row="0" column="1">
+    <widget class="QToolButton" name="TriA_button">
+     <property name="text"><string>^A</string></property>
+     <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
+     <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
+     <property name="checkable"><bool>true</bool></property>
+     <property name="checked"><bool>false</bool></property>
+     <!-- stylesheet (tc.red) applied in Python -->
+    </widget>
+   </item>
+
+   <!-- col 2: triangle B toggle -->
+   <item row="0" column="2">
+    <widget class="QToolButton" name="TriB_button">
+     <property name="text"><string>^B</string></property>
+     <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
+     <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
+     <property name="checkable"><bool>true</bool></property>
+     <property name="checked"><bool>false</bool></property>
+     <!-- stylesheet (tc.red) applied in Python -->
+    </widget>
+   </item>
+
+   <!-- col 3: ADC lock point spinbox -->
+   <item row="0" column="3">
+    <widget class="QSpinBox" name="a2d_lockpt_spin">
+     <property name="minimumSize"><size><width>60</width><height>25</height></size></property>
+     <property name="maximumSize"><size><width>60</width><height>25</height></size></property>
+     <property name="focusPolicy"><enum>Qt::StrongFocus</enum></property>
+     <property name="keyboardTracking"><bool>false</bool></property>
+     <property name="minimum"><number>0</number></property>
+     <property name="maximum"><number>4095</number></property>
+     <property name="singleStep"><number>1</number></property>
+    </widget>
+   </item>
+
+   <!-- col 4: ADC lock point slider -->
+   <item row="0" column="4">
+    <widget class="QSlider" name="a2d_lockpt_slider">
+     <property name="minimumSize"><size><width>120</width><height>25</height></size></property>
+     <property name="maximumSize"><size><width>120</width><height>25</height></size></property>
+     <property name="focusPolicy"><enum>Qt::StrongFocus</enum></property>
+     <property name="minimum"><number>0</number></property>
+     <property name="maximum"><number>4095</number></property>
+     <property name="singleStep"><number>8</number></property>
+     <property name="pageStep"><number>128</number></property>
+     <property name="tickPosition"><enum>QSlider::TicksBelow</enum></property>
+     <property name="tickInterval"><number>256</number></property>
+     <property name="tracking"><bool>true</bool></property>
+     <property name="orientation"><enum>Qt::Horizontal</enum></property>
+    </widget>
+   </item>
+
+   <!-- col 5: DAC A spinbox -->
+   <item row="0" column="5">
+    <widget class="QSpinBox" name="d2a_A_spin">
+     <property name="minimumSize"><size><width>80</width><height>25</height></size></property>
+     <property name="maximumSize"><size><width>80</width><height>25</height></size></property>
+     <property name="focusPolicy"><enum>Qt::StrongFocus</enum></property>
+     <property name="keyboardTracking"><bool>false</bool></property>
+     <property name="minimum"><number>0</number></property>
+     <property name="maximum"><number>16383</number></property>
+     <property name="singleStep"><number>1</number></property>
+    </widget>
+   </item>
+
+   <!-- col 6: DAC A slider -->
+   <item row="0" column="6">
+    <widget class="QSlider" name="d2a_A_slider">
+     <property name="minimumSize"><size><width>120</width><height>25</height></size></property>
+     <property name="maximumSize"><size><width>120</width><height>25</height></size></property>
+     <property name="focusPolicy"><enum>Qt::StrongFocus</enum></property>
+     <property name="minimum"><number>0</number></property>
+     <property name="maximum"><number>16383</number></property>
+     <property name="singleStep"><number>32</number></property>
+     <property name="pageStep"><number>512</number></property>
+     <property name="tickPosition"><enum>QSlider::TicksBelow</enum></property>
+     <property name="tickInterval"><number>1024</number></property>
+     <property name="tracking"><bool>true</bool></property>
+     <property name="orientation"><enum>Qt::Horizontal</enum></property>
+    </widget>
+   </item>
+
+   <!-- col 7: DAC B spinbox -->
+   <item row="0" column="7">
+    <widget class="QSpinBox" name="d2a_B_spin">
+     <property name="minimumSize"><size><width>80</width><height>25</height></size></property>
+     <property name="maximumSize"><size><width>80</width><height>25</height></size></property>
+     <property name="focusPolicy"><enum>Qt::StrongFocus</enum></property>
+     <property name="keyboardTracking"><bool>false</bool></property>
+     <property name="minimum"><number>0</number></property>
+     <property name="maximum"><number>16383</number></property>
+     <property name="singleStep"><number>1</number></property>
+    </widget>
+   </item>
+
+   <!-- col 8: DAC B slider -->
+   <item row="0" column="8">
+    <widget class="QSlider" name="d2a_B_slider">
+     <property name="minimumSize"><size><width>120</width><height>25</height></size></property>
+     <property name="maximumSize"><size><width>120</width><height>25</height></size></property>
+     <property name="focusPolicy"><enum>Qt::StrongFocus</enum></property>
+     <property name="minimum"><number>0</number></property>
+     <property name="maximum"><number>16383</number></property>
+     <property name="singleStep"><number>32</number></property>
+     <property name="pageStep"><number>512</number></property>
+     <property name="tickPosition"><enum>QSlider::TicksBelow</enum></property>
+     <property name="tickInterval"><number>1024</number></property>
+     <property name="tracking"><bool>true</bool></property>
+     <property name="orientation"><enum>Qt::Horizontal</enum></property>
+    </widget>
+   </item>
+
+   <!-- col 9: data packet / send mode combobox -->
+   <item row="0" column="9">
+    <widget class="QComboBox" name="data_packet">
+     <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
+     <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
+     <item><property name="text"><string>FBA, ERR</string></property></item>
+     <item><property name="text"><string>FBB, ERR</string></property></item>
+     <item><property name="text"><string>FBB, FBA</string></property></item>
+     <item><property name="text"><string>test pattern</string></property></item>
+    </widget>
+   </item>
+
+   <!-- col 10: P gain spinbox -->
+   <item row="0" column="10">
+    <widget class="QSpinBox" name="P_spin">
+     <property name="minimumSize"><size><width>60</width><height>25</height></size></property>
+     <property name="maximumSize"><size><width>60</width><height>25</height></size></property>
+     <property name="focusPolicy"><enum>Qt::StrongFocus</enum></property>
+     <property name="keyboardTracking"><bool>false</bool></property>
+     <property name="minimum"><number>-511</number></property>
+     <property name="maximum"><number>511</number></property>
+     <property name="singleStep"><number>8</number></property>
+    </widget>
+   </item>
+
+   <!-- col 11: I gain spinbox -->
+   <item row="0" column="11">
+    <widget class="QSpinBox" name="I_spin">
+     <property name="minimumSize"><size><width>60</width><height>25</height></size></property>
+     <property name="maximumSize"><size><width>60</width><height>25</height></size></property>
+     <property name="focusPolicy"><enum>Qt::StrongFocus</enum></property>
+     <property name="keyboardTracking"><bool>false</bool></property>
+     <property name="minimum"><number>-511</number></property>
+     <property name="maximum"><number>511</number></property>
+     <property name="singleStep"><number>8</number></property>
+    </widget>
+   </item>
+
+   <!-- col 12: feedback A toggle -->
+   <item row="0" column="12">
+    <widget class="QToolButton" name="FBA_button">
+     <property name="text"><string>FB[A]</string></property>
+     <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
+     <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
+     <property name="checkable"><bool>true</bool></property>
+     <property name="checked"><bool>false</bool></property>
+     <!-- stylesheet (tc.red) applied in Python -->
+    </widget>
+   </item>
+
+   <!-- col 13: feedback B toggle -->
+   <item row="0" column="13">
+    <widget class="QToolButton" name="FBB_button">
+     <property name="text"><string>FB[B]</string></property>
+     <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
+     <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
+     <property name="checkable"><bool>true</bool></property>
+     <property name="checked"><bool>false</bool></property>
+     <!-- stylesheet (tc.red) applied in Python -->
+    </widget>
+   </item>
+
+   <!-- col 14: ARL toggle -->
+   <item row="0" column="14">
+    <widget class="QToolButton" name="ARL_button">
+     <property name="text"><string>ARL</string></property>
+     <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
+     <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
+     <property name="checkable"><bool>true</bool></property>
+     <property name="checked"><bool>false</bool></property>
+     <!-- stylesheet (tc.red) applied in Python -->
+    </widget>
+   </item>
+
+   <!-- col 15: send channel button -->
+   <item row="0" column="15">
+    <widget class="QPushButton" name="chn_send">
+     <property name="text"><string>send channel</string></property>
+     <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
+     <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
+    </widget>
+   </item>
+
+   <!-- col 16: dynamic/static lock toggle -->
+   <item row="0" column="16">
+    <widget class="QToolButton" name="lock_button">
+     <property name="text"><string>dynamic</string></property>
+     <property name="minimumSize"><size><width>50</width><height>25</height></size></property>
+     <property name="maximumSize"><size><width>50</width><height>25</height></size></property>
+     <property name="checkable"><bool>true</bool></property>
+     <property name="checked"><bool>true</bool></property>
+     <!-- stylesheet (tc.green) applied in Python -->
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
