@@ -1,5 +1,6 @@
+import os
 import sys
-from PyQt5 import QtGui, QtCore, QtWidgets
+from PyQt5 import QtGui, QtCore, QtWidgets, uic
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
@@ -43,261 +44,24 @@ class dfbChn(QWidget):
         
         self.saveState = {}
                 
-#         self.layout_widget = QHBox(self)
-#         self.layout_widget.setStyleSheet("font-size: 14px")
-#         self.layout_widget.setStyleSheet("font-style: italic")
-        self.row_layout = QGridLayout(self)
-#         self.row_layout = QHBoxLayout(self)
-        self.row_layout.setContentsMargins(0,0,0,0)
-        self.row_layout.setSpacing(5)
-        
-#         self.counter_label = QLabel(str(self.chn))
-#         self.counter_label.setFixedWidth(20)
-#         self.counter_label.setAlignment(QtCore.Qt.AlignRight)
+        if master is None:
+            uic.loadUi(os.path.join(os.path.dirname(__file__), 'dfbchn.ui'), self)
+        else:
+            uic.loadUi(os.path.join(os.path.dirname(__file__), 'dfbchn_master.ui'), self)
 
-        self.counter_label = QLineEdit()
-        self.counter_label.setReadOnly(True)
-        self.counter_label.setFixedWidth(36)
-        self.counter_label.setAlignment(QtCore.Qt.AlignRight)
         self.counter_label.setStyleSheet("background-color: #" + tc.yellow + ";")
-        self.counter_label.setFocusPolicy(QtCore.Qt.NoFocus)
-        self.counter_label.setText(str(self.state))
-        self.row_layout.addWidget(self.counter_label,0,0)
-
-        self.TriA_button = QToolButton(self, text = '^A')
-        self.TriA_button.setFixedHeight(25)
-        self.TriA_button.setCheckable(1)
-        self.TriA_button.setChecked(self.triA)
         self.TriA_button.setStyleSheet("background-color: #" + tc.red + ";")
-        self.row_layout.addWidget(self.TriA_button,0,1)
-
-        self.TriB_button = QToolButton(self, text = '^B')
-        self.TriB_button.setFixedHeight(25)
-        self.TriB_button.setCheckable(1)
-        self.TriB_button.setChecked(self.triB)
         self.TriB_button.setStyleSheet("background-color: #" + tc.red + ";")
-        self.row_layout.addWidget(self.TriB_button,0,2)
-
-        self.a2d_lockpt_spin = QSpinBox()
-        self.a2d_lockpt_spin.setRange(0, 4095)
-        self.a2d_lockpt_spin.setFixedWidth(60)
-        self.a2d_lockpt_spin.setFixedHeight(25)
-        self.a2d_lockpt_spin.setSingleStep(1)
-        self.a2d_lockpt_spin.setKeyboardTracking(0)
-        self.a2d_lockpt_spin.setFocusPolicy(QtCore.Qt.StrongFocus)
-        self.row_layout.addWidget(self.a2d_lockpt_spin,0,3)
-
-#         self.d2a_lo_min_button = QPushButton("<")
-#         self.row_layout.addWidget(self.d2a_lo_min_button,0,5)
-        
-        self.a2d_lockpt_slider = QSlider(QtCore.Qt.Horizontal)
-        self.a2d_lockpt_slider.setTickPosition(QSlider.TicksBelow)
-        self.a2d_lockpt_slider.setRange(0,4095)
-        self.a2d_lockpt_slider.setFixedWidth(120)
-        self.a2d_lockpt_slider.setFixedHeight(25)
-        self.a2d_lockpt_slider.setTickInterval(256)
-        self.a2d_lockpt_slider.setSingleStep(8)
-        self.a2d_lockpt_slider.setPageStep(128)
-        self.a2d_lockpt_slider.setValue(0)
-        self.a2d_lockpt_slider.setTracking(1)
-        self.a2d_lockpt_slider.setFocusPolicy(QtCore.Qt.StrongFocus)
-        self.row_layout.addWidget(self.a2d_lockpt_slider,0,4)
-
-#         self.d2a_lo_max_button = QPushButton(">")
-#         self.row_layout.addWidget(self.d2a_lo_max_button,0,7)
-
-        self.d2a_A_spin = QSpinBox()
-        self.d2a_A_spin.setRange(0, 16383)
-        self.d2a_A_spin.setFixedWidth(80)
-        self.d2a_A_spin.setFixedHeight(25)
-        self.d2a_A_spin.setSingleStep(1)
-        self.d2a_A_spin.setKeyboardTracking(0)
-        self.d2a_A_spin.setFocusPolicy(QtCore.Qt.StrongFocus)
-        self.row_layout.addWidget(self.d2a_A_spin,0,5)
-        
-        self.d2a_A_slider = QSlider(QtCore.Qt.Horizontal)
-        self.d2a_A_slider.setTickPosition(QSlider.TicksBelow)
-        self.d2a_A_slider.setRange(0,16383)
-        self.d2a_A_slider.setFixedWidth(120)
-        self.d2a_A_slider.setFixedHeight(25)
-        self.d2a_A_slider.setTickInterval(1024)
-        self.d2a_A_slider.setSingleStep(32)
-        self.d2a_A_slider.setPageStep(512)
-        self.d2a_A_slider.setValue(0)
-        self.d2a_A_slider.setTracking(1)
-        self.d2a_A_slider.setFocusPolicy(QtCore.Qt.StrongFocus)
-        self.row_layout.addWidget(self.d2a_A_slider,0,6)
-
-        self.d2a_B_spin = QSpinBox()
-        self.d2a_B_spin.setRange(0, 16383)
-        self.d2a_B_spin.setFixedWidth(80)
-        self.d2a_B_spin.setFixedHeight(25)
-        self.d2a_B_spin.setSingleStep(1)
-        self.d2a_B_spin.setKeyboardTracking(0)
-        self.d2a_B_spin.setFocusPolicy(QtCore.Qt.StrongFocus)
-        self.row_layout.addWidget(self.d2a_B_spin,0,7)
-        
-        self.d2a_B_slider = QSlider(QtCore.Qt.Horizontal)
-        self.d2a_B_slider.setTickPosition(QSlider.TicksBelow)
-        self.d2a_B_slider.setRange(0,16383)
-        self.d2a_B_slider.setFixedWidth(120)
-        self.d2a_B_slider.setFixedHeight(25)
-        self.d2a_B_slider.setTickInterval(1024)
-        self.d2a_B_slider.setSingleStep(32)
-        self.d2a_B_slider.setPageStep(512)
-        self.d2a_B_slider.setValue(0)
-        self.d2a_B_slider.setTracking(1)
-        self.d2a_B_slider.setFocusPolicy(QtCore.Qt.StrongFocus)
-        self.row_layout.addWidget(self.d2a_B_slider,0,8)
-        
-        self.data_packet = QComboBox()
-        self.data_packet.setFixedHeight(25)
-        self.data_packet.addItem('FBA, ERR')
-        self.data_packet.addItem('FBB, ERR')
-        self.data_packet.addItem('FBB, FBA')            # changed label order to reflect data data packing 8mar16
-        self.data_packet.addItem('test pattern')        
-        self.row_layout.addWidget(self.data_packet,0,9)
-
-        self.P_spin = QSpinBox()
-        self.P_spin.setRange(-511, 511)
-        self.P_spin.setFixedWidth(60)
-        self.P_spin.setFixedHeight(25)
-        self.P_spin.setSingleStep(8)
-        self.P_spin.setKeyboardTracking(0)
-        self.P_spin.setFocusPolicy(QtCore.Qt.StrongFocus)
-        self.row_layout.addWidget(self.P_spin,0,10)
-
-        self.I_spin = QSpinBox()
-        self.I_spin.setRange(-511, 511)
-        self.I_spin.setFixedWidth(60)
-        self.I_spin.setFixedHeight(25)
-        self.I_spin.setSingleStep(8)
-        self.I_spin.setKeyboardTracking(0)
-        self.I_spin.setFocusPolicy(QtCore.Qt.StrongFocus)
-        self.row_layout.addWidget(self.I_spin,0,11)
-
-        self.FBA_button = QToolButton(self, text = 'FB[A]')
-        self.FBA_button.setFixedHeight(25)
-#         self.FBA_button.setFixedWidth(25)
-        self.FBA_button.setCheckable(1)
-        self.FBA_button.setChecked(self.triA)
         self.FBA_button.setStyleSheet("background-color: #" + tc.red + ";")
-        self.row_layout.addWidget(self.FBA_button,0,12)
-
-        self.FBB_button = QToolButton(self, text = 'FB[B]')
-        self.FBB_button.setFixedHeight(25)
-#         self.FBB_button.setFixedWidth(25)
-        self.FBB_button.setCheckable(1)
-        self.FBB_button.setChecked(self.triB)
         self.FBB_button.setStyleSheet("background-color: #" + tc.red + ";")
-        self.row_layout.addWidget(self.FBB_button,0,13)
-        
-        self.ARL_button = QToolButton(self, text = 'ARL')
-        self.ARL_button.setFixedHeight(25)
-#         self.FBB_button.setFixedWidth(25)
-        self.ARL_button.setCheckable(1)
-        self.ARL_button.setChecked(self.triB)
         self.ARL_button.setStyleSheet("background-color: #" + tc.red + ";")
-        self.row_layout.addWidget(self.ARL_button,0,14)
-        
-        self.chn_send = QPushButton(self, text = "send channel")
-        self.chn_send.setFixedHeight(25)
-#         self.chn_send.setFixedWidth(160)
-        self.row_layout.addWidget(self.chn_send,0,15)
-
-        self.lock_button = QToolButton(self, text = 'dynamic')
-#         self.lock_button.setMenu(self.mode_menu)
-        self.lock_button.setFixedWidth(50)
-        self.lock_button.setFixedHeight(25)
-        self.lock_button.setCheckable(1)
-        self.lock_button.setChecked(1)
         self.lock_button.setStyleSheet("background-color: #" + tc.green + ";")
-        self.row_layout.addWidget(self.lock_button,0,16)
-        
-        if master != None:
-            self.chn_lbl = QLabel("state")
-            self.chn_lbl.setToolTip("DAC channel number (corresponds to front panel)")
-            self.chn_lbl.setFrameStyle(50)
-            self.chn_lbl.setFrameStyle(50)
-            self.chn_lbl.setAlignment(QtCore.Qt.AlignCenter)
-            self.chn_lbl.setStyleSheet("background-color: #6A6A6A; color: #EFEFEF")
-            self.row_layout.addWidget(self.chn_lbl,1,0)
-            
-            self.bool_lbl = QLabel("triangle")
-            self.bool_lbl.setToolTip("select DC mode, HI/LO level for DC mode, and/or TRI output")
-    #         self.bool_lbl.setFixedWidth(85)
-            self.bool_lbl.setFrameStyle(50)
-            self.bool_lbl.setAlignment(QtCore.Qt.AlignCenter)
-            self.bool_lbl.setStyleSheet("background-color: #6A6A6A; color: #EFEFEF")
-            self.row_layout.addWidget(self.bool_lbl,1,1,1,2)
-
-            self.DAClo_lbl = QLabel("ADC lock point")
-            self.DAClo_lbl.setFixedHeight(25)
-            self.DAClo_lbl.setFrameStyle(50)
-            self.DAClo_lbl.setAlignment(QtCore.Qt.AlignCenter)
-            self.DAClo_lbl.setStyleSheet("background-color: #6A6A6A; color: #EFEFEF")
-            self.row_layout.addWidget(self.DAClo_lbl,1,3,1,2)
-    
-            self.DAChi_lbl = QLabel("DAC A offset")
-            self.DAChi_lbl.setFixedHeight(25)
-            self.DAChi_lbl.setFrameStyle(50)
-            self.DAChi_lbl.setAlignment(QtCore.Qt.AlignCenter)
-            self.DAChi_lbl.setStyleSheet("background-color: #6A6A6A; color: #EFEFEF")
-            self.row_layout.addWidget(self.DAChi_lbl,1,5,1,2)
-    
-            tc.COMMAND_lbl = QLabel("DAC B offset")
-            tc.COMMAND_lbl.setFixedHeight(25)
-            tc.COMMAND_lbl.setFrameStyle(50)
-            tc.COMMAND_lbl.setAlignment(QtCore.Qt.AlignCenter)
-            tc.COMMAND_lbl.setStyleSheet("background-color: #6A6A6A; color: #EFEFEF")
-            self.row_layout.addWidget(tc.COMMAND_lbl,1,7,1,2)
-    
-            self.mode_lbl = QLabel("send mode")
-            self.mode_lbl.setFixedHeight(25)
-            self.mode_lbl.setFrameStyle(50)
-            self.mode_lbl.setAlignment(QtCore.Qt.AlignCenter)
-            self.mode_lbl.setStyleSheet("background-color: #6A6A6A; color: #EFEFEF")
-            self.row_layout.addWidget(self.mode_lbl,1,9,1,1)
-
-            self.P_lbl = QLabel("P")
-            self.P_lbl.setFixedHeight(25)
-            self.P_lbl.setFrameStyle(50)
-            self.P_lbl.setAlignment(QtCore.Qt.AlignCenter)
-            self.P_lbl.setStyleSheet("background-color: #6A6A6A; color: #EFEFEF")
-            self.row_layout.addWidget(self.P_lbl,1,10,1,1)
-
-            self.I_lbl = QLabel("I")
-            self.I_lbl.setFixedHeight(25)
-            self.I_lbl.setFrameStyle(50)
-            self.I_lbl.setAlignment(QtCore.Qt.AlignCenter)
-            self.I_lbl.setStyleSheet("background-color: #6A6A6A; color: #EFEFEF")
-            self.row_layout.addWidget(self.I_lbl,1,11,1,1)
-
-            self.FB_lbl = QLabel("feedback")
-            self.FB_lbl.setFixedHeight(25)
-            self.FB_lbl.setFrameStyle(50)
-            self.FB_lbl.setAlignment(QtCore.Qt.AlignCenter)
-            self.FB_lbl.setStyleSheet("background-color: #6A6A6A; color: #EFEFEF")
-            self.row_layout.addWidget(self.FB_lbl,1,12,1,3)
-
-            tc.COMMAND_lbl = QLabel("command")
-            tc.COMMAND_lbl.setFixedHeight(25)
-            tc.COMMAND_lbl.setFrameStyle(50)
-            tc.COMMAND_lbl.setAlignment(QtCore.Qt.AlignCenter)
-            tc.COMMAND_lbl.setStyleSheet("background-color: #6A6A6A; color: #EFEFEF")
-            self.row_layout.addWidget(tc.COMMAND_lbl,1,15,1,1)
-
-            self.mode_lbl = QLabel("track")
-            self.mode_lbl.setFixedHeight(25)
-            self.mode_lbl.setFrameStyle(50)
-            self.mode_lbl.setAlignment(QtCore.Qt.AlignCenter)
-            self.mode_lbl.setStyleSheet("background-color: #6A6A6A; color: #EFEFEF")
-            self.row_layout.addWidget(self.mode_lbl,1,16,1,1)
+        self.counter_label.setText(str(self.state))
 
         '''
         call self routines
         '''
-        if master == None:
+        if master is None:
             self.TriA_button.toggled.connect(self.triA_changed)
             self.TriB_button.toggled.connect(self.triB_changed)
             self.a2d_lockpt_spin.valueChanged.connect(self.a2d_lockpt_spin_changed)
@@ -318,7 +82,7 @@ class dfbChn(QWidget):
         '''
         call parent routines
         '''    
-        if master != None:
+        if master is not None:
             self.TriA_button.toggled.connect(parent.triA_changed, self.TriA_button.isChecked())
             self.TriB_button.toggled.connect(parent.triB_changed, self.TriB_button.isChecked())
             self.a2d_lockpt_spin.valueChanged.connect(parent.a2d_lockpt_spin_changed, self.a2d_lockpt_spin.value())
@@ -336,10 +100,10 @@ class dfbChn(QWidget):
             self.chn_send.clicked.connect(parent.send_channel)
             self.lock_button.toggled.connect(parent.lock_channel, self.lock_button.isChecked())
         
-        if self.parent != None:
-            self.layout.addWidget(self) 
-        
-        if parent == None:       
+        if self.parent is not None:
+            self.layout.addWidget(self)
+
+        if parent is None:
             self.show()
 #             print self.width()
         

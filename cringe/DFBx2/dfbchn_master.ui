@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>dfbChn</class>
+ <widget class="QWidget" name="dfbChn">
+  <layout class="QGridLayout" name="row_layout">
+   <property name="leftMargin"><number>0</number></property>
+   <property name="topMargin"><number>0</number></property>
+   <property name="rightMargin"><number>0</number></property>
+   <property name="bottomMargin"><number>0</number></property>
+   <property name="spacing"><number>5</number></property>
+ 
+   <!-- ── row 0: control widgets (identical to dfbchn.ui) ── -->
+ 
+   <item row="0" column="0">
+    <widget class="QLineEdit" name="counter_label">
+     <property name="minimumSize"><size><width>36</width><height>0</height></size></property>
+     <property name="maximumSize"><size><width>36</width><height>16777215</height></size></property>
+     <property name="alignment"><set>Qt::AlignRight</set></property>
+     <property name="readOnly"><bool>true</bool></property>
+     <property name="focusPolicy"><enum>Qt::NoFocus</enum></property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QToolButton" name="TriA_button">
+     <property name="text"><string>^A</string></property>
+     <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
+     <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
+     <property name="checkable"><bool>true</bool></property>
+     <property name="checked"><bool>false</bool></property>
+    </widget>
+   </item>
+   <item row="0" column="2">
+    <widget class="QToolButton" name="TriB_button">
+     <property name="text"><string>^B</string></property>
+     <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
+     <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
+     <property name="checkable"><bool>true</bool></property>
+     <property name="checked"><bool>false</bool></property>
+    </widget>
+   </item>
+   <item row="0" column="3">
+    <widget class="QSpinBox" name="a2d_lockpt_spin">
+     <property name="minimumSize"><size><width>60</width><height>25</height></size></property>
+     <property name="maximumSize"><size><width>60</width><height>25</height></size></property>
+     <property name="focusPolicy"><enum>Qt::StrongFocus</enum></property>
+     <property name="keyboardTracking"><bool>false</bool></property>
+     <property name="minimum"><number>0</number></property>
+     <property name="maximum"><number>4095</number></property>
+     <property name="singleStep"><number>1</number></property>
+    </widget>
+   </item>
+   <item row="0" column="4">
+    <widget class="QSlider" name="a2d_lockpt_slider">
+     <property name="minimumSize"><size><width>120</width><height>25</height></size></property>
+     <property name="maximumSize"><size><width>120</width><height>25</height></size></property>
+     <property name="focusPolicy"><enum>Qt::StrongFocus</enum></property>
+     <property name="minimum"><number>0</number></property>
+     <property name="maximum"><number>4095</number></property>
+     <property name="singleStep"><number>8</number></property>
+     <property name="pageStep"><number>128</number></property>
+     <property name="tickPosition"><enum>QSlider::TicksBelow</enum></property>
+     <property name="tickInterval"><number>256</number></property>
+     <property name="tracking"><bool>true</bool></property>
+     <property name="orientation"><enum>Qt::Horizontal</enum></property>
+    </widget>
+   </item>
+   <item row="0" column="5">
+    <widget class="QSpinBox" name="d2a_A_spin">
+     <property name="minimumSize"><size><width>80</width><height>25</height></size></property>
+     <property name="maximumSize"><size><width>80</width><height>25</height></size></property>
+     <property name="focusPolicy"><enum>Qt::StrongFocus</enum></property>
+     <property name="keyboardTracking"><bool>false</bool></property>
+     <property name="minimum"><number>0</number></property>
+     <property name="maximum"><number>16383</number></property>
+     <property name="singleStep"><number>1</number></property>
+    </widget>
+   </item>
+   <item row="0" column="6">
+    <widget class="QSlider" name="d2a_A_slider">
+     <property name="minimumSize"><size><width>120</width><height>25</height></size></property>
+     <property name="maximumSize"><size><width>120</width><height>25</height></size></property>
+     <property name="focusPolicy"><enum>Qt::StrongFocus</enum></property>
+     <property name="minimum"><number>0</number></property>
+     <property name="maximum"><number>16383</number></property>
+     <property name="singleStep"><number>32</number></property>
+     <property name="pageStep"><number>512</number></property>
+     <property name="tickPosition"><enum>QSlider::TicksBelow</enum></property>
+     <property name="tickInterval"><number>1024</number></property>
+     <property name="tracking"><bool>true</bool></property>
+     <property name="orientation"><enum>Qt::Horizontal</enum></property>
+    </widget>
+   </item>
+   <item row="0" column="7">
+    <widget class="QSpinBox" name="d2a_B_spin">
+     <property name="minimumSize"><size><width>80</width><height>25</height></size></property>
+     <property name="maximumSize"><size><width>80</width><height>25</height></size></property>
+     <property name="focusPolicy"><enum>Qt::StrongFocus</enum></property>
+     <property name="keyboardTracking"><bool>false</bool></property>
+     <property name="minimum"><number>0</number></property>
+     <property name="maximum"><number>16383</number></property>
+     <property name="singleStep"><number>1</number></property>
+    </widget>
+   </item>
+   <item row="0" column="8">
+    <widget class="QSlider" name="d2a_B_slider">
+     <property name="minimumSize"><size><width>120</width><height>25</height></size></property>
+     <property name="maximumSize"><size><width>120</width><height>25</height></size></property>
+     <property name="focusPolicy"><enum>Qt::StrongFocus</enum></property>
+     <property name="minimum"><number>0</number></property>
+     <property name="maximum"><number>16383</number></property>
+     <property name="singleStep"><number>32</number></property>
+     <property name="pageStep"><number>512</number></property>
+     <property name="tickPosition"><enum>QSlider::TicksBelow</enum></property>
+     <property name="tickInterval"><number>1024</number></property>
+     <property name="tracking"><bool>true</bool></property>
+     <property name="orientation"><enum>Qt::Horizontal</enum></property>
+    </widget>
+   </item>
+   <item row="0" column="9">
+    <widget class="QComboBox" name="data_packet">
+     <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
+     <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
+     <item><property name="text"><string>FBA, ERR</string></property></item>
+     <item><property name="text"><string>FBB, ERR</string></property></item>
+     <item><property name="text"><string>FBB, FBA</string></property></item>
+     <item><property name="text"><string>test pattern</string></property></item>
+    </widget>
+   </item>
+   <item row="0" column="10">
+    <widget class="QSpinBox" name="P_spin">
+     <property name="minimumSize"><size><width>60</width><height>25</height></size></property>
+     <property name="maximumSize"><size><width>60</width><height>25</height></size></property>
+     <property name="focusPolicy"><enum>Qt::StrongFocus</enum></property>
+     <property name="keyboardTracking"><bool>false</bool></property>
+     <property name="minimum"><number>-511</number></property>
+     <property name="maximum"><number>511</number></property>
+     <property name="singleStep"><number>8</number></property>
+    </widget>
+   </item>
+   <item row="0" column="11">
+    <widget class="QSpinBox" name="I_spin">
+     <property name="minimumSize"><size><width>60</width><height>25</height></size></property>
+     <property name="maximumSize"><size><width>60</width><height>25</height></size></property>
+     <property name="focusPolicy"><enum>Qt::StrongFocus</enum></property>
+     <property name="keyboardTracking"><bool>false</bool></property>
+     <property name="minimum"><number>-511</number></property>
+     <property name="maximum"><number>511</number></property>
+     <property name="singleStep"><number>8</number></property>
+    </widget>
+   </item>
+   <item row="0" column="12">
+    <widget class="QToolButton" name="FBA_button">
+     <property name="text"><string>FB[A]</string></property>
+     <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
+     <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
+     <property name="checkable"><bool>true</bool></property>
+     <property name="checked"><bool>false</bool></property>
+    </widget>
+   </item>
+   <item row="0" column="13">
+    <widget class="QToolButton" name="FBB_button">
+     <property name="text"><string>FB[B]</string></property>
+     <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
+     <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
+     <property name="checkable"><bool>true</bool></property>
+     <property name="checked"><bool>false</bool></property>
+    </widget>
+   </item>
+   <item row="0" column="14">
+    <widget class="QToolButton" name="ARL_button">
+     <property name="text"><string>ARL</string></property>
+     <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
+     <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
+     <property name="checkable"><bool>true</bool></property>
+     <property name="checked"><bool>false</bool></property>
+    </widget>
+   </item>
+   <item row="0" column="15">
+    <widget class="QPushButton" name="chn_send">
+     <property name="text"><string>send channel</string></property>
+     <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
+     <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
+    </widget>
+   </item>
+   <item row="0" column="16">
+    <widget class="QToolButton" name="lock_button">
+     <property name="text"><string>dynamic</string></property>
+     <property name="minimumSize"><size><width>50</width><height>25</height></size></property>
+     <property name="maximumSize"><size><width>50</width><height>25</height></size></property>
+     <property name="checkable"><bool>true</bool></property>
+     <property name="checked"><bool>true</bool></property>
+    </widget>
+   </item>
+ 
+   <!-- ── row 1: column header labels ── -->
+ 
+   <item row="1" column="0">
+    <widget class="QLabel" name="chn_lbl">
+     <property name="text"><string>state</string></property>
+     <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
+     <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
+     <property name="toolTip"><string>DAC channel number (corresponds to front panel)</string></property>
+     <property name="frameShape"><enum>QFrame::Panel</enum></property>
+     <property name="frameShadow"><enum>QFrame::Plain</enum></property>
+     <property name="alignment"><set>Qt::AlignHCenter|Qt::AlignVCenter</set></property>
+     <property name="styleSheet"><string>background-color: #6A6A6A; color: #EFEFEF</string></property>
+    </widget>
+   </item>
+   <item row="1" column="1" colspan="2">
+    <widget class="QLabel" name="bool_lbl">
+     <property name="text"><string>triangle</string></property>
+     <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
+     <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
+     <property name="toolTip"><string>select DC mode, HI/LO level for DC mode, and/or TRI output</string></property>
+     <property name="frameShape"><enum>QFrame::Panel</enum></property>
+     <property name="frameShadow"><enum>QFrame::Plain</enum></property>
+     <property name="alignment"><set>Qt::AlignHCenter|Qt::AlignVCenter</set></property>
+     <property name="styleSheet"><string>background-color: #6A6A6A; color: #EFEFEF</string></property>
+    </widget>
+   </item>
+   <item row="1" column="3" colspan="2">
+    <widget class="QLabel" name="DAClo_lbl">
+     <property name="text"><string>ADC lock point</string></property>
+     <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
+     <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
+     <property name="frameShape"><enum>QFrame::Panel</enum></property>
+     <property name="frameShadow"><enum>QFrame::Plain</enum></property>
+     <property name="alignment"><set>Qt::AlignHCenter|Qt::AlignVCenter</set></property>
+     <property name="styleSheet"><string>background-color: #6A6A6A; color: #EFEFEF</string></property>
+    </widget>
+   </item>
+   <item row="1" column="5" colspan="2">
+    <widget class="QLabel" name="DAChi_lbl">
+     <property name="text"><string>DAC A offset</string></property>
+     <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
+     <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
+     <property name="frameShape"><enum>QFrame::Panel</enum></property>
+     <property name="frameShadow"><enum>QFrame::Plain</enum></property>
+     <property name="alignment"><set>Qt::AlignHCenter|Qt::AlignVCenter</set></property>
+     <property name="styleSheet"><string>background-color: #6A6A6A; color: #EFEFEF</string></property>
+    </widget>
+   </item>
+   <item row="1" column="7" colspan="2">
+    <widget class="QLabel" name="DAC_B_lbl">
+     <property name="text"><string>DAC B offset</string></property>
+     <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
+     <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
+     <property name="frameShape"><enum>QFrame::Panel</enum></property>
+     <property name="frameShadow"><enum>QFrame::Plain</enum></property>
+     <property name="alignment"><set>Qt::AlignHCenter|Qt::AlignVCenter</set></property>
+     <property name="styleSheet"><string>background-color: #6A6A6A; color: #EFEFEF</string></property>
+    </widget>
+   </item>
+   <item row="1" column="9">
+    <widget class="QLabel" name="send_mode_lbl">
+     <property name="text"><string>send mode</string></property>
+     <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
+     <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
+     <property name="frameShape"><enum>QFrame::Panel</enum></property>
+     <property name="frameShadow"><enum>QFrame::Plain</enum></property>
+     <property name="alignment"><set>Qt::AlignHCenter|Qt::AlignVCenter</set></property>
+     <property name="styleSheet"><string>background-color: #6A6A6A; color: #EFEFEF</string></property>
+    </widget>
+   </item>
+   <item row="1" column="10">
+    <widget class="QLabel" name="P_lbl">
+     <property name="text"><string>P</string></property>
+     <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
+     <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
+     <property name="frameShape"><enum>QFrame::Panel</enum></property>
+     <property name="frameShadow"><enum>QFrame::Plain</enum></property>
+     <property name="alignment"><set>Qt::AlignHCenter|Qt::AlignVCenter</set></property>
+     <property name="styleSheet"><string>background-color: #6A6A6A; color: #EFEFEF</string></property>
+    </widget>
+   </item>
+   <item row="1" column="11">
+    <widget class="QLabel" name="I_lbl">
+     <property name="text"><string>I</string></property>
+     <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
+     <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
+     <property name="frameShape"><enum>QFrame::Panel</enum></property>
+     <property name="frameShadow"><enum>QFrame::Plain</enum></property>
+     <property name="alignment"><set>Qt::AlignHCenter|Qt::AlignVCenter</set></property>
+     <property name="styleSheet"><string>background-color: #6A6A6A; color: #EFEFEF</string></property>
+    </widget>
+   </item>
+   <item row="1" column="12" colspan="3">
+    <widget class="QLabel" name="FB_lbl">
+     <property name="text"><string>feedback</string></property>
+     <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
+     <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
+     <property name="frameShape"><enum>QFrame::Panel</enum></property>
+     <property name="frameShadow"><enum>QFrame::Plain</enum></property>
+     <property name="alignment"><set>Qt::AlignHCenter|Qt::AlignVCenter</set></property>
+     <property name="styleSheet"><string>background-color: #6A6A6A; color: #EFEFEF</string></property>
+    </widget>
+   </item>
+   <item row="1" column="15">
+    <widget class="QLabel" name="command_lbl">
+     <property name="text"><string>command</string></property>
+     <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
+     <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
+     <property name="frameShape"><enum>QFrame::Panel</enum></property>
+     <property name="frameShadow"><enum>QFrame::Plain</enum></property>
+     <property name="alignment"><set>Qt::AlignHCenter|Qt::AlignVCenter</set></property>
+     <property name="styleSheet"><string>background-color: #6A6A6A; color: #EFEFEF</string></property>
+    </widget>
+   </item>
+   <item row="1" column="16">
+    <widget class="QLabel" name="track_lbl">
+     <property name="text"><string>track</string></property>
+     <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
+     <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
+     <property name="frameShape"><enum>QFrame::Panel</enum></property>
+     <property name="frameShadow"><enum>QFrame::Plain</enum></property>
+     <property name="alignment"><set>Qt::AlignHCenter|Qt::AlignVCenter</set></property>
+     <property name="styleSheet"><string>background-color: #6A6A6A; color: #EFEFEF</string></property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
+ 
