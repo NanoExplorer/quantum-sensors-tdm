@@ -109,7 +109,7 @@ class SV_array(QWidget):
 
     def loadSVfile(self):
         log.debug(tc.FCTCALL + "Load state sequence from file: BAD16 /", self.addr, tc.ENDC)
-        self.load_filename = str(QFileDialog.getOpenFileName())
+        self.load_filename = str(QFileDialog.getOpenFileName()[0])
         self.filenameEdit.setText(self.load_filename)
         log.debug(("filename = [%s]" % self.load_filename))
         if len(self.load_filename) > 0:
