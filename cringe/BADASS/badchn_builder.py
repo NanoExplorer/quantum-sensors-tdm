@@ -66,7 +66,6 @@ class badChn(QWidget):
             self.d2a_hi_slider.valueChanged.connect(self.d2a_hi_slider_changed)
             self.d2a_hi_max_button.clicked.connect(self.d2a_hi_setMax)
             self.chn_send.clicked.connect(self.send_channel)
-            #             self.lock_button.mode_menu.triggered('static').connect(self.lock_channel)
             self.lock_button.toggled.connect(self.lock_channel)
 
         if master is not None:
@@ -91,12 +90,8 @@ class badChn(QWidget):
             self.lock_button.toggled.connect(parent.lock_channel,
                                              self.lock_button.isChecked())
 
-#         self.setStyleSheet("background-color: #" + tc.grey + ";")
-
         if self.parent is not None:
             self.layout.addWidget(self)
-
-#         self.show()
 
     def dc_changed(self):
         self.dc = self.dc_button.isChecked()
@@ -105,7 +100,7 @@ class badChn(QWidget):
                                          ";")
         else:
             self.dc_button.setStyleSheet("background-color: #" + tc.red + ";")
-#         if self.unlocked == 1:
+
         self.send_channel()
 
     def LoHi_changed(self):
