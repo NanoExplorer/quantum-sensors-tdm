@@ -94,7 +94,7 @@ class dfbcard(QWidget):
         # file gets loaded into the .layout member variable
         # To avoid breaking things, .layout should stay a QGridLayout
         # But as I understand it, a .ui file can't have a QGridLayout as its top level item
-        _glb = QWidget()
+        _glb = QWidget(self)
         uic.loadUi(
             os.path.join(os.path.dirname(__file__), '../shared/card_global.ui'), _glb)
         self.card_glb_widget = _glb.card_glb_widget
