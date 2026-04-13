@@ -86,7 +86,7 @@ class dfbscard(QWidget):
         log.debug(tc.INIT + "building DFBscream card: slot", self.slot,
                   "/ address", self.address, tc.ENDC)
 
-        _glb = QWidget()
+        _glb = QWidget(self)
         uic.loadUi(
             os.path.join(os.path.dirname(__file__), '../shared/card_global.ui'), _glb)
         self.card_glb_widget = _glb.card_glb_widget

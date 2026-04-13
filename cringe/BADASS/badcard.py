@@ -63,7 +63,7 @@ class badcard(QWidget):
         log.debug(tc.INIT + "building BAD16 card: slot", self.slot,
                   "/ address", self.address, tc.ENDC)
 
-        _glb = QWidget()
+        _glb = QWidget(self)
         uic.loadUi(
             os.path.join(os.path.dirname(__file__), '../shared/card_global.ui'),
             _glb)
