@@ -171,10 +171,6 @@ class IVCommon():
                 plt.show()
         return dex, success
 
-    def remove_NaN(self,arr):
-        ''' only works on 1d vector, not array '''
-        return arr[~np.isnan(arr)]
-
     def get_turn_index_arr(self,fb_arr,showplot=False):
         ''' return the indices corresponding to the IV turnaround for a set of IV curves.
             Assumes fb_arr is ordered from highest voltage bias setting to lowest
@@ -383,8 +379,11 @@ class IVCommon():
         n,m=np.shape(arr)
         result = np.zeros((len(rn_fracs),m))
         for ii in range(m):
-            x = self.remove_NaN(ro[:,ii])
-            y = self.remove_NaN(arr[:,ii])
+            x = ro[:,ii]
+            y = arr[:,ii]
+            mask = np.logical_or(np.isnan(x),np.isnan(y))
+            x = x[~mask]
+            y = y[~mask]
             YY = np.interp(rn_fracs,x[::-1],y[::-1])
 
             # over write with NaN for when data does not extend to fracRn
@@ -487,6 +486,10 @@ class IVCurveAnalyzeSingle():
 
         # Responsivity estimate
         R_L_smooth = np.ones(len(r_tes_smooth))*R_L
+        print(self.sc_idx)
+        if len(r_tes_smooth) <= self.sc_idx -2:
+            print(self.sc_idx, len(r_tes_smooth))
+            self.sc_idx = len(r_tes_smooth)-3
         R_L_smooth[:self.sc_idx] = dv_tes[:self.sc_idx]/di_tes[:self.sc_idx]
         r_tes_smooth_noStray = r_tes_smooth - R_L_smooth
         i0 = i_tes_smooth[:-1]
