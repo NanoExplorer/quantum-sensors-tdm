@@ -62,14 +62,52 @@ def write_wreg(serialport, wregval, address, sleep_after=0.001):
     """
     log.debug(tc.COMMAND + "send to address", address, ":",
               tc.BOLD, wregval, tc.ENDC)
-    b0 = (wregval & 0x7f) << 1            # bits  0-6,  shifted up 1
-    b1 = ((wregval >> 7) & 0x7f) << 1     # bits  7-13, shifted up 1
-    b2 = ((wregval >> 14) & 0x7f) << 1    # bits 14-20, shifted up 1
-    b3 = ((wregval >> 21) & 0x7f) << 1    # bits 21-24 and register index
-    b4 = (address << 1) + 1               # address shifted up 1, LSB = address bit
-    msg = struct.pack("BBBBB", b0, b1, b2, b3, b4)
-
+    msg = get_wreg_bytes(wregval, address)
     with _rack_lock:
         serialport.write(msg)
         if sleep_after:
             time.sleep(sleep_after)
+
+
+def write_wreg_sequence(serialport, wregvals, address, sleep_after=0.001):
+    """Write multiple register values under a single lock acquisition.
+
+    Use this whenever a wreg0 page-select must be immediately followed by one
+    or more data wregs without any other caller interleaving on the bus.
+
+    Parameters
+    ----------
+    serialport : object with a .write(bytes) method
+    wregvals : iterable of int
+        Register values to write in order, using the same bit layout as
+        ``write_wreg``.
+    address : int
+        7-bit card address on the rack bus.
+    sleep_after : float, optional
+        Seconds to sleep after each write. Defaults to 0.001.
+
+    Like write_wreg, thread safe but don't hold locks while calling.
+    blocks for sleep_after*len(wregvals) + serial time * len(wregvals)
+    """
+
+    with _rack_lock:
+        for wregval in wregvals:
+            log.debug(tc.COMMAND + "send to address", address, ":",
+                      tc.BOLD, wregval, tc.ENDC)
+            msg = get_wreg_bytes(wregval, address)
+            serialport.write(msg)
+            if sleep_after:
+                time.sleep(sleep_after)
+
+
+def get_wreg_bytes(wregval, address):
+    """
+    pack a register value and its address into a 5-byte sequence
+    ready for directly sending to the crate over serial
+    """
+    b0 = (wregval & 0x7f) << 1            # bits  0-6,  shifted up 1
+    b1 = ((wregval >> 7) & 0x7f) << 1     # bits  7-13, shifted up 1
+    b2 = ((wregval >> 14) & 0x7f) << 1    # bits 14-20, shifted up 1
+    b3 = ((wregval >> 21) & 0x7f) << 1    # bits 21-24 and register index
+    b4 = (address << 1) + 1          # address shifted up 1, LSB = address bit
+    return struct.pack("BBBBB", b0, b1, b2, b3, b4)
