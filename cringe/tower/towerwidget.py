@@ -1,9 +1,11 @@
 from PyQt5 import QtGui, QtCore, QtWidgets
+from PyQt5.QtCore import QThread
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
 from . import towercard
 from cringe.shared import log
+from instruments.tower_power_supplies_worker import TowerPowerSuppliesWorker
 
 BAY_NAMES = ["0", "1", "2", "3", "4", "5", "6", "7"]
 
@@ -51,10 +53,27 @@ class TowerWidget(QWidget):
         sendallbutton.clicked.connect(self.sendall)
         self.layout.addWidget(sendallbutton)
 
-        launchtowerpowersupplyguibutton = QPushButton("Power Supply GUI")
-        launchtowerpowersupplyguibutton.clicked.connect(
-            self.launchtowerpowersupplygui)
-        self.layout.addWidget(launchtowerpowersupplyguibutton)
+        self.power_on_button = QPushButton("Tower Power ON")
+        self.power_off_button = QPushButton("Tower Power OFF")
+        self.power_on_button.setEnabled(False)
+        self.power_off_button.setEnabled(False)
+        self.power_on_button.clicked.connect(self.tower_power_on_event)
+        self.power_off_button.clicked.connect(self.tower_power_off_event)
+        ps_buttons = QWidget()
+        ps_layout = QHBoxLayout(ps_buttons)
+        ps_layout.setContentsMargins(0, 0, 0, 0)
+        ps_layout.addWidget(self.power_on_button)
+        ps_layout.addWidget(self.power_off_button)
+        self.layout.addWidget(ps_buttons)
+
+        self.power_supplies = None
+        self._connect_thread = QThread(self)
+        self._connect_worker = TowerPowerSuppliesWorker()
+        self._connect_worker.moveToThread(self._connect_thread)
+        self._connect_thread.started.connect(self._connect_worker.run)
+        self._connect_worker.ready.connect(self._on_ps_connected)
+        self._connect_worker.failed.connect(self._on_ps_failed)
+        self._connect_thread.start()
 
         if parent == None:
             self.show()
@@ -96,7 +115,49 @@ class TowerWidget(QWidget):
             for tchn in tc.towerchannels:
                 dacvalues.append(tchn.dacspin.setValue(dacvalues.pop(0)))
 
-    def launchtowerpowersupplygui(self):
-        from subprocess import Popen
-        Popen(["tower_power_gui"])
+    def _on_ps_connected(self, power_supplies):
+        self.power_supplies = power_supplies
+        self._connect_thread.quit()
+        self.power_on_button.setEnabled(True)
+        self.power_off_button.setEnabled(True)
+
+    def _on_ps_failed(self, error):
+        log.debug(f"tower power supply connection failed: {error}")
+
+    def _set_ps_buttons_enabled(self, enabled):
+        self.power_on_button.setEnabled(enabled)
+        self.power_off_button.setEnabled(enabled)
+
+    def _on_ps_command_failed(self, error):
+        self._on_ps_failed(error)
+        self._set_ps_buttons_enabled(True)
+
+    def _run_ps_in_thread(self, worker, slot):
+        thread = QThread(self)
+        worker.moveToThread(thread)
+        thread.started.connect(slot)
+        worker.failed.connect(self._on_ps_command_failed)
+        thread.start()
+        return thread
+
+    def tower_power_on_event(self):
+        self._set_ps_buttons_enabled(False)
+        worker = TowerPowerSuppliesWorker(self.power_supplies)
+        worker.power_on_done.connect(self._on_tower_power_on_done)
+        self._power_on_thread = self._run_ps_in_thread(worker, worker.run_power_on)
+
+    def _on_tower_power_on_done(self, s):
+        self._power_on_thread.quit()
+        self._set_ps_buttons_enabled(True)
+        self.sendall()
+
+    def tower_power_off_event(self):
+        self._set_ps_buttons_enabled(False)
+        worker = TowerPowerSuppliesWorker(self.power_supplies)
+        worker.power_off_done.connect(self._on_tower_power_off_done)
+        self._power_off_thread = self._run_ps_in_thread(worker, worker.run_power_off)
+
+    def _on_tower_power_off_done(self):
+        self._power_off_thread.quit()
+        self._set_ps_buttons_enabled(True)
 
