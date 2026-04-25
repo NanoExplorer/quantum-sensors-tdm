@@ -16,6 +16,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
 from . import tower_power_supplies
+from .tower_power_supplies_worker import TowerPowerSuppliesWorker
 
 class MainWindow(QMainWindow):
     def __init__(self, app):
@@ -31,10 +32,10 @@ class MainWindow(QMainWindow):
 
         self.version = "1.0.2"
 
-        self.setWindowTitle("Tower Power Supply GUI %s" % self.version)
+        self.setWindowTitle(f"Tower Power Supply GUI {self.version}")
         self.setGeometry(100, 100, 360, 100)
 
-        self.power_supplies = tower_power_supplies.TowerPowerSupplies()
+        self.power_supplies = None
 
         self.central_widget = QWidget(self)
         self.setCentralWidget(self.central_widget)
@@ -43,16 +44,8 @@ class MainWindow(QMainWindow):
         self.layout = QVBoxLayout(self.central_widget)
 
         self.top_text_label = QLabel("Tower Power Supply Control", self.central_widget)
-        psa_text = "Power Supply A: %s %s (pad=%s)" % \
-            (self.power_supplies.power_supply_1.manufacturer,
-             self.power_supplies.power_supply_1.model_number,
-             str(self.power_supplies.power_supply_1.pad))
-        self.psa_label = QLabel(psa_text, self.central_widget)
-        psb_text = "Power Supply B: %s %s (pad=%s)" % \
-            (self.power_supplies.power_supply_2.manufacturer,
-             self.power_supplies.power_supply_2.model_number,
-             str(self.power_supplies.power_supply_2.pad))
-        self.psb_label = QLabel(psb_text, self.central_widget)
+        self.psa_label = QLabel("Power Supply A: connecting...", self.central_widget)
+        self.psb_label = QLabel("Power Supply B: connecting...", self.central_widget)
         self.power_state_label = QLabel(self.power_state_string, self.central_widget)
         self.power_on_button = QPushButton("Power ON", self.central_widget)
         self.power_off_button = QPushButton("Power OFF", self.central_widget)
@@ -79,26 +72,76 @@ class MainWindow(QMainWindow):
         self.power_off_button.clicked.connect(self.power_off_event)
         self.quit_button.clicked.connect(self.quit_event)
 
-        # Update the state of the power supplies
+        self.power_on_button.setEnabled(False)
+        self.power_off_button.setEnabled(False)
+
+        self._thread = QThread()
+        self._worker = TowerPowerSuppliesWorker()
+        self._worker.moveToThread(self._thread)
+        self._thread.started.connect(self._worker.run)
+        self._worker.ready.connect(self._on_instruments_ready)
+        self._worker.failed.connect(self._on_instruments_failed)
+        self._thread.start()
+
+    def _on_instruments_ready(self, power_supplies):
+        self.power_supplies = power_supplies
+        self._thread.quit()
+        ps1 = power_supplies.power_supply_1
+        ps2 = power_supplies.power_supply_2
+        self.psa_label.setText(f"Power Supply A: {ps1.manufacturer} {ps1.model_number} (pad={ps1.pad})")
+        self.psb_label.setText(f"Power Supply B: {ps2.manufacturer} {ps2.model_number} (pad={ps2.pad})")
+        self.power_on_button.setEnabled(True)
+        self.power_off_button.setEnabled(True)
         self.updatePowerOnString()
+
+    def _on_instruments_failed(self, error):
+        self._thread.quit()
+        self.psa_label.setText("Power Supply A: failed to connect")
+        self.psb_label.setText("Power Supply B: failed to connect")
+        self.readingLabel.setText("Error: " + error)
+
+    def _set_buttons_enabled(self, enabled):
+        self.power_on_button.setEnabled(enabled)
+        self.power_off_button.setEnabled(enabled)
+
+    def _run_in_thread(self, worker, slot):
+        thread = QThread(self)
+        worker.moveToThread(thread)
+        thread.started.connect(slot)
+        worker.failed.connect(lambda e: (self._on_instruments_failed(e), self._set_buttons_enabled(True)))
+        thread.start()
+        return thread
 
     def power_on_event(self):
+        self._set_buttons_enabled(False)
+        worker = TowerPowerSuppliesWorker(self.power_supplies)
+        worker.power_on_done.connect(self._on_power_on_done)
+        self._power_on_thread = self._run_in_thread(worker, worker.run_power_on)
 
-        s = self.power_supplies.powerOnSequence()
+    def _on_power_on_done(self, s):
+        self._power_on_thread.quit()
         self.updatePowerOnString()
-        self.readingLabel.setText("most recent readings:\n"+s)
+        self.readingLabel.setText("most recent readings:\n" + s)
+        self._set_buttons_enabled(True)
 
     def power_off_event(self):
+        self._set_buttons_enabled(False)
+        worker = TowerPowerSuppliesWorker(self.power_supplies)
+        worker.power_off_done.connect(self._on_power_off_done)
+        self._power_off_thread = self._run_in_thread(worker, worker.run_power_off)
 
-        self.power_supplies.powerOffSupplies()
+    def _on_power_off_done(self):
+        self._power_off_thread.quit()
         self.updatePowerOnString()
+        self._set_buttons_enabled(True)
 
     def quit_event(self):
 
         self.app.quit()
 
     def updatePowerOnString(self):
-
+        if self.power_supplies is None:
+            return
         if self.power_supplies.powered == True:
             self.power_state_string = "Power is ON"
         else:
