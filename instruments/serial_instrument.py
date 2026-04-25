@@ -12,7 +12,6 @@ Created on Feb 17, 2010
 from . import instrument
 from named_serial import Serial
 import serial
-import numpy as np
 import time
 
 class SerialInstrument(instrument.Instrument):
@@ -69,7 +68,7 @@ class SerialInstrument(instrument.Instrument):
         '''
         self.write(string)
         result = self.read()
-        float_result = np.nan
+        float_result = float('nan')
         if len(result) > 0:
             float_result = float(result)
 

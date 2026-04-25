@@ -7,7 +7,7 @@ Created on Jan 12, 2010
 from time import sleep
 from . import serial_instrument
 import serial
-import numpy as np
+
 
 class AgilentE3631A(serial_instrument.SerialInstrument):
     '''
@@ -17,8 +17,11 @@ class AgilentE3631A(serial_instrument.SerialInstrument):
     def __init__(self, port):
         '''Constructor - The PAD (Primary GPIB Address) is the only required parameter '''
 
-        super(AgilentE3631A, self).__init__(port,stopbits=serial.STOPBITS_TWO, parity=serial.PARITY_NONE,
-        bytesize=serial.EIGHTBITS, min_time_between_writes=0.7)
+        super(AgilentE3631A, self).__init__(port,
+                                            stopbits=serial.STOPBITS_TWO,
+                                            parity=serial.PARITY_NONE,
+                                            bytesize=serial.EIGHTBITS,
+                                            min_time_between_writes=0.7)
 
         # GPIB identity string of the instrument
         self.id_string = "HEWLETT-PACKARD,E3631A,0,2.1-5.0-1.0"
@@ -70,6 +73,7 @@ class AgilentE3631A(serial_instrument.SerialInstrument):
         '''
         Set Current Limit
         '''
+        assert output in self.allowed_outputs, "invalid output name for E3631A"
         voltage_string = "%8.6f" %( voltage ) # V setting
         amps_limit_string = "%8.6f" %( amps_limit )
         self.write("APPL " + output + "," + voltage_string + "," + amps_limit_string)
@@ -83,6 +87,7 @@ class AgilentE3631A(serial_instrument.SerialInstrument):
         N25V = -25V output
         Measure one of the currents from the specified output
         '''
+        assert output in self.allowed_outputs, "invalid output name for E3631A"
         the_result = self.askFloat("MEAS:CURR:DC? " + output)
         return the_result
 
@@ -95,6 +100,7 @@ class AgilentE3631A(serial_instrument.SerialInstrument):
         N25V = -25V output
         Measure one of the voltages from the specified output
         '''
+        assert output in self.allowed_outputs, "invalid output name for E3631A"
         the_result = self.askFloat("MEAS:VOLT:DC? " + output)
         return the_result
 
