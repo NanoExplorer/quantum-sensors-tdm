@@ -6,7 +6,7 @@ from PyQt5.QtWidgets import *
 
 from cringe.shared import terminal_colors as tc
 from cringe.shared import log
-from cringe.shared.rack_transport import write_wreg
+from cringe.shared.rack_transport import write_wreg_sequence
 
 
 class dfbChn(QWidget):
@@ -43,6 +43,11 @@ class dfbChn(QWidget):
         self.ARL = 0
 
         self.unlocked = 1
+
+        self.pending_wreg1 = False
+        self.pending_wreg2 = False
+        self.pending_wreg3 = False
+        self.pending_wreg5 = False
 
         self.dc = False
         self.lohi = True
@@ -144,8 +149,8 @@ class dfbChn(QWidget):
         else:
             self.TriA_button.setStyleSheet("background-color: #" + tc.red +
                                            ";")
-        self.send_wreg0()
-        self.send_wreg2()
+        if self.unlocked == 1:
+            self.pending_wreg2 = True
 
     def triB_changed(self):
         self.triB = self.TriB_button.isChecked()
@@ -155,15 +160,14 @@ class dfbChn(QWidget):
         else:
             self.TriB_button.setStyleSheet("background-color: #" + tc.red +
                                            ";")
-        self.send_wreg0()
-        self.send_wreg2()
+        if self.unlocked == 1:
+            self.pending_wreg2 = True
 
     def a2d_lockpt_spin_changed(self):
         self.a2d_lockpt = self.a2d_lockpt_spin.value()
         self.a2d_lockpt_slider.setValue(self.a2d_lockpt_spin.value())
         if self.unlocked == 1:
-            self.send_wreg0()
-            self.send_wreg1()
+            self.pending_wreg1 = True
 
     def a2d_lockpt_sense(self):
         log.debug("Double Click event")
@@ -175,8 +179,7 @@ class dfbChn(QWidget):
         self.d2a_A = self.d2a_A_spin.value()
         self.d2a_A_slider.setValue(self.d2a_A_spin.value())
         if self.unlocked == 1:
-            self.send_wreg0()
-            self.send_wreg2()
+            self.pending_wreg2 = True
 
     def d2a_A_slider_changed(self):
         self.d2a_A_spin.setValue(self.d2a_A_slider.value())
@@ -185,8 +188,7 @@ class dfbChn(QWidget):
         self.d2a_B = self.d2a_B_spin.value()
         self.d2a_B_slider.setValue(self.d2a_B_spin.value())
         if self.unlocked == 1:
-            self.send_wreg0()
-            self.send_wreg5()
+            self.pending_wreg5 = True
 
     def d2a_B_slider_changed(self):
         self.d2a_B_spin.setValue(self.d2a_B_slider.value())
@@ -194,20 +196,17 @@ class dfbChn(QWidget):
     def data_packet_changed(self):
         self.SM = self.data_packet.currentIndex()
         if self.unlocked == 1:
-            self.send_wreg0()
-            self.send_wreg5()
+            self.pending_wreg5 = True
 
     def P_spin_changed(self):
         self.P = self.P_spin.value()
         if self.unlocked == 1:
-            self.send_wreg0()
-            self.send_wreg3()
+            self.pending_wreg3 = True
 
     def I_spin_changed(self):
         self.I = self.I_spin.value()
         if self.unlocked == 1:
-            self.send_wreg0()
-            self.send_wreg3()
+            self.pending_wreg3 = True
 
     def FBA_changed(self):
         self.FBA = self.FBA_button.isChecked()
@@ -217,8 +216,8 @@ class dfbChn(QWidget):
             self.FBB_button.setChecked(0)
         else:
             self.FBA_button.setStyleSheet("background-color: #" + tc.red + ";")
-        self.send_wreg0()
-        self.send_wreg3()
+        if self.unlocked == 1:
+            self.pending_wreg3 = True
 
     def FBB_changed(self):
         self.FBB = self.FBB_button.isChecked()
@@ -228,8 +227,8 @@ class dfbChn(QWidget):
             self.FBA_button.setChecked(0)
         else:
             self.FBB_button.setStyleSheet("background-color: #" + tc.red + ";")
-        self.send_wreg0()
-        self.send_wreg3()
+        if self.unlocked == 1:
+            self.pending_wreg3 = True
 
     def ARL_changed(self):
         self.ARL = self.ARL_button.isChecked()
@@ -238,69 +237,65 @@ class dfbChn(QWidget):
                                           ";")
         else:
             self.ARL_button.setStyleSheet("background-color: #" + tc.red + ";")
-        self.send_wreg0()
-        self.send_wreg3()
+        if self.unlocked == 1:
+            self.pending_wreg3 = True
 
     def send_channel(self):
         log.debug(tc.FCTCALL + "send DFB STATE parameters", self.state,
                   ": index & arrayed register values", tc.ENDC)
-        self.send_wreg0()
-        self.send_wreg1()
-        self.send_wreg2()
-        self.send_wreg3()
-        self.send_wreg5()
+        write_wreg_sequence(
+            self.serialport,
+            [
+                self._build_wreg0(),
+                self._build_wreg1(),
+                self._build_wreg2(),
+                self._build_wreg3(),
+                self._build_wreg5(),
+            ],
+            self.address,
+        )
 
     def lock_channel(self):
+        was_locked = not self.unlocked
         self.unlocked = self.lock_button.isChecked()
-        if self.unlocked == 1:
+        if self.unlocked:
             self.lock_button.setStyleSheet("background-color: #" + tc.green +
                                            ";")
             self.lock_button.setText('dynamic')
+            if was_locked:
+                self.pending_wreg1 = True
+                self.pending_wreg2 = True
+                self.pending_wreg3 = True
+                self.pending_wreg5 = True
         else:
             self.lock_button.setStyleSheet("background-color: #" + tc.red +
                                            ";")
             self.lock_button.setText('static')
 
-    def send_wreg0(self):
-        log.debug("DFB:WREG0: page index (GPI/channel/state)")
-        wreg = 0 << 25
-        wregval = wreg | (self.chn << 6) | self.state
-        self.sendReg(wregval)
+    def _build_wreg0(self):
+        # 0 << 25 is still zero
+        return (self.chn << 6) | self.state
 
-    def send_wreg1(self):
-        log.debug("DFB:WREG1: arrayed state variables: ADC lock point")
-        wreg = 1 << 25
-        wregval = wreg | self.a2d_lockpt
-        self.sendReg(wregval)
+    def _build_wreg1(self):
+        # originally this was 
+        # wreg = 1 << 25; return wreg | self.a2d_lockpt
+        return (1 << 25) | self.a2d_lockpt
 
-    def send_wreg2(self):
-        log.debug(
-            "DFB:WREG2: arrayed state variables: triangle booleans & DAC offset A"
-        )
-        wreg = 2 << 25
-        wregval = wreg | (self.triA << 16) | (self.triB << 17) | self.d2a_A
-        self.sendReg(wregval)
+    def _build_wreg2(self):
+        # wreg = 2 << 25
+        return (2 << 25) | (self.triA << 16) | (self.triB << 17) | self.d2a_A
 
-    def send_wreg3(self):
-        log.debug(
-            "DFB:WREG3: arrayed state feedback parameters: tri, arl, P, I")
-        wreg = 3 << 25
-        wreg = wreg | (int(self.FBA) << 24)
-        wreg = wreg | (int(self.FBB) << 23)
-        wreg = wreg | (int(self.ARL) << 21)
-        wreg = wreg | ((int(self.P) & 0x3ff) << 10)
-        wregval = wreg | (int(self.I) & 0x3ff)
-        self.sendReg(wregval)
+    def _build_wreg3(self):
+        wreg = (3 << 25)
+        wreg |= (int(self.FBA) << 24)
+        wreg |= (int(self.FBB) << 23)
+        wreg |= (int(self.ARL) << 21)
+        wreg |= ((int(self.P) & 0x3ff) << 10)
+        return wreg | (int(self.I) & 0x3ff)
 
-    def send_wreg5(self):
-
-        log.debug("DFB:WREG5: DAC offset B & send mode")
-        wreg = 5 << 25
-        wregval = wreg | (self.d2a_B << 11) | self.SM
-        self.sendReg(wregval)
-
-    def sendReg(self, wregval):
-        write_wreg(self.serialport, wregval, self.address)
+    def _build_wreg5(self):
+        # wreg = 5 << 25
+        return (5 << 25) | (self.d2a_B << 11) | self.SM
 
     def packState(self):
         self.stateVector = {
