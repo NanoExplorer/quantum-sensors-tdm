@@ -20,7 +20,6 @@ from cringe.DFBx2.dfbcard import dfbcard
 from cringe.BADASS.badcard import badcard
 from cringe.DFBx2.dfbclkcard import dfbclkcard
 from cringe.emu_card import EMU_Card
-from cringe.DFBx2.dfbscard import dfbscard
 from cringe.tune.tunetab import TuneTab
 from cringe.tower import towerwidget
 from cringe.calibration.caltab import CalTab
