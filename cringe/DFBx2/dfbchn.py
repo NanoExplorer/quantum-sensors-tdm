@@ -44,6 +44,9 @@ class dfbChn(QWidget):
 
         self.unlocked = 1
 
+        # Because there are so many instances of dfbchn,
+        # instead of writing to the crate directly, they 
+        # will now *almost* always offload that to the "dfb_scan_worker"
         self.pending_wreg1 = False
         self.pending_wreg2 = False
         self.pending_wreg3 = False

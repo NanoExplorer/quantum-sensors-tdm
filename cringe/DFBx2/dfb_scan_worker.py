@@ -28,7 +28,8 @@ class DfbScanWorker(QObject):
 
     def __init__(self, channels):
         super().__init__()
-        self._channels = channels   # list of dfbChn (state_vectors only, never master_vectors)
+        self._channels = channels   # list of dfbChn (state_vectors only, never master_vectors
+        # since those don't correspond to actual hardware)
         self._running = False
 
         # Flush-sync support: callers can block until the worker completes a full
@@ -42,7 +43,9 @@ class DfbScanWorker(QObject):
                 # the scanner checked all the pendings, found nothing.
                 with self._flush_done:
                     self._flush_done.notify_all()
-                time.sleep(0.005)   # 5 ms idle sleep when nothing pending
+                time.sleep(0.005)   # 5 ms sleep when nothing pending
+                # Just makes sure that we don't waste ALL the cpu time.
+                # also lets other threads do work (releasing the python GIL) 
 
     def _scan_once(self):
         wrote_any = False
