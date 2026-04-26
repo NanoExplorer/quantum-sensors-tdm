@@ -12,3 +12,4 @@ detchar/analysis/Kate_Analysis
 detchar/analysis/kate_analysis.py
 *.png
 *.DS_Store
+.claude
