@@ -91,13 +91,3 @@ class TowerCard(QWidget):
         for tcard in self.towerchannels:
             tcard.dacspin.setStyleSheet("background-color: #" + tc.white + ";")
 
-    def packState(self):
-        self.stateVector = {
-            'dacvalue': self.TriA_button.isChecked(),
-            'addr': self.TriB_button.isChecked(),
-            'chn': self.a2d_lockpt_spin.value(),
-            'serialport': self.d2a_A_spin.value()
-        }
-
-    def unpackState(self, loadState):
-        self.TriA_button.setChecked(loadState['triA'])

@@ -41,16 +41,6 @@ class SV_array(QWidget):
         self.globals_widget = QWidget(self.layout_widget)
         self.globals_layout = QGridLayout(self.globals_widget)
 
-        #       self.seqln_indicator = QLineEdit()
-        #       self.seqln_indicator.setReadOnly(True)
-        #       self.seqln_indicator.setFixedWidth(40)
-        #       self.seqln_indicator.setText(str(seqln))
-        #       self.seqln_indicator.setAlignment(QtCore.Qt.AlignRight)
-        #       self.globals_layout.addWidget(self.seqln_indicator,0,0,QtCore.Qt.AlignLeft)
-        #
-        #       self.seqln_label = QLabel("states in sequence")
-        #       self.globals_layout.addWidget(self.seqln_label,0,1,1,4,QtCore.Qt.AlignLeft)
-
         self.loadseq = QPushButton(self, text="load sequence")
         self.globals_layout.addWidget(self.loadseq, 0, 0, QtCore.Qt.AlignTop)
 
@@ -223,33 +213,3 @@ class SV_array(QWidget):
                 self.state_vectors[idx].update_sv()
         self.init_flag = 0
         self.SendAllStates()
-
-
-def main():
-
-    app = QApplication(sys.argv)
-    win = SV_array(seqln=seqln, addr=addr)
-    win.show()
-    sys.exit(app.exec_())
-
-
-if __name__ == '__main__':
-    p = optparse.OptionParser()
-    p.add_option('-A',
-                 '--address',
-                 action='store',
-                 dest='addr',
-                 type='int',
-                 help='Physical hardware address (default=32).')
-    p.add_option('-L',
-                 '--length',
-                 action='store',
-                 dest='seqln',
-                 type='int',
-                 help='Number of states in sequence (default=4')
-    p.set_defaults(addr=32)
-    p.set_defaults(seqln=4)
-    opt, args = p.parse_args()
-    addr = opt.addr
-    seqln = opt.seqln
-    main()

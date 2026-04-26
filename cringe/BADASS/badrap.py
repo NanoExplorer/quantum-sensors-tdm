@@ -111,17 +111,11 @@ class badrap(QWidget):
         #       self.show()
         #       print self.arrayframe.width()
         self.master_ctrl_widget.setFixedWidth(self.arrayframe.width() + 0)
-        if parent == None:
-            self.glb_var_widget.setFixedWidth(self.arrayframe.width() + 0)
-            self.tri_wvfm_widget.setFixedWidth(self.arrayframe.width() + 0)
 
     '''
     child called methods
     '''
 
-    def tri_widget_toggle(self):
-        self.tri_widget_state = self.tri_wvfm_widget.isChecked()
-        self.tri_wvfm_widget.setHidden(not (self.tri_widget_state))
 
     def dc_changed(self, state):
         for idx in range(self.chns):

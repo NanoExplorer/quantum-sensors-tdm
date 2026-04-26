@@ -221,10 +221,7 @@ class dfbcard(QWidget):
         self.sendReg(2 << 6)
         self.dfbx2_widget2.send_wreg4(wreg4)
 
-### child called methods
-
-#   def broadcast_channel(self, state):
-#       print "BROADCAST CHANNEL:", state
+# child called methods
 
     def send_class_globals(self, wreg6, wreg7):
         log.debug(tc.FCTCALL + "send class globals to DFBx2 card:", tc.ENDC)
@@ -276,11 +273,6 @@ class dfbcard(QWidget):
             self.wreg7 = (7 << 25) | (self.LED << 23) | (self.ST << 22) | (self.prop_delay << 18) \
                 | (self.dfb_delay << 14) | (self.seqln << 8) | self.SETT
             self.sendReg(self.wreg7)
-
-
-#   def send_wreg7(self):
-#       print "WREG7: global parameters: LED, ST, delays, sequence length, SETT"
-#       self.sendReg(self.wreg7 | (self.LED << 23) | (self.ST << 22))
 
     def send_GPI4(self):
         log.debug("DFB:GPI4: test mode select")
@@ -386,49 +378,3 @@ class dfbcard(QWidget):
         self.dfbx2_widget2.unpackStates(dfbAllStates2)
         CARDphase = classParameters['CARDphase']
         self.dfbx2_widget3.unpackCal(CARDphase)
-
-
-def main():
-
-    app = QApplication(sys.argv)
-    app.setStyle("plastique")
-    app.setStyleSheet("""   QPushbutton{font: 10px; padding: 6px}
-                            QToolButton{font: 10px; padding: 6px}
-                            QLineEdit {background-color: #FFFFCC;}""")
-    win = dfbcard(addr=addr, slot=slot, seqln=seqln)
-    win.show()
-    sys.exit(app.exec_())
-
-
-if __name__ == '__main__':
-    p = optparse.OptionParser()
-    #   p.add_option('-C','--card_type', action='store', dest='ctype', type='str',
-    #                help='Type of card to calibrate (default=DFBx2).')
-    p.add_option('-A',
-                 '--card_address',
-                 action='store',
-                 dest='addr',
-                 type='int',
-                 help='Hardware address of card (default=32).')
-    p.add_option('-S',
-                 '--slot',
-                 action='store',
-                 dest='slot',
-                 type='int',
-                 help='Host slot in crate (default=9)')
-    p.add_option('-L',
-                 '--length',
-                 action='store',
-                 dest='seqln',
-                 type='int',
-                 help='Number of states in sequence (default=4')
-    #   p.set_defaults(ctype="DFBx2")
-    p.set_defaults(addr=3)
-    p.set_defaults(slot=3)
-    p.set_defaults(seqln=4)
-    opt, args = p.parse_args()
-    #   ctype = opt.ctype
-    addr = opt.addr
-    slot = opt.slot
-    seqln = opt.seqln
-    main()

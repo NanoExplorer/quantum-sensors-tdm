@@ -165,8 +165,6 @@ class dfbChn(QWidget):
             self.send_wreg0()
             self.send_wreg1()
 
-    def a2d_lockpt_sense(self):
-        log.debug("Double Click event")
 
     def a2d_lockpt_slider_changed(self):
         self.a2d_lockpt_spin.setValue(self.a2d_lockpt_slider.value())
