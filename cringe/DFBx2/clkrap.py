@@ -105,7 +105,12 @@ class clkrap(QWidget):
     def resync(self):
         if self.CLKstate == 1:
             log.debug(tc.FCTCALL + "resynchronize system:", tc.ENDC)
-
+            # I don't know how this works. 
+            # My best guess is that when the cards 
+            # don't see a clock signal for long enough
+            # they eventually give up and reset their individual
+            # clock counters to 0, so when it starts back up again
+            # they are all in sync...
             self.CLKstate_button.click()
             time.sleep(1)
             self.CLKstate_button.click()
