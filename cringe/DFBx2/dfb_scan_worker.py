@@ -5,6 +5,7 @@ from PyQt5.QtCore import QObject, pyqtSignal
 
 from cringe.shared.rack_transport import write_wreg_sequence
 
+
 class DfbScanWorker(QObject):
     """Continuously flushes pending DFB channel state to hardware off the GUI thread.
 
