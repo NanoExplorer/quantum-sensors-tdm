@@ -378,82 +378,6 @@ class dfbrap(QWidget):
     self called methods
     '''
 
-    def card_delay_changed(self):
-        self.card_delay = self.card_delay_spin.value()
-        if self.mode == 1:
-            self.send_wreg7()
-
-    def prop_delay_changed(self):
-        self.prop_delay = self.prop_delay_spin.value()
-        if self.mode == 1:
-            self.send_wreg7()
-
-    def XPT_changed(self):
-        self.XPT = self.xpt_mode.currentIndex()
-        if self.mode == 1:
-            self.send_wreg6()
-
-    def NSAMP_changed(self):
-        self.NSAMP = self.NSAMP_spin.value()
-        if self.mode == 1:
-            self.send_wreg6()
-
-    def SETT_changed(self):
-        self.SETT = self.SETT_spin.value()
-        if self.mode == 1:
-            self.send_wreg7()
-
-    def PS_changed(self):
-        self.PS = self.PS_button.isChecked()
-        if self.PS == 1:
-            self.PS_button.setStyleSheet("background-color: #" + tc.green +
-                                         ";")
-        else:
-            self.PS_button.setStyleSheet("background-color: #" + tc.red + ";")
-        self.send_wreg6()
-
-    def ARLsense_changed(self):
-        self.ARLsense = self.ARLsense_spin.value()
-        self.ARLsense_indicator.setText("%5i" % (2**self.ARLsense))
-        self.ARLsense_eng_indicator.setText(
-            str((2**self.ARLsense) / 16.383)[:6])
-        self.send_wreg6()
-
-    def RLDpos_changed(self):
-        self.RLDpos = self.RLDpos_spin.value()
-        self.RLDpos_indicator.setText("%5i" % (2**self.RLDpos))
-        self.RLDpos_eng_indicator.setText(
-            str((2**self.RLDpos) * self.frame_period)[:6])
-        self.send_wreg6()
-
-    def RLDneg_changed(self):
-        self.RLDneg = self.RLDneg_spin.value()
-        self.RLDneg_indicator.setText("%5i" % (2**self.RLDneg))
-        self.RLDneg_eng_indicator.setText(
-            str((2**self.RLDneg) * self.frame_period)[:6])
-        self.send_wreg6()
-
-    def LED_changed(self):
-        self.LED = self.LED_button.isChecked()
-        if self.LED == 1:
-            self.LED_button.setStyleSheet("background-color: #" + tc.red + ";")
-            self.LED_button.setText('OFF')
-        else:
-            self.LED_button.setStyleSheet("background-color: #" + tc.green +
-                                          ";")
-            self.LED_button.setText('ON')
-#        if self.unlocked == 1:
-        self.send_wreg7()
-
-    def status_changed(self):
-        self.ST = self.status_button.isChecked()
-        if self.ST == 1:
-            self.status_button.setStyleSheet("background-color: #" + tc.green +
-                                             ";")
-        else:
-            self.status_button.setStyleSheet("background-color: #" + tc.red +
-                                             ";")
-        self.send_wreg7()
 
     def GR_changed(self):
         log.debug(tc.FCTCALL + "send global relock enable to DFB channel",
@@ -496,29 +420,10 @@ class dfbrap(QWidget):
             self.MSTR_RX.setText('OFF')
             self.MSTR_TX.setChecked(0)
 
-    def send_class_globals(self):
-        log.debug(tc.FCTCALL + "send DFB class globals:", tc.ENDC)
-        self.send_wreg0()
-        self.send_wreg4()
-        self.send_wreg6()
-        self.send_wreg7()
-
     def send_channel_globals(self):
         log.debug(tc.FCTCALL + "send DFB channel globals:", tc.ENDC)
         self.send_wreg0()
         self.send_wreg4(self.wreg4)
-
-
-#       self.send_wreg7()
-
-#   def mode_changed(self):
-#       self.mode = self.mode_button.isChecked()
-#       if self.mode ==1:
-#           self.mode_button.setStyleSheet("background-color: #" + tc.green + ";")
-#           self.mode_button.setText('dynamic')
-#       else:
-#           self.mode_button.setStyleSheet("background-color: #" + tc.red + ";")
-#           self.mode_button.setText('static')
 
     def dwell_changed(self):
         self.dwell_val = self.dwell.value()
@@ -535,10 +440,6 @@ class dfbrap(QWidget):
         self.range_indicator.setText('%5i' % self.rangeDACunits)
         self.amp_changed()
         self.period_changed()
-        #       periodDACunits = 2*2**self.dwell_val*2**self.range_val
-        #       self.period_indicator.setText('%11i'%periodDACunits)
-        #       self.period_eng_indicator.setText('%12.4d'%periodDACunits*self.lsync*0.008)
-        #       self.freq_eng_indicator.setText(str(1000/float(self.period_eng_indicator.text()))[:6])
         if self.mode == 1:
             self.send_wreg0()
             self.send_wreg4()
@@ -547,9 +448,6 @@ class dfbrap(QWidget):
         self.step_val = self.step.value()
         self.stepDACunits = self.step_val
         self.amp_changed()
-        #       self.period_changed()
-        #       self.amp_indicator.setText(str((2**self.range_val)*self.step_val))
-        #       self.amp_eng_indicator.setText(str(int(self.amp_indicator.text())/16.383)[:6])
         if self.mode == 1:
             self.send_wreg0()
             self.send_wreg4()
