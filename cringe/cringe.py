@@ -28,6 +28,7 @@ from cringe.calibration.caltab import CalTab
 from cringe.cringe_control import CRINGE_COMMANDS, build_zmq_addr
 from cringe.zmq_rep import ZmqRep
 from cringe.shared.rack_transport import write_wreg
+from cringe.DFBx2.dfb_scan_worker import DfbScanWorker
 
 
 class Cringe(QtWidgets.QWidget):
@@ -220,46 +221,51 @@ class Cringe(QtWidgets.QWidget):
         '''
         build tab widget for crate cards
         '''
-        for idx, val in enumerate(self.class_vector):
-            if val == "DFBCLK":
-                self.card_widget = dfbclkcard(parent=self,
-                                              addr=self.addr_vector[idx],
-                                              slot=self.slot_vector[idx],
-                                              seqln=self.seqln,
-                                              lsync=self.lsync)
+        self._dfb_scan_channels = [] # channels that the dfb_scan_worker will watch
+        for idx, card_type in enumerate(self.class_vector):
+            if card_type == "DFBCLK":
+                card_widget = dfbclkcard(parent=self,
+                                         addr=self.addr_vector[idx],
+                                         slot=self.slot_vector[idx],
+                                         seqln=self.seqln,
+                                         lsync=self.lsync)
                 tab_lbl = " DFBx1CLK: " + \
                     str(self.slot_vector[idx]) + "/" + \
                     str(self.addr_vector[idx]) + " "
-                self.scale_factor = self.card_widget.dfbclk_widget1.state_vectors[
-                    0].width()
-            if val == "DFBx2":
-                self.card_widget = dfbcard(parent=self,
-                                           addr=self.addr_vector[idx],
-                                           slot=self.slot_vector[idx],
-                                           seqln=self.seqln,
-                                           lsync=self.lsync)
+                self.scale_factor = card_widget.dfbclk_widget1.state_vectors[0].width(
+                )
+                self._dfb_scan_channels.extend(card_widget.dfbclk_widget1.state_vectors)
+            if card_type == "DFBx2":
+                card_widget = dfbcard(parent=self,
+                                      addr=self.addr_vector[idx],
+                                      slot=self.slot_vector[idx],
+                                      seqln=self.seqln,
+                                      lsync=self.lsync)
                 tab_lbl = " DFBx2: " + \
                     str(self.slot_vector[idx]) + "/" + \
                     str(self.addr_vector[idx]) + " "
-            if val == "BAD16":
-                self.card_widget = badcard(parent=self,
-                                           addr=self.addr_vector[idx],
-                                           slot=self.slot_vector[idx],
-                                           seqln=self.seqln,
-                                           lsync=self.lsync)
+                self._dfb_scan_channels.extend(card_widget.dfbx2_widget1.state_vectors)
+                self._dfb_scan_channels.extend(card_widget.dfbx2_widget2.state_vectors)
+            if card_type == "BAD16":
+                card_widget = badcard(parent=self,
+                                      addr=self.addr_vector[idx],
+                                      slot=self.slot_vector[idx],
+                                      seqln=self.seqln,
+                                      lsync=self.lsync)
                 tab_lbl = " BAD16: " + \
                     str(self.slot_vector[idx]) + "/" + \
                     str(self.addr_vector[idx]) + " "
-            if val == "DFBs":
-                self.card_widget = dfbscard(parent=self,
-                                            addr=self.addr_vector[idx],
-                                            slot=self.slot_vector[idx],
-                                            lsync=self.lsync)
+            if card_type == "DFBs":
+                card_widget = dfbscard(parent=self,
+                                       addr=self.addr_vector[idx],
+                                       slot=self.slot_vector[idx],
+                                       lsync=self.lsync)
                 tab_lbl = " DFBscream: " + \
                     str(self.slot_vector[idx]) + "/" + \
                     str(self.addr_vector[idx]) + " "
-            self.crate_widgets.append(self.card_widget)
-            self.crate_widget.addTab(self.card_widget, tab_lbl)
+            self.crate_widgets.append(card_widget)
+            self.crate_widget.addTab(card_widget, tab_lbl)
+
         self.tune_widget = TuneTab(self)
         self.crate_widget.addTab(self.tune_widget, "Tune")
         self.crate_widgets.append(self.tune_widget)
@@ -267,6 +273,16 @@ class Cringe(QtWidgets.QWidget):
             self.cal_widget = CalTab(self)
             self.crate_widget.addTab(self.cal_widget, "Calibration")
         self.crate_widgets.append(self.tune_widget)
+
+        # create the dfb scan worker/thread
+        self._scan_worker = DfbScanWorker(self._dfb_scan_channels)
+        self._scan_thread = QtCore.QThread(self)
+        self._scan_worker.moveToThread(self._scan_thread)
+        self._scan_thread.started.connect(self._scan_worker.run)
+        self._scan_worker.error.connect(
+            lambda msg: log.debug("dfb scan worker error:", msg)
+        )
+        self._scan_thread.start()
 
         if not self.tower_vector is None:
             log.debug("building tower widget")
@@ -340,6 +356,7 @@ class Cringe(QtWidgets.QWidget):
         else:
             success = False
             extra_info = f"`{message}` invalid, must be one of {list(self.cringe_commands.keys())}"
+        self._scan_worker.flush_sync()  # wait for confirmation that dfbs are in sync
         self.control_socket.resolve_message(success, extra_info)
 
     def full_crate_init(self):
@@ -1968,6 +1985,9 @@ class Cringe(QtWidgets.QWidget):
         self.tune_widget.unpackState(self.loadTune["TuneParameters"])
 
     def closeEvent(self, event):
+        self._scan_worker.stop()
+        self._scan_thread.quit()
+        self._scan_thread.wait(2000) # QT thread wait param is in ms
         self.saveSettings()
         event.accept()
 
