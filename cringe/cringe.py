@@ -1895,6 +1895,7 @@ class Cringe(QtWidgets.QWidget):
         if "Tune" in list(load_sys_config.keys()):
             self.loadTune = load_sys_config["Tune"]
         self.assertSettings()
+        self._scan_worker.flush_sync()
 
     def assertSettings(self):
         log.debug(tc.FCTCALL + ("asserting loaded or last saved settings"),
