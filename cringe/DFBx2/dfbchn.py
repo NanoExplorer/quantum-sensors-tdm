@@ -172,8 +172,6 @@ class dfbChn(QWidget):
         if self.unlocked == 1:
             self.pending_wreg1 = True
 
-    def a2d_lockpt_sense(self):
-        log.debug("Double Click event")
 
     def a2d_lockpt_slider_changed(self):
         self.a2d_lockpt_spin.setValue(self.a2d_lockpt_slider.value())
