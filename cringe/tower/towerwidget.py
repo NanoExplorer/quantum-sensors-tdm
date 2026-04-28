@@ -121,6 +121,7 @@ class TowerWidget(QWidget):
 
     def _on_ps_failed(self, error):
         log.debug(f"tower power supply connection failed: {error}")
+        # buttons remain disabled
 
     def _set_ps_buttons_enabled(self, enabled):
         self.power_on_button.setEnabled(enabled)
@@ -140,7 +141,8 @@ class TowerWidget(QWidget):
 
     def tower_power_on_event(self):
         self._set_ps_buttons_enabled(False)
-        worker = TowerPowerSuppliesWorker(self.power_supplies)
+        self._on_worker = TowerPowerSuppliesWorker(self.power_supplies)
+        worker=self._on_worker
         worker.power_on_done.connect(self._on_tower_power_on_done)
         self._power_on_thread = self._run_ps_in_thread(worker, worker.run_power_on)
 
@@ -151,7 +153,8 @@ class TowerWidget(QWidget):
 
     def tower_power_off_event(self):
         self._set_ps_buttons_enabled(False)
-        worker = TowerPowerSuppliesWorker(self.power_supplies)
+        self._off_worker = TowerPowerSuppliesWorker(self.power_supplies)
+        worker = self._off_worker
         worker.power_off_done.connect(self._on_tower_power_off_done)
         self._power_off_thread = self._run_ps_in_thread(worker, worker.run_power_off)
 

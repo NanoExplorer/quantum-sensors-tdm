@@ -75,17 +75,17 @@ class MainWindow(QMainWindow):
         self.power_on_button.setEnabled(False)
         self.power_off_button.setEnabled(False)
 
-        self._thread = QThread()
-        self._worker = TowerPowerSuppliesWorker()
-        self._worker.moveToThread(self._thread)
-        self._thread.started.connect(self._worker.run)
-        self._worker.ready.connect(self._on_instruments_ready)
-        self._worker.failed.connect(self._on_instruments_failed)
-        self._thread.start()
+        self._init_thread = QThread()
+        self._init_worker = TowerPowerSuppliesWorker()
+        self._init_worker.moveToThread(self._init_thread)
+        self._init_thread.started.connect(self._init_worker.run)
+        self._init_worker.ready.connect(self._on_instruments_ready)
+        self._init_worker.failed.connect(self._on_instruments_failed)
+        self._init_thread.start()
 
     def _on_instruments_ready(self, power_supplies):
         self.power_supplies = power_supplies
-        self._thread.quit()
+        self._init_thread.quit()
         ps1 = power_supplies.power_supply_1
         ps2 = power_supplies.power_supply_2
         self.psa_label.setText(f"Power Supply A: {ps1.manufacturer} {ps1.model_number} (pad={ps1.pad})")
@@ -95,7 +95,7 @@ class MainWindow(QMainWindow):
         self.updatePowerOnString()
 
     def _on_instruments_failed(self, error):
-        self._thread.quit()
+        self._init_thread.quit()
         self.psa_label.setText("Power Supply A: failed to connect")
         self.psb_label.setText("Power Supply B: failed to connect")
         self.readingLabel.setText("Error: " + error)
@@ -108,13 +108,19 @@ class MainWindow(QMainWindow):
         thread = QThread(self)
         worker.moveToThread(thread)
         thread.started.connect(slot)
-        worker.failed.connect(lambda e: (self._on_instruments_failed(e), self._set_buttons_enabled(True)))
+        worker.failed.connect(
+            lambda e: (
+                       self._on_instruments_failed(e), 
+                       self._set_buttons_enabled(True)
+                       )
+        )
         thread.start()
         return thread
 
     def power_on_event(self):
         self._set_buttons_enabled(False)
-        worker = TowerPowerSuppliesWorker(self.power_supplies)
+        self._on_worker = TowerPowerSuppliesWorker(self.power_supplies)
+        worker = self._on_worker
         worker.power_on_done.connect(self._on_power_on_done)
         self._power_on_thread = self._run_in_thread(worker, worker.run_power_on)
 
@@ -126,7 +132,8 @@ class MainWindow(QMainWindow):
 
     def power_off_event(self):
         self._set_buttons_enabled(False)
-        worker = TowerPowerSuppliesWorker(self.power_supplies)
+        self._off_worker = TowerPowerSuppliesWorker(self.power_supplies)
+        worker = self._off_worker
         worker.power_off_done.connect(self._on_power_off_done)
         self._power_off_thread = self._run_in_thread(worker, worker.run_power_off)
 
