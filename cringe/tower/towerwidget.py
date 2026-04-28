@@ -59,12 +59,10 @@ class TowerWidget(QWidget):
         self.power_off_button.setEnabled(False)
         self.power_on_button.clicked.connect(self.tower_power_on_event)
         self.power_off_button.clicked.connect(self.tower_power_off_event)
-        ps_buttons = QWidget()
-        ps_layout = QHBoxLayout(ps_buttons)
-        ps_layout.setContentsMargins(0, 0, 0, 0)
+        ps_layout=QHBoxLayout()
         ps_layout.addWidget(self.power_on_button)
         ps_layout.addWidget(self.power_off_button)
-        self.layout.addWidget(ps_buttons)
+        self.layout.addLayout(ps_layout)
 
         self.power_supplies = None
         self._connect_thread = QThread(self)
