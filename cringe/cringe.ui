@@ -4,653 +4,1473 @@
  <widget class="QWidget" name="Cringe">
   <property name="geometry">
    <rect>
-    <x>30</x>
-    <y>30</y>
-    <width>800</width>
+    <x>0</x>
+    <y>0</y>
+    <width>1461</width>
     <height>1000</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>CRINGE</string>
   </property>
-  <layout class="QGridLayout" name="layout">
-   <property name="leftMargin"><number>0</number></property>
-   <property name="topMargin"><number>0</number></property>
-   <property name="rightMargin"><number>0</number></property>
-   <property name="bottomMargin"><number>0</number></property>
-
-   <!-- Row 0: FILE MANAGEMENT -->
+  <layout class="QGridLayout" name="gridLayout">
+   <property name="horizontalSpacing">
+    <number>25</number>
+   </property>
+   <property name="verticalSpacing">
+    <number>9</number>
+   </property>
    <item row="0" column="0" colspan="2">
     <widget class="QGroupBox" name="file_mgmt_widget">
-     <property name="title"><string>FILE MANAGEMENT INTERFACE</string></property>
-     <property name="focusPolicy"><enum>Qt::NoFocus</enum></property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
+     <property name="title">
+      <string>FILE MANAGEMENT INTERFACE</string>
+     </property>
      <layout class="QGridLayout" name="file_mgmt_layout">
-      <property name="leftMargin"><number>5</number></property>
-      <property name="topMargin"><number>5</number></property>
-      <property name="rightMargin"><number>5</number></property>
-      <property name="bottomMargin"><number>5</number></property>
-      <property name="spacing"><number>5</number></property>
-      <item row="0" column="0" alignment="Qt::AlignLeft">
-       <widget class="QPushButton" name="loadsetup">
-        <property name="text"><string>load setup</string></property>
-        <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
-        <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
-       </widget>
-      </item>
-      <item row="0" column="1" alignment="Qt::AlignLeft">
-       <widget class="QPushButton" name="savesetup">
-        <property name="text"><string>save setup</string></property>
-        <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
-        <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
-       </widget>
-      </item>
+      <property name="sizeConstraint">
+       <enum>QLayout::SetMinAndMaxSize</enum>
+      </property>
+      <property name="leftMargin">
+       <number>5</number>
+      </property>
+      <property name="topMargin">
+       <number>5</number>
+      </property>
+      <property name="rightMargin">
+       <number>5</number>
+      </property>
+      <property name="bottomMargin">
+       <number>5</number>
+      </property>
+      <property name="spacing">
+       <number>5</number>
+      </property>
       <item row="0" column="2" alignment="Qt::AlignLeft">
        <widget class="QPushButton" name="sendsetup">
-        <property name="text"><string>re-assert setup</string></property>
-        <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
-        <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>re-assert setup</string>
+        </property>
        </widget>
       </item>
       <item row="0" column="3" alignment="Qt::AlignRight">
        <widget class="QLabel" name="filename_label">
-        <property name="text"><string>file</string></property>
+        <property name="text">
+         <string>file</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0" alignment="Qt::AlignLeft">
+       <widget class="QPushButton" name="loadsetup">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>load setup</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1" alignment="Qt::AlignLeft">
+       <widget class="QPushButton" name="savesetup">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>save setup</string>
+        </property>
        </widget>
       </item>
       <item row="0" column="4" colspan="4">
        <widget class="QLineEdit" name="filenameEdit">
-        <property name="readOnly"><bool>true</bool></property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
        </widget>
       </item>
      </layout>
     </widget>
    </item>
-
-   <!-- Row 1, col 0: SYSTEM GLOBALS -->
-   <item row="1" column="0" alignment="Qt::AlignLeft">
+   <item row="1" column="0">
     <widget class="QGroupBox" name="sys_glob_hdr_widget">
-     <property name="title"><string>SYSTEM GLOBALS</string></property>
-     <property name="focusPolicy"><enum>Qt::NoFocus</enum></property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
+     <property name="title">
+      <string>SYSTEM GLOBALS</string>
+     </property>
      <layout class="QGridLayout" name="sys_glob_layout">
-      <property name="leftMargin"><number>5</number></property>
-      <property name="topMargin"><number>5</number></property>
-      <property name="rightMargin"><number>5</number></property>
-      <property name="bottomMargin"><number>5</number></property>
-      <property name="spacing"><number>5</number></property>
-      <item row="0" column="0">
-       <widget class="QSpinBox" name="seqln_spin">
-        <property name="focusPolicy"><enum>Qt::StrongFocus</enum></property>
-        <property name="alignment"><set>Qt::AlignRight</set></property>
-        <property name="keyboardTracking"><bool>false</bool></property>
-        <property name="minimum"><number>4</number></property>
-        <property name="maximum"><number>64</number></property>
-        <property name="singleStep"><number>1</number></property>
-        <property name="value"><number>30</number></property>
+      <property name="leftMargin">
+       <number>5</number>
+      </property>
+      <property name="topMargin">
+       <number>5</number>
+      </property>
+      <property name="rightMargin">
+       <number>5</number>
+      </property>
+      <property name="bottomMargin">
+       <number>5</number>
+      </property>
+      <property name="spacing">
+       <number>5</number>
+      </property>
+      <item row="0" column="5" colspan="2" alignment="Qt::AlignRight">
+       <widget class="QPushButton" name="sys_glob_send">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>send system globals</string>
+        </property>
        </widget>
       </item>
       <item row="0" column="1" alignment="Qt::AlignLeft">
        <widget class="QLabel" name="seqln_lbl">
-        <property name="text"><string>sequence length</string></property>
+        <property name="text">
+         <string>sequence length</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QSpinBox" name="seqln_spin">
+        <property name="focusPolicy">
+         <enum>Qt::StrongFocus</enum>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight</set>
+        </property>
+        <property name="keyboardTracking">
+         <bool>false</bool>
+        </property>
+        <property name="minimum">
+         <number>4</number>
+        </property>
+        <property name="maximum">
+         <number>64</number>
+        </property>
+        <property name="singleStep">
+         <number>1</number>
+        </property>
+        <property name="value">
+         <number>30</number>
+        </property>
        </widget>
       </item>
       <item row="0" column="2">
        <widget class="QSpinBox" name="lsync_spin">
-        <property name="focusPolicy"><enum>Qt::StrongFocus</enum></property>
-        <property name="alignment"><set>Qt::AlignRight</set></property>
-        <property name="keyboardTracking"><bool>false</bool></property>
-        <property name="minimum"><number>20</number></property>
-        <property name="maximum"><number>256</number></property>
-        <property name="singleStep"><number>1</number></property>
-        <property name="value"><number>40</number></property>
+        <property name="focusPolicy">
+         <enum>Qt::StrongFocus</enum>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight</set>
+        </property>
+        <property name="keyboardTracking">
+         <bool>false</bool>
+        </property>
+        <property name="minimum">
+         <number>20</number>
+        </property>
+        <property name="maximum">
+         <number>256</number>
+        </property>
+        <property name="singleStep">
+         <number>1</number>
+        </property>
+        <property name="value">
+         <number>40</number>
+        </property>
        </widget>
       </item>
-      <item row="0" column="3" colspan="2" alignment="Qt::AlignLeft">
+      <item row="0" column="3" colspan="2">
        <widget class="QLabel" name="lsync_lbl">
-        <property name="text"><string>line period</string></property>
-       </widget>
-      </item>
-      <item row="0" column="5" colspan="2" alignment="Qt::AlignRight">
-       <widget class="QPushButton" name="sys_glob_send">
-        <property name="text"><string>send system globals</string></property>
-        <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
-        <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
+        <property name="text">
+         <string>line period</string>
+        </property>
        </widget>
       </item>
      </layout>
     </widget>
    </item>
-
-   <!-- Row 1, col 1: SYSTEM CONTROL -->
-   <item row="1" column="1" alignment="Qt::AlignRight">
+   <item row="1" column="1">
     <widget class="QGroupBox" name="sys_control_hdr_widget">
-     <property name="title"><string>SYSTEM CONTROL</string></property>
-     <property name="focusPolicy"><enum>Qt::NoFocus</enum></property>
+     <property name="maximumSize">
+      <size>
+       <width>16777198</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="sizeIncrement">
+      <size>
+       <width>6</width>
+       <height>9</height>
+      </size>
+     </property>
+     <property name="baseSize">
+      <size>
+       <width>13</width>
+       <height>15</height>
+      </size>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
+     <property name="title">
+      <string>SYSTEM CONTROL</string>
+     </property>
      <layout class="QGridLayout" name="sys_control_layout">
-      <property name="leftMargin"><number>5</number></property>
-      <property name="topMargin"><number>5</number></property>
-      <property name="rightMargin"><number>5</number></property>
-      <property name="bottomMargin"><number>5</number></property>
-      <property name="spacing"><number>5</number></property>
+      <property name="sizeConstraint">
+       <enum>QLayout::SetMinAndMaxSize</enum>
+      </property>
+      <property name="leftMargin">
+       <number>5</number>
+      </property>
+      <property name="topMargin">
+       <number>5</number>
+      </property>
+      <property name="rightMargin">
+       <number>5</number>
+      </property>
+      <property name="bottomMargin">
+       <number>5</number>
+      </property>
+      <property name="spacing">
+       <number>5</number>
+      </property>
       <item row="0" column="0" alignment="Qt::AlignLeft">
        <widget class="QToolButton" name="crate_power">
-        <property name="text"><string>crate power ON</string></property>
-        <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
-        <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
-        <property name="checkable"><bool>true</bool></property>
-        <property name="checked"><bool>true</bool></property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>crate power ON</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
        </widget>
       </item>
       <item row="0" column="1">
        <widget class="QToolButton" name="server_lock">
-        <property name="text"><string>server LOCK OFF</string></property>
-        <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
-        <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
-        <property name="toolTip"><string>engage when SERVER is running to prevent changing of critical parameters</string></property>
-        <property name="checkable"><bool>true</bool></property>
-        <property name="checked"><bool>false</bool></property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="toolTip">
+         <string>engage when SERVER is running to prevent changing of critical parameters</string>
+        </property>
+        <property name="text">
+         <string>server LOCK OFF</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="checked">
+         <bool>false</bool>
+        </property>
        </widget>
       </item>
       <item row="0" column="2">
        <widget class="QPushButton" name="send_all_globals">
-        <property name="text"><string>send globals</string></property>
-        <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
-        <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>send globals</string>
+        </property>
        </widget>
       </item>
       <item row="0" column="3">
        <widget class="QPushButton" name="send_all_states_chns">
-        <property name="text"><string>send arrayed</string></property>
-        <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
-        <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>send arrayed</string>
+        </property>
        </widget>
       </item>
       <item row="0" column="4">
        <widget class="QPushButton" name="cal_system">
-        <property name="text"><string>CALIBRATE</string></property>
-        <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
-        <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>CALIBRATE</string>
+        </property>
        </widget>
       </item>
       <item row="0" column="5">
        <widget class="QPushButton" name="resync_system">
-        <property name="text"><string>RESYNC</string></property>
-        <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
-        <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>RESYNC</string>
+        </property>
        </widget>
       </item>
       <item row="0" column="6">
        <widget class="QPushButton" name="full_init_button">
-        <property name="text"><string>init</string></property>
-        <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
-        <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>init</string>
+        </property>
        </widget>
       </item>
      </layout>
     </widget>
    </item>
-
-   <!-- Row 2: CLASS GLOBALS -->
    <item row="2" column="0" colspan="2">
     <widget class="QGroupBox" name="class_glob_hdr_widget">
-     <property name="title"><string>DFB/BAD CLASS GLOBALS</string></property>
-     <property name="focusPolicy"><enum>Qt::NoFocus</enum></property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
+     <property name="title">
+      <string>DFB/BAD CLASS GLOBALS</string>
+     </property>
      <layout class="QGridLayout" name="class_glob_layout">
-      <property name="leftMargin"><number>5</number></property>
-      <property name="topMargin"><number>5</number></property>
-      <property name="rightMargin"><number>5</number></property>
-      <property name="bottomMargin"><number>5</number></property>
-      <property name="spacing"><number>5</number></property>
+      <property name="sizeConstraint">
+       <enum>QLayout::SetMaximumSize</enum>
+      </property>
+      <property name="leftMargin">
+       <number>5</number>
+      </property>
+      <property name="topMargin">
+       <number>5</number>
+      </property>
+      <property name="rightMargin">
+       <number>5</number>
+      </property>
+      <property name="bottomMargin">
+       <number>5</number>
+      </property>
+      <property name="horizontalSpacing">
+       <number>10</number>
+      </property>
+      <property name="verticalSpacing">
+       <number>5</number>
+      </property>
       <item row="0" column="0">
        <widget class="QSpinBox" name="SETT_spin">
-        <property name="focusPolicy"><enum>Qt::StrongFocus</enum></property>
-        <property name="alignment"><set>Qt::AlignRight</set></property>
-        <property name="keyboardTracking"><bool>false</bool></property>
-        <property name="minimum"><number>0</number></property>
-        <property name="maximum"><number>255</number></property>
-        <property name="singleStep"><number>1</number></property>
-        <property name="value"><number>12</number></property>
+        <property name="focusPolicy">
+         <enum>Qt::StrongFocus</enum>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight</set>
+        </property>
+        <property name="keyboardTracking">
+         <bool>false</bool>
+        </property>
+        <property name="minimum">
+         <number>0</number>
+        </property>
+        <property name="maximum">
+         <number>255</number>
+        </property>
+        <property name="singleStep">
+         <number>1</number>
+        </property>
+        <property name="value">
+         <number>12</number>
+        </property>
        </widget>
       </item>
       <item row="0" column="1" alignment="Qt::AlignLeft">
        <widget class="QLabel" name="SETT_spin_lbl">
-        <property name="text"><string>SETT</string></property>
+        <property name="text">
+         <string>SETT</string>
+        </property>
        </widget>
       </item>
       <item row="1" column="0">
        <widget class="QSpinBox" name="NSAMP_spin">
-        <property name="focusPolicy"><enum>Qt::StrongFocus</enum></property>
-        <property name="alignment"><set>Qt::AlignRight</set></property>
-        <property name="keyboardTracking"><bool>false</bool></property>
-        <property name="minimum"><number>0</number></property>
-        <property name="maximum"><number>255</number></property>
-        <property name="singleStep"><number>1</number></property>
-        <property name="value"><number>4</number></property>
+        <property name="focusPolicy">
+         <enum>Qt::StrongFocus</enum>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight</set>
+        </property>
+        <property name="keyboardTracking">
+         <bool>false</bool>
+        </property>
+        <property name="minimum">
+         <number>0</number>
+        </property>
+        <property name="maximum">
+         <number>255</number>
+        </property>
+        <property name="singleStep">
+         <number>1</number>
+        </property>
+        <property name="value">
+         <number>4</number>
+        </property>
        </widget>
       </item>
       <item row="1" column="1" alignment="Qt::AlignLeft">
        <widget class="QLabel" name="NSAMP_spin_lbl">
-        <property name="text"><string>NSAMP (SETT+NSAMP+2&lt;=line period)</string></property>
+        <property name="text">
+         <string>NSAMP (SETT+NSAMP+2&lt;=line period)</string>
+        </property>
        </widget>
       </item>
       <item row="0" column="2">
        <widget class="QSpinBox" name="prop_delay_spin">
-        <property name="focusPolicy"><enum>Qt::StrongFocus</enum></property>
-        <property name="alignment"><set>Qt::AlignRight</set></property>
-        <property name="keyboardTracking"><bool>false</bool></property>
-        <property name="minimum"><number>0</number></property>
-        <property name="maximum"><number>15</number></property>
-        <property name="singleStep"><number>1</number></property>
-        <property name="value"><number>3</number></property>
+        <property name="focusPolicy">
+         <enum>Qt::StrongFocus</enum>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight</set>
+        </property>
+        <property name="keyboardTracking">
+         <bool>false</bool>
+        </property>
+        <property name="minimum">
+         <number>0</number>
+        </property>
+        <property name="maximum">
+         <number>15</number>
+        </property>
+        <property name="singleStep">
+         <number>1</number>
+        </property>
+        <property name="value">
+         <number>3</number>
+        </property>
        </widget>
       </item>
       <item row="0" column="3" alignment="Qt::AlignLeft">
        <widget class="QLabel" name="prop_delay_lbl">
-        <property name="text"><string>DFB prop delay</string></property>
+        <property name="text">
+         <string>DFB prop delay</string>
+        </property>
        </widget>
       </item>
       <item row="0" column="4">
        <widget class="QSpinBox" name="dfb_delay_spin">
-        <property name="focusPolicy"><enum>Qt::StrongFocus</enum></property>
-        <property name="alignment"><set>Qt::AlignRight</set></property>
-        <property name="keyboardTracking"><bool>false</bool></property>
-        <property name="minimum"><number>0</number></property>
-        <property name="maximum"><number>15</number></property>
-        <property name="singleStep"><number>1</number></property>
-        <property name="value"><number>0</number></property>
+        <property name="focusPolicy">
+         <enum>Qt::StrongFocus</enum>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight</set>
+        </property>
+        <property name="keyboardTracking">
+         <bool>false</bool>
+        </property>
+        <property name="minimum">
+         <number>0</number>
+        </property>
+        <property name="maximum">
+         <number>15</number>
+        </property>
+        <property name="singleStep">
+         <number>1</number>
+        </property>
+        <property name="value">
+         <number>0</number>
+        </property>
        </widget>
       </item>
       <item row="0" column="5" alignment="Qt::AlignLeft">
        <widget class="QLabel" name="dfb_card_delay_lbl">
-        <property name="text"><string>DFB card delay</string></property>
+        <property name="text">
+         <string>DFB card delay</string>
+        </property>
        </widget>
       </item>
       <item row="1" column="4">
        <widget class="QSpinBox" name="bad_delay_spin">
-        <property name="focusPolicy"><enum>Qt::StrongFocus</enum></property>
-        <property name="alignment"><set>Qt::AlignRight</set></property>
-        <property name="keyboardTracking"><bool>false</bool></property>
-        <property name="minimum"><number>0</number></property>
-        <property name="maximum"><number>15</number></property>
-        <property name="singleStep"><number>1</number></property>
-        <property name="value"><number>5</number></property>
+        <property name="focusPolicy">
+         <enum>Qt::StrongFocus</enum>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight</set>
+        </property>
+        <property name="keyboardTracking">
+         <bool>false</bool>
+        </property>
+        <property name="minimum">
+         <number>0</number>
+        </property>
+        <property name="maximum">
+         <number>15</number>
+        </property>
+        <property name="singleStep">
+         <number>1</number>
+        </property>
+        <property name="value">
+         <number>5</number>
+        </property>
        </widget>
       </item>
       <item row="1" column="5" alignment="Qt::AlignLeft">
        <widget class="QLabel" name="bad_delay_lbl">
-        <property name="text"><string>BAD16 card delay</string></property>
+        <property name="text">
+         <string>BAD16 card delay</string>
+        </property>
        </widget>
       </item>
       <item row="0" column="6">
        <widget class="QComboBox" name="dfbx2_xpt_mode">
-        <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
-        <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
-        <item><property name="text"><string>0: A-C-B-D</string></property></item>
-        <item><property name="text"><string>1: C-A-D-B</string></property></item>
-        <item><property name="text"><string>2: B-D-A-C</string></property></item>
-        <item><property name="text"><string>3: D-B-C-A</string></property></item>
-        <item><property name="text"><string>4: A-B-C-D</string></property></item>
-        <item><property name="text"><string>5: C-D-A-B</string></property></item>
-        <item><property name="text"><string>6: B-A-D-C</string></property></item>
-        <item><property name="text"><string>7: D-C-B-A</string></property></item>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>25</height>
+         </size>
+        </property>
+        <item>
+         <property name="text">
+          <string>0: A-C-B-D</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>1: C-A-D-B</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>2: B-D-A-C</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>3: D-B-C-A</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>4: A-B-C-D</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>5: C-D-A-B</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>6: B-A-D-C</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>7: D-C-B-A</string>
+         </property>
+        </item>
        </widget>
       </item>
       <item row="0" column="7" alignment="Qt::AlignLeft">
        <widget class="QLabel" name="dfbx2_xpt_mode_lbl">
-        <property name="text"><string>DFBx2 XPT mode</string></property>
+        <property name="text">
+         <string>DFBx2 XPT mode</string>
+        </property>
        </widget>
       </item>
       <item row="0" column="8">
        <widget class="QComboBox" name="tp_mode">
-        <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
-        <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
-        <item><property name="text"><string>DEADBEEF</string></property></item>
-        <item><property name="text"><string>55555555</string></property></item>
-        <item><property name="text"><string>AAAAAAAA</string></property></item>
-        <item><property name="text"><string>33333333</string></property></item>
-        <item><property name="text"><string>0F0F0F0F</string></property></item>
-        <item><property name="text"><string>00FF00FF</string></property></item>
-        <item><property name="text"><string>0000FFFF</string></property></item>
-        <item><property name="text"><string>00000000</string></property></item>
-        <item><property name="text"><string>FFFFFFFF</string></property></item>
-        <item><property name="text"><string>8BADF00D</string></property></item>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>25</height>
+         </size>
+        </property>
+        <item>
+         <property name="text">
+          <string>DEADBEEF</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>55555555</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>AAAAAAAA</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>33333333</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>0F0F0F0F</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>00FF00FF</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>0000FFFF</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>00000000</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>FFFFFFFF</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>8BADF00D</string>
+         </property>
+        </item>
        </widget>
       </item>
       <item row="0" column="9" alignment="Qt::AlignLeft">
        <widget class="QLabel" name="tp_mode_lbl">
-        <property name="text"><string>test pattern</string></property>
+        <property name="text">
+         <string>test pattern</string>
+        </property>
        </widget>
       </item>
       <item row="0" column="10" alignment="Qt::AlignLeft">
        <widget class="QPushButton" name="class_glb_send">
-        <property name="text"><string>send class globals</string></property>
-        <property name="minimumSize"><size><width>200</width><height>25</height></size></property>
-        <property name="maximumSize"><size><width>200</width><height>25</height></size></property>
+        <property name="minimumSize">
+         <size>
+          <width>200</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>200</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>send class globals</string>
+        </property>
        </widget>
       </item>
       <item row="1" column="6">
        <widget class="QComboBox" name="dfbclk_xpt_mode">
-        <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
-        <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
-        <property name="toolTip"><string>FANOUT = M-L-M-L, BKPLN = M-L-LSYNC-FRSYNC, SYNC25 = M-L-25-25, SYNC10 = M-L-10-10</string></property>
-        <property name="currentIndex"><number>5</number></property>
-        <item><property name="text"><string>0: FANOUT</string></property></item>
-        <item><property name="text"><string>1: BKPLN</string></property></item>
-        <item><property name="text"><string>2: SYNC25</string></property></item>
-        <item><property name="text"><string>3: SYNC10</string></property></item>
-        <item><property name="text"><string>4: M-L-C-D</string></property></item>
-        <item><property name="text"><string>5: M-L-A-B</string></property></item>
-        <item><property name="text"><string>6: M-L-D-C</string></property></item>
-        <item><property name="text"><string>7: M-L-B-A</string></property></item>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="toolTip">
+         <string>FANOUT = M-L-M-L, BKPLN = M-L-LSYNC-FRSYNC, SYNC25 = M-L-25-25, SYNC10 = M-L-10-10</string>
+        </property>
+        <property name="currentIndex">
+         <number>5</number>
+        </property>
+        <item>
+         <property name="text">
+          <string>0: FANOUT</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>1: BKPLN</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>2: SYNC25</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>3: SYNC10</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>4: M-L-C-D</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>5: M-L-A-B</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>6: M-L-D-C</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>7: M-L-B-A</string>
+         </property>
+        </item>
        </widget>
       </item>
       <item row="1" column="7" alignment="Qt::AlignLeft">
        <widget class="QLabel" name="dfbclk_xpt_mode_lbl">
-        <property name="text"><string>DFBCLK XPT mode</string></property>
+        <property name="text">
+         <string>DFBCLK XPT mode</string>
+        </property>
        </widget>
       </item>
       <item row="1" column="8" alignment="Qt::AlignRight">
        <widget class="QToolButton" name="PS_button">
-        <property name="text"><string>PS</string></property>
-        <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
-        <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
-        <property name="checkable"><bool>true</bool></property>
-        <property name="checked"><bool>false</bool></property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>PS</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="checked">
+         <bool>false</bool>
+        </property>
        </widget>
       </item>
       <item row="1" column="9" alignment="Qt::AlignLeft">
        <widget class="QLabel" name="ps_lbl">
-        <property name="text"><string>parallel stream</string></property>
+        <property name="text">
+         <string>parallel stream</string>
+        </property>
        </widget>
       </item>
      </layout>
     </widget>
    </item>
-
-   <!-- Row 3, col 0: ARL CONTROL -->
    <item row="3" column="0">
     <widget class="QGroupBox" name="arl_widget">
-     <property name="title"><string>DFB AUTO RELOCK CONTROL</string></property>
+     <property name="title">
+      <string>DFB AUTO RELOCK CONTROL</string>
+     </property>
      <layout class="QGridLayout" name="arl_layout">
-      <property name="leftMargin"><number>5</number></property>
-      <property name="topMargin"><number>5</number></property>
-      <property name="rightMargin"><number>5</number></property>
-      <property name="bottomMargin"><number>5</number></property>
-      <property name="spacing"><number>5</number></property>
-      <item row="0" column="0" alignment="Qt::AlignRight">
-       <widget class="QLabel" name="ARLsense_title">
-        <property name="text"><string>flux jump threshold</string></property>
-       </widget>
-      </item>
+      <property name="sizeConstraint">
+       <enum>QLayout::SetMinimumSize</enum>
+      </property>
+      <property name="leftMargin">
+       <number>5</number>
+      </property>
+      <property name="topMargin">
+       <number>5</number>
+      </property>
+      <property name="rightMargin">
+       <number>5</number>
+      </property>
+      <property name="bottomMargin">
+       <number>5</number>
+      </property>
+      <property name="horizontalSpacing">
+       <number>10</number>
+      </property>
+      <property name="verticalSpacing">
+       <number>5</number>
+      </property>
       <item row="1" column="0" alignment="Qt::AlignRight">
        <widget class="QSpinBox" name="ARLsense_spin">
-        <property name="focusPolicy"><enum>Qt::StrongFocus</enum></property>
-        <property name="keyboardTracking"><bool>false</bool></property>
-        <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
-        <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
-        <property name="minimum"><number>0</number></property>
-        <property name="maximum"><number>16383</number></property>
-        <property name="singleStep"><number>256</number></property>
-        <property name="value"><number>1024</number></property>
-       </widget>
-      </item>
-      <item row="1" column="1" alignment="Qt::AlignLeft">
-       <widget class="QLabel" name="ARLsense_indicator_lbl">
-        <property name="text"><string>DAC units</string></property>
-       </widget>
-      </item>
-      <item row="2" column="0" alignment="Qt::AlignRight">
-       <widget class="QLineEdit" name="ARLsense_eng_indicator">
-        <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
-        <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
-        <property name="alignment"><set>Qt::AlignRight</set></property>
-        <property name="readOnly"><bool>true</bool></property>
-        <property name="focusPolicy"><enum>Qt::NoFocus</enum></property>
-       </widget>
-      </item>
-      <item row="2" column="1" alignment="Qt::AlignLeft">
-       <widget class="QLabel" name="ARLsense_eng_indicator_lbl">
-        <property name="text"><string>mV</string></property>
-       </widget>
-      </item>
-      <item row="0" column="2" alignment="Qt::AlignRight">
-       <widget class="QLabel" name="RLDpos_title">
-        <property name="text"><string>[+] event reset delay</string></property>
-       </widget>
-      </item>
-      <item row="1" column="2" alignment="Qt::AlignRight">
-       <widget class="QSpinBox" name="RLDpos_spin">
-        <property name="focusPolicy"><enum>Qt::StrongFocus</enum></property>
-        <property name="keyboardTracking"><bool>false</bool></property>
-        <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
-        <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
-        <property name="minimum"><number>1</number></property>
-        <property name="maximum"><number>65535</number></property>
-        <property name="singleStep"><number>16</number></property>
-        <property name="value"><number>64</number></property>
-       </widget>
-      </item>
-      <item row="1" column="3" alignment="Qt::AlignLeft">
-       <widget class="QLabel" name="RLDpos_indicator_lbl">
-        <property name="text"><string>FRM units</string></property>
-       </widget>
-      </item>
-      <item row="2" column="2" alignment="Qt::AlignRight">
-       <widget class="QLineEdit" name="RLDpos_eng_indicator">
-        <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
-        <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
-        <property name="alignment"><set>Qt::AlignRight</set></property>
-        <property name="readOnly"><bool>true</bool></property>
-        <property name="focusPolicy"><enum>Qt::NoFocus</enum></property>
-       </widget>
-      </item>
-      <item row="2" column="3" alignment="Qt::AlignLeft">
-       <widget class="QLabel" name="RLDpos_eng_indicator_lbl">
-        <property name="text"><string>µs</string></property>
-       </widget>
-      </item>
-      <item row="0" column="4" alignment="Qt::AlignRight">
-       <widget class="QLabel" name="RLDneg_title">
-        <property name="text"><string>[-] event reset delay</string></property>
-       </widget>
-      </item>
-      <item row="1" column="4" alignment="Qt::AlignRight">
-       <widget class="QSpinBox" name="RLDneg_spin">
-        <property name="focusPolicy"><enum>Qt::StrongFocus</enum></property>
-        <property name="keyboardTracking"><bool>false</bool></property>
-        <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
-        <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
-        <property name="minimum"><number>1</number></property>
-        <property name="maximum"><number>65535</number></property>
-        <property name="singleStep"><number>16</number></property>
-        <property name="value"><number>4</number></property>
-       </widget>
-      </item>
-      <item row="1" column="5" alignment="Qt::AlignLeft">
-       <widget class="QLabel" name="RLDneg_indicator_lbl">
-        <property name="text"><string>FRM units</string></property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::StrongFocus</enum>
+        </property>
+        <property name="keyboardTracking">
+         <bool>false</bool>
+        </property>
+        <property name="minimum">
+         <number>0</number>
+        </property>
+        <property name="maximum">
+         <number>16383</number>
+        </property>
+        <property name="singleStep">
+         <number>256</number>
+        </property>
+        <property name="value">
+         <number>1024</number>
+        </property>
        </widget>
       </item>
       <item row="2" column="4" alignment="Qt::AlignRight">
        <widget class="QLineEdit" name="RLDneg_eng_indicator">
-        <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
-        <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
-        <property name="alignment"><set>Qt::AlignRight</set></property>
-        <property name="readOnly"><bool>true</bool></property>
-        <property name="focusPolicy"><enum>Qt::NoFocus</enum></property>
-       </widget>
-      </item>
-      <item row="2" column="5" alignment="Qt::AlignLeft">
-       <widget class="QLabel" name="RLDneg_eng_indicator_lbl">
-        <property name="text"><string>µs</string></property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight</set>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
        </widget>
       </item>
       <item row="0" column="6" alignment="Qt::AlignLeft">
        <widget class="QLabel" name="RLD_track">
-        <property name="text"><string>track</string></property>
+        <property name="text">
+         <string>track</string>
+        </property>
        </widget>
       </item>
-      <item row="1" column="6" alignment="Qt::AlignLeft">
-       <widget class="QRadioButton" name="RLD_frame">
-        <property name="text"><string>frame</string></property>
-        <property name="checked"><bool>true</bool></property>
+      <item row="1" column="2" alignment="Qt::AlignRight">
+       <widget class="QSpinBox" name="RLDpos_spin">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::StrongFocus</enum>
+        </property>
+        <property name="keyboardTracking">
+         <bool>false</bool>
+        </property>
+        <property name="minimum">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <number>65535</number>
+        </property>
+        <property name="singleStep">
+         <number>16</number>
+        </property>
+        <property name="value">
+         <number>64</number>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="4" alignment="Qt::AlignRight">
+       <widget class="QSpinBox" name="RLDneg_spin">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::StrongFocus</enum>
+        </property>
+        <property name="keyboardTracking">
+         <bool>false</bool>
+        </property>
+        <property name="minimum">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <number>65535</number>
+        </property>
+        <property name="singleStep">
+         <number>16</number>
+        </property>
+        <property name="value">
+         <number>4</number>
+        </property>
        </widget>
       </item>
       <item row="2" column="6" alignment="Qt::AlignLeft">
        <widget class="QRadioButton" name="RLD_time">
-        <property name="text"><string>time</string></property>
-        <property name="checked"><bool>false</bool></property>
+        <property name="text">
+         <string>time</string>
+        </property>
+        <property name="checked">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0" alignment="Qt::AlignRight">
+       <widget class="QLineEdit" name="ARLsense_eng_indicator">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight</set>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="3" alignment="Qt::AlignLeft">
+       <widget class="QLabel" name="RLDpos_indicator_lbl">
+        <property name="text">
+         <string>FRM units</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="3" alignment="Qt::AlignLeft">
+       <widget class="QLabel" name="RLDpos_eng_indicator_lbl">
+        <property name="text">
+         <string>µs</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="4" colspan="2">
+       <widget class="QLabel" name="RLDneg_title">
+        <property name="text">
+         <string>[-] event reset delay</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="5" alignment="Qt::AlignLeft">
+       <widget class="QLabel" name="RLDneg_eng_indicator_lbl">
+        <property name="text">
+         <string>µs</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2" colspan="2">
+       <widget class="QLabel" name="RLDpos_title">
+        <property name="text">
+         <string>[+] event reset delay</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2" alignment="Qt::AlignRight">
+       <widget class="QLineEdit" name="RLDpos_eng_indicator">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight</set>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0" colspan="2">
+       <widget class="QLabel" name="ARLsense_title">
+        <property name="text">
+         <string>flux jump threshold</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1" alignment="Qt::AlignLeft">
+       <widget class="QLabel" name="ARLsense_eng_indicator_lbl">
+        <property name="text">
+         <string>mV</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="5" alignment="Qt::AlignLeft">
+       <widget class="QLabel" name="RLDneg_indicator_lbl">
+        <property name="text">
+         <string>FRM units</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="6" alignment="Qt::AlignLeft">
+       <widget class="QRadioButton" name="RLD_frame">
+        <property name="text">
+         <string>frame</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLabel" name="ARLsense_indicator_lbl">
+        <property name="text">
+         <string>DAC units</string>
+        </property>
        </widget>
       </item>
      </layout>
     </widget>
    </item>
-
-   <!-- Row 3, col 1: TRIANGLE WAVEFORM GENERATOR -->
-   <item row="3" column="1" alignment="Qt::AlignRight">
+   <item row="3" column="1">
     <widget class="QGroupBox" name="tri_wvfm_widget">
-     <property name="title"><string>DFB/BAD TRIANGLE WAVEFORM GENERATOR</string></property>
+     <property name="title">
+      <string>DFB/BAD TRIANGLE WAVEFORM GENERATOR</string>
+     </property>
      <layout class="QGridLayout" name="tri_wvfm_layout">
-      <property name="leftMargin"><number>5</number></property>
-      <property name="topMargin"><number>5</number></property>
-      <property name="rightMargin"><number>5</number></property>
-      <property name="bottomMargin"><number>5</number></property>
-      <property name="spacing"><number>5</number></property>
-      <item row="0" column="0" alignment="Qt::AlignRight">
-       <widget class="QSpinBox" name="dwell">
-        <property name="focusPolicy"><enum>Qt::StrongFocus</enum></property>
-        <property name="keyboardTracking"><bool>false</bool></property>
-        <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
-        <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
-        <property name="minimum"><number>0</number></property>
-        <property name="maximum"><number>15</number></property>
-        <property name="singleStep"><number>1</number></property>
-        <property name="value"><number>0</number></property>
-       </widget>
-      </item>
-      <item row="0" column="1" alignment="Qt::AlignLeft">
-       <widget class="QLabel" name="dwell_lbl">
-        <property name="text"><string>dwell (2^N)</string></property>
+      <property name="leftMargin">
+       <number>5</number>
+      </property>
+      <property name="topMargin">
+       <number>5</number>
+      </property>
+      <property name="rightMargin">
+       <number>5</number>
+      </property>
+      <property name="bottomMargin">
+       <number>5</number>
+      </property>
+      <property name="spacing">
+       <number>5</number>
+      </property>
+      <item row="3" column="4" alignment="Qt::AlignRight">
+       <widget class="QLineEdit" name="freq_eng_indicator">
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight</set>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
        </widget>
       </item>
       <item row="0" column="2" alignment="Qt::AlignRight">
        <widget class="QSpinBox" name="range">
-        <property name="focusPolicy"><enum>Qt::StrongFocus</enum></property>
-        <property name="keyboardTracking"><bool>false</bool></property>
-        <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
-        <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
-        <property name="minimum"><number>1</number></property>
-        <property name="maximum"><number>14</number></property>
-        <property name="singleStep"><number>1</number></property>
-        <property name="value"><number>10</number></property>
-       </widget>
-      </item>
-      <item row="0" column="3" alignment="Qt::AlignLeft">
-       <widget class="QLabel" name="range_lbl">
-        <property name="text"><string>steps (2^N)</string></property>
-       </widget>
-      </item>
-      <item row="0" column="4" alignment="Qt::AlignRight">
-       <widget class="QSpinBox" name="step">
-        <property name="focusPolicy"><enum>Qt::StrongFocus</enum></property>
-        <property name="keyboardTracking"><bool>false</bool></property>
-        <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
-        <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
-        <property name="minimum"><number>1</number></property>
-        <property name="maximum"><number>16383</number></property>
-        <property name="singleStep"><number>1</number></property>
-        <property name="value"><number>8</number></property>
-       </widget>
-      </item>
-      <item row="0" column="5" alignment="Qt::AlignLeft">
-       <widget class="QLabel" name="step_lbl">
-        <property name="text"><string>step size</string></property>
-       </widget>
-      </item>
-      <item row="0" column="6" alignment="Qt::AlignRight">
-       <widget class="QToolButton" name="tri_idx_button">
-        <property name="text"><string>LSYNC</string></property>
-        <property name="minimumSize"><size><width>0</width><height>25</height></size></property>
-        <property name="maximumSize"><size><width>16777215</width><height>25</height></size></property>
-        <property name="checkable"><bool>true</bool></property>
-        <property name="checked"><bool>false</bool></property>
-       </widget>
-      </item>
-      <item row="0" column="7" alignment="Qt::AlignLeft">
-       <widget class="QLabel" name="tri_idx_lbl">
-        <property name="text"><string>timebase</string></property>
-       </widget>
-      </item>
-      <item row="2" column="0" alignment="Qt::AlignRight">
-       <widget class="QLineEdit" name="period_indicator">
-        <property name="alignment"><set>Qt::AlignRight</set></property>
-        <property name="readOnly"><bool>true</bool></property>
-        <property name="focusPolicy"><enum>Qt::NoFocus</enum></property>
-       </widget>
-      </item>
-      <item row="2" column="1" alignment="Qt::AlignLeft">
-       <widget class="QLabel" name="period_indicator_lbl">
-        <property name="text"><string>period</string></property>
-       </widget>
-      </item>
-      <item row="3" column="0" alignment="Qt::AlignRight">
-       <widget class="QLineEdit" name="period_eng_indicator">
-        <property name="alignment"><set>Qt::AlignRight</set></property>
-        <property name="readOnly"><bool>true</bool></property>
-        <property name="focusPolicy"><enum>Qt::NoFocus</enum></property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::StrongFocus</enum>
+        </property>
+        <property name="keyboardTracking">
+         <bool>false</bool>
+        </property>
+        <property name="minimum">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <number>14</number>
+        </property>
+        <property name="singleStep">
+         <number>1</number>
+        </property>
+        <property name="value">
+         <number>10</number>
+        </property>
        </widget>
       </item>
       <item row="3" column="1" alignment="Qt::AlignLeft">
        <widget class="QLabel" name="period_eng_indicator_lbl">
-        <property name="text"><string>period [µs]</string></property>
+        <property name="text">
+         <string>period [µs]</string>
+        </property>
        </widget>
       </item>
-      <item row="2" column="2" alignment="Qt::AlignRight">
-       <widget class="QLineEdit" name="amp_indicator">
-        <property name="alignment"><set>Qt::AlignRight</set></property>
-        <property name="readOnly"><bool>true</bool></property>
-        <property name="focusPolicy"><enum>Qt::NoFocus</enum></property>
+      <item row="2" column="1" alignment="Qt::AlignLeft">
+       <widget class="QLabel" name="period_indicator_lbl">
+        <property name="text">
+         <string>period</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0" alignment="Qt::AlignRight">
+       <widget class="QLineEdit" name="period_eng_indicator">
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight</set>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
        </widget>
       </item>
       <item row="2" column="3" alignment="Qt::AlignLeft">
        <widget class="QLabel" name="amp_indicator_lbl">
-        <property name="text"><string>amplitude</string></property>
+        <property name="text">
+         <string>amplitude</string>
+        </property>
        </widget>
       </item>
-      <item row="3" column="2" alignment="Qt::AlignRight">
-       <widget class="QLineEdit" name="amp_eng_indicator">
-        <property name="alignment"><set>Qt::AlignRight</set></property>
-        <property name="readOnly"><bool>true</bool></property>
-        <property name="focusPolicy"><enum>Qt::NoFocus</enum></property>
+      <item row="0" column="6" alignment="Qt::AlignRight">
+       <widget class="QToolButton" name="tri_idx_button">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>LSYNC</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="checked">
+         <bool>false</bool>
+        </property>
        </widget>
       </item>
       <item row="3" column="3" alignment="Qt::AlignLeft">
        <widget class="QLabel" name="amp_eng_indicator_lbl">
-        <property name="text"><string>amplitude [mV]</string></property>
+        <property name="text">
+         <string>amplitude [mV]</string>
+        </property>
        </widget>
       </item>
-      <item row="2" column="4" colspan="4" alignment="Qt::AlignRight">
-       <widget class="QPushButton" name="tri_send">
-        <property name="text"><string>send triangle</string></property>
-        <property name="minimumSize"><size><width>200</width><height>25</height></size></property>
-        <property name="maximumSize"><size><width>200</width><height>25</height></size></property>
+      <item row="0" column="0" alignment="Qt::AlignRight">
+       <widget class="QSpinBox" name="dwell">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::StrongFocus</enum>
+        </property>
+        <property name="keyboardTracking">
+         <bool>false</bool>
+        </property>
+        <property name="minimum">
+         <number>0</number>
+        </property>
+        <property name="maximum">
+         <number>15</number>
+        </property>
+        <property name="singleStep">
+         <number>1</number>
+        </property>
+        <property name="value">
+         <number>0</number>
+        </property>
        </widget>
       </item>
-      <item row="3" column="4" alignment="Qt::AlignRight">
-       <widget class="QLineEdit" name="freq_eng_indicator">
-        <property name="alignment"><set>Qt::AlignRight</set></property>
-        <property name="readOnly"><bool>true</bool></property>
-        <property name="focusPolicy"><enum>Qt::NoFocus</enum></property>
+      <item row="2" column="2" alignment="Qt::AlignRight">
+       <widget class="QLineEdit" name="amp_indicator">
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight</set>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
        </widget>
       </item>
       <item row="3" column="5" alignment="Qt::AlignLeft">
        <widget class="QLabel" name="freq_eng_indicator_lbl">
-        <property name="text"><string>freq [kHz]</string></property>
+        <property name="text">
+         <string>freq [kHz]</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="5" alignment="Qt::AlignLeft">
+       <widget class="QLabel" name="step_lbl">
+        <property name="text">
+         <string>step size</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1" alignment="Qt::AlignLeft">
+       <widget class="QLabel" name="dwell_lbl">
+        <property name="text">
+         <string>dwell (2^N)</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="2" alignment="Qt::AlignRight">
+       <widget class="QLineEdit" name="amp_eng_indicator">
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight</set>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="4" alignment="Qt::AlignRight">
+       <widget class="QSpinBox" name="step">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::StrongFocus</enum>
+        </property>
+        <property name="keyboardTracking">
+         <bool>false</bool>
+        </property>
+        <property name="minimum">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <number>16383</number>
+        </property>
+        <property name="singleStep">
+         <number>1</number>
+        </property>
+        <property name="value">
+         <number>8</number>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0" alignment="Qt::AlignRight">
+       <widget class="QLineEdit" name="period_indicator">
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight</set>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3" alignment="Qt::AlignLeft">
+       <widget class="QLabel" name="range_lbl">
+        <property name="text">
+         <string>steps (2^N)</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="7" alignment="Qt::AlignLeft">
+       <widget class="QLabel" name="tri_idx_lbl">
+        <property name="text">
+         <string>timebase</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="4" colspan="4" alignment="Qt::AlignRight">
+       <widget class="QPushButton" name="tri_send">
+        <property name="minimumSize">
+         <size>
+          <width>200</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>200</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>send triangle</string>
+        </property>
        </widget>
       </item>
      </layout>
     </widget>
    </item>
-
-   <!-- Row 4: CRATE TAB WIDGET (tabs added dynamically) -->
    <item row="4" column="0" colspan="2">
     <widget class="QTabWidget" name="crate_widget">
      <property name="tabShape">
