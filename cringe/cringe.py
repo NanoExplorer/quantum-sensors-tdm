@@ -135,7 +135,7 @@ class Cringe(QtWidgets.QWidget):
         # 		self.cal_coeffs = [0,0,0,0,0,0,0]
         # 		self.appTrim =[0,0,0,0,0,0,0]
 
-        self.setWindowTitle("CRINGE")  # Phase Offset Widget
+        self.setWindowTitle("CRINGE: Save Before Exit Edition")  # Phase Offset Widget
         self.setGeometry(30, 30, 800, 1000)
         self.setContentsMargins(0, 0, 0, 0)
         # 		self.setFixedWidth(1400)
