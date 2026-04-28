@@ -257,6 +257,10 @@ class Cringe(QtWidgets.QWidget):
             # There used to be a DFBs card here but ctr determined it
             # was not used by anyone due to a bug that would prevent
             # basically all communication with it.
+            # Carl says someone used it once. This means that the 
+            # code got broken afterwards, but before migration to GitHub?
+            # Anyway, main branch CRINGE still has the dfb/scream code.
+            # Single Channel REAdout Module?
             self.crate_widgets.append(card_widget)
             self.crate_widget.addTab(card_widget, tab_lbl)
 
