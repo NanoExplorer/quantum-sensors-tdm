@@ -1981,7 +1981,7 @@ def main():
         load_sys_config = pickle.load(load_file)
         load_file.close()
         load_on_launch = True
-        log.info("failed to interpret file %s" % load_filename)
+        log.info("loaded file %s" % load_filename)
         # these are global variables accessed later
         tower_vector = load_sys_config['Tower']['TowerVector']
         loadCrateConfig = load_sys_config['CrateConfig']

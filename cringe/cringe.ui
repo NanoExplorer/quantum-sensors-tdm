@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>CRINGE</string>
+   <string>CRINGE: Experimental Async Edition</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <property name="horizontalSpacing">

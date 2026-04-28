@@ -50,7 +50,9 @@ class DfbScanWorker(QObject):
     def _scan_once(self):
         wrote_any = False
         for ch in self._channels:
-            if not ch.unlocked:
+            if not ch.unlocked or not ch.isEnabled():
+                #isEnabled is a qt function since the channels are qwidgets
+                # channels are disabled if they are >= sequence length
                 continue
             p1 = ch.pending_wreg1
             p2 = ch.pending_wreg2
