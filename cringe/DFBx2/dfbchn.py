@@ -51,6 +51,7 @@ class dfbChn(QWidget):
         self.pending_wreg2 = False
         self.pending_wreg3 = False
         self.pending_wreg5 = False
+        self.pending_relock = False
 
         self.dc = False
         self.lohi = True
@@ -218,6 +219,8 @@ class dfbChn(QWidget):
         else:
             self.FBA_button.setStyleSheet("background-color: #" + tc.red + ";")
         if self.unlocked == 1:
+            if self.pending_wreg3:
+                self.pending_relock = True
             self.pending_wreg3 = True
 
     def FBB_changed(self):
@@ -229,6 +232,8 @@ class dfbChn(QWidget):
         else:
             self.FBB_button.setStyleSheet("background-color: #" + tc.red + ";")
         if self.unlocked == 1:
+            if self.pending_wreg3:
+                self.pending_relock = True
             self.pending_wreg3 = True
 
     def ARL_changed(self):

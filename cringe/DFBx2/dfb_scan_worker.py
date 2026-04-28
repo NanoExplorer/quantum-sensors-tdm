@@ -65,6 +65,19 @@ class DfbScanWorker(QObject):
             ch.pending_wreg3 = False
             ch.pending_wreg5 = False
             try:
+                if ch.pending_relock:
+                    # If the user has clicked the fba button twice in quick succession
+                    # or muxmaster relock was used
+                    # we need to write a "feedback off" followed by 
+                    # updating feedback to whatever the user requested at the end of the day
+                    ch.pending_relock = False
+                    wregvals = [ch._build_wreg0()]
+                    wregvals.append(0x6000000) 
+                    # hardcoded wreg3: FBA off. FBB off.
+                    # ARL off. P=0, I=0.
+                    # These will all be rewritten in the next step
+                    write_wreg_sequence(ch.serialport, wregvals, ch.address)
+
                 wregvals = [ch._build_wreg0()]
                 if p1:
                     wregvals.append(ch._build_wreg1())
