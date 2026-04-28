@@ -124,7 +124,14 @@ class BlueBox(object):
         return bytes(bytevals)
 
     def _getbytes_tower(self, value):
-        ''' get 4 bytes for the tower '''
+        ''' get 4 bytes for the tower
+        byte 0: msb=0, next 7 bits are lowest 7 bits of value
+        byte 1: msb=0, second-lowest 7 bits
+        byte 2: msb=0, 5 bits of addr, 2 MSB of value
+        byte 3: msb=1, rest of the bits of addr
+
+        '''
+
         address = int(self.address)
         channel = int(self.channel)
         #print 'address = [%3i] channel = [%3i]' % (address, channel)

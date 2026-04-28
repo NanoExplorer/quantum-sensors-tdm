@@ -7,6 +7,7 @@ plt.rcParams['figure.constrained_layout.use']=True
 from scipy.signal import decimate
 from glob import glob
 import re
+import warnings
 
 # Note: most arrays have indices [bias, fb/err, column, row, time]
 
@@ -17,6 +18,10 @@ class DacCircuit:
     dac_volts: float = 1
 
     def dac_to_v(self, dac):
+        if self.r == type(self).r:
+            warnings.warn(f"your {type(self)} resistance may not have been calibrated: 1% error potentially")
+        if self.dac_volts == type(self).dac_volts:
+            warnings.warn(f"your {type(self)} dac_volts may not have been calibrated: potential for 10% error")
         return dac * self.dac_volts / (2**self.dac_bits - 1)
 
     def dac_to_i(self, dac):

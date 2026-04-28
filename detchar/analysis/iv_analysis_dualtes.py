@@ -164,7 +164,7 @@ class IVAnalyzeDual(IVCurveAnalyzeSingle):
         try:
             self.lab_turn_idx = np.argmin(np.abs(np.diff(self.y[self.lab_start:self.lab_end]))) + self.lab_start
         except ValueError:
-            self.turn_idx = self.sci_end
+            self.lab_turn_idx = self.sci_end
         self.lab_normal_idx = (self.lab_end+self.lab_turn_idx)//2
         if plot:
             self.iv_regions_debug_plot()
@@ -313,9 +313,9 @@ class IVvsADRTempDual(IVversusADRTempOneRow):
         self.v_clean = self.v.filled(fill_value=np.nan)
         self.r_clean = self.r.filled(fill_value=np.nan)
 
-        for p in self.p_clean.T:
-            print(np.all(np.isnan(p)))
-        print(self.p_clean.shape, self.ro_clean.shape)
+        # for p in self.p_clean.T:
+        #     print(np.all(np.isnan(p)))
+        #print(self.p_clean.shape, self.ro_clean.shape)
         self.p_at_rnfrac = self.get_value_at_rn_frac(self.rn_fracs,self.p_clean,self.ro_clean)
 
         self.pfits = self.fit_pvt_for_all_rn_frac()
