@@ -10,13 +10,16 @@ v0: 2/2021
 v1: 4/2021 updated to allow plotting and to take IV curve at current temperature if 
 @author GCJ
 v0 5/2022 can acquire and store RvT data, can't control ramp rate just yet fixed to 50mK/min in adr_gui_control or somewhere
+Update: 2026: CR has added ramp rate controls to the "advanced" settings button in adr_gui. Note that unless this is REALLY SMALL
+the actual ADR temperature won't change linearly with time due to the PID loop's response time.
+
 '''
 
 import yaml, sys, os
 from iv_utils import *
 from IPython import embed
 import pickle
-
+from acquire import column_name_to_num
 
 def plot_rvt_groups(data):
     t = data['temperature']
@@ -66,10 +69,10 @@ if __name__=='__main__':
 
     dac0 = int(cfg['voltage_bias']['v_stop_dac'])
     dac1 = int(cfg['voltage_bias']['v_start_dac'])
-
+    print(dac0,dac1)
     #############
-    pt_taker = IVPointTaker(db_cardname=cfg['dfb']['dfb_cardname'], bayname=cfg['detectors']['Column'], voltage_source = voltage_source)
-    curve_taker = IVCurveTaker(pt_taker, temp_settle_delay_s=cfg['runconfig']['temp_settle_delay_s'], shock_normal_dac_value=65000, zero_tower_at_end=cfg['voltage_bias']['setVtoZeroPostIV'], adr_gui_control=None)
+    pt_taker = IVPointTaker(db_cardname=cfg['voltage_bias']['db_cardname'], bayname=column_name_to_num(cfg['detectors']['Column']), voltage_source = voltage_source)
+    curve_taker = IVCurveTaker(pt_taker, temp_settle_delay_s=cfg['runconfig']['temp_settle_delay_s'], shock_normal_dac_value=65000, zero_tower_at_end=cfg['voltage_bias']['setVtoZeroPostIV'])
     curve_taker.prep_fb_settings(I=cfg['dfb']['i'], fba_offset=cfg['dfb']['dac_a_offset'], ARLoff=True)
 
     t = []
@@ -77,19 +80,24 @@ if __name__=='__main__':
     curve_taker.set_temp_and_settle(Tstart) # uses temp_settle_delay_s, but might not be long enough
 
     print('Checking if we are at Tstart={:.3f} K.'.format(Tstart))
-    Tnow = curve_taker.adr_gui_control.get_temp_k()
+    Tnow = pt_taker.adr.get_temp_k()
     while not np.isclose(Tnow,Tstart,atol=1E-3):        
         time.sleep(1)
-        Tnow = curve_taker.adr_gui_control.get_temp_k()
+        Tnow = pt_taker.adr.get_temp_k()
 
     print('We are at Tstart={:.3f} K, moving to Tstop={:.3f} K now.'.format(Tstart,Tstop))
-    curve_taker.adr_gui_control.set_temp_k(Tstop) # no delay, just gooo
+    old_ramp_rate = pt_taker.adr.get_ramp_rate_kpm() # note old ramp rate so we go back to it when done
+    try:
+        pt_taker.adr.set_ramp_rate_kpm(cfg["runconfig"]["ramprate"])
+    except KeyError:
+        print("No ramp rate specified in config, leaving as-is")
+    pt_taker.adr.set_temp_k(Tstop) # no delay, just gooo
 
-    Tnow = curve_taker.adr_gui_control.get_temp_k()
+    Tnow = pt_taker.adr.get_temp_k()
 
-    while not np.isclose(Tnow,Tstop,atol=1E-3):
+    while not np.isclose(Tnow,Tstop,atol=1E-3): # Note this means we stop 1 mK early
         try:
-            Tnow = curve_taker.adr_gui_control.get_temp_k()
+            Tnow = pt_taker.adr.get_temp_k()
             t.append(Tnow)
             fb0 = curve_taker.pt.get_iv_pt(dac0)
             fb1 = curve_taker.pt.get_iv_pt(dac1)
@@ -107,7 +115,7 @@ if __name__=='__main__':
             'desc':desc,
             'cfg':cfg,
             }
-
+    pt_taker.adr.set_ramp_rate_kpm(old_ramp_rate)
     if cfg['runconfig']['show_plot']:
         print('showing plot')
         plot_rvt_groups(data)

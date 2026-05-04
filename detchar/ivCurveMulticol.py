@@ -157,7 +157,12 @@ def main():
         data = ivsweeper.get_sweep(
             dacs, 
             bath_temps, 
-            extra_info={'config': cfg, 'exp_status': desc, 'row_to_period_map': cfg['detectors']['Rows']}
+            extra_info={
+                'config': cfg, 
+                'exp_status': desc, 
+                'row_to_period_map': cfg['detectors']['Rows'],
+                'return_to_T': 0.1
+            }
         )
         data.to_file(write_filename,overwrite=True)
         if cfg['runconfig']['show_plot']:

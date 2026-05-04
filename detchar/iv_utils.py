@@ -148,10 +148,12 @@ class IVPointTakerMulti(IVPointTaker):
         if len(relocked_chans) > 0:
             time.sleep(self.acq_delay)
             post_relock_data = self.ec.getNewData2(16)
-            print(f"Relocked: {relocked_chans}")
+            # print(f"Relocked: {relocked_chans}")
             for i in relocked_chans:
                 avg_after = np.mean(post_relock_data[f"chan{i}"] >> 2)
-                self._relock_offset[i] += avg_after - processed_data[i]
+                relock_offset_delta = avg_after - processed_data[i]
+                # print(i, relock_offset_delta)
+                self._relock_offset[i] += relock_offset_delta
                 processed_data[i] = avg_after
 
         return processed_data - self._relock_offset
@@ -234,7 +236,10 @@ class IVCurveTaker():
         time.sleep(5) # wait after shock to settle
         
         fb_values = []
-        bar = progress.bar.Bar("getting IV points",max=len(dac_values))
+        bar = progress.bar.IncrementalBar("getting IV points",
+            max=len(dac_values),
+            suffix=' [%(index)d/%(max)d, ETA:%(eta_td)s]'
+        )
         for dac_value in dac_values:
             fb_values.append(self.pt.get_iv_pt(dac_value))
             bar.next()
@@ -277,7 +282,7 @@ class IVTempSweeper():
     def initialize_bath_temp(self,set_temp_k):
         if self.to_normal_method == None:
             self.curve_taker.set_temp_and_settle(set_temp_k)
-            self.curve_taker.pt.wait_temp_stable(set_temp_k, tol=.001, time_out_s=180)
+            self.curve_taker.pt.wait_temp_stable(set_temp_k, tol=.001, time_out_s=300)
         elif self.to_normal_method == "overbias":
             self.curve_taker.overbias(self.overbias_temp_k, setpoint_k = set_temp_k, dac_value=self.overbias_dac_value, verbose=True)
             self.curve_taker.set_temp_and_settle(set_temp_k)
@@ -288,6 +293,10 @@ class IVTempSweeper():
             self.initialize_bath_temp(set_temp_k)
             data = self.curve_taker.get_curve(dac_values, extra_info)
             datas.append(data)
+        try:
+            self.curve_taker.set_temp_and_settle(extra_info['return_to_T'])
+        except KeyError:
+            pass
         return IVTempSweepData(set_temps_k, datas)
 
 class IVColdloadSweeper():
