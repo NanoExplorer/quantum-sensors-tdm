@@ -7,7 +7,7 @@ import json
 import numpy as np
 import os
 
-DEBUG = True
+DEBUG = False
 rpc_client_for_easy_client.DEBUG = False
 def debugprint(txt):
     if DEBUG:
