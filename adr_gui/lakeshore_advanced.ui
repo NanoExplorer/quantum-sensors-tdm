@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>530</width>
-    <height>302</height>
+    <width>559</width>
+    <height>357</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,8 +16,8 @@
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
-     <x>40</x>
-     <y>250</y>
+     <x>0</x>
+     <y>290</y>
      <width>341</width>
      <height>32</height>
     </rect>
@@ -33,13 +33,13 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>-10</y>
+     <y>10</y>
      <width>491</width>
      <height>111</height>
     </rect>
    </property>
    <property name="text">
-    <string>Edit PID parameters and ramp rate for the Lakeshore. Be sure to familiarize yourself with Lakeshore's definition of P, I, and D! Also, should we try a  negative heater setting after demag to help drain the current? And should we power on the electronics automatically?</string>
+    <string>Edit PID parameters and ramp rate for the Lakeshore. Be sure to familiarize yourself with Lakeshore's definition of P, I, and D! Also whether to use a negative heater setting to help drain the current, whether to power on electronics, and whether to activate temperature-based heat-switch closing at beginning of ADR cycle instead of closing immediately.</string>
    </property>
    <property name="wordWrap">
     <bool>true</bool>
@@ -48,8 +48,8 @@
   <widget class="QWidget" name="verticalLayoutWidget">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>100</y>
+     <x>10</x>
+     <y>130</y>
      <width>241</width>
      <height>141</height>
     </rect>
@@ -100,7 +100,11 @@
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_2">
       <item>
-       <widget class="QDoubleSpinBox" name="spinbox_ramp"/>
+       <widget class="QDoubleSpinBox" name="spinbox_ramp">
+        <property name="decimals">
+         <number>3</number>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QLabel" name="label_3">
@@ -117,16 +121,46 @@
    <property name="geometry">
     <rect>
      <x>270</x>
-     <y>100</y>
-     <width>229</width>
-     <height>88</height>
+     <y>120</y>
+     <width>343</width>
+     <height>157</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout_2">
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_6">
+      <property name="sizeConstraint">
+       <enum>QLayout::SetMinAndMaxSize</enum>
+      </property>
       <item>
        <widget class="QDoubleSpinBox" name="spinbox_demag_min">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Maximum" vsizetype="Minimum">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>84</width>
+          <height>21</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>90</width>
+          <height>24</height>
+         </size>
+        </property>
+        <property name="baseSize">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
         <property name="decimals">
          <number>1</number>
         </property>
@@ -143,6 +177,12 @@
       </item>
       <item>
        <widget class="QLabel" name="label_7">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="text">
          <string>Demag minimum heat</string>
         </property>
@@ -169,6 +209,33 @@
        <bool>true</bool>
       </property>
      </widget>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_5">
+      <item>
+       <widget class="QDoubleSpinBox" name="spinbox_hsw_temp">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>90</width>
+          <height>16777215</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="check_hsw_temp">
+        <property name="text">
+         <string>Close HSW at Temp [K]</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </item>
    </layout>
   </widget>

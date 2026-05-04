@@ -281,7 +281,7 @@ class ADR_Gui(PyQt5.QtWidgets.QMainWindow):
         _, r = self.tempControl.a.temperature_controller.getRamp()
         self.pidr = [p, i, d, r] 
         self.tempControl.rampRate = r
-
+        self.temp_based_hsw_activation = None
         self.advanced_reject() # sets values of pid dialog to values we just got from the controller
 
         # these are to turn on and off the crate and tower during and after mags
@@ -518,7 +518,8 @@ class ADR_Gui(PyQt5.QtWidgets.QMainWindow):
     def prepForMagup(self):
         print("prepping for magup")
         # self.powerOffCrateTower() # now done on SIG_startgoingToMagUp
-        self.ensureHeatSwitchIsClosed()
+        if self.temp_based_hsw_activation is None:
+            self.ensureHeatSwitchIsClosed()
         self.tempControl.setupRamp()
 
     def updatePlots(self):
@@ -595,12 +596,28 @@ class ADR_Gui(PyQt5.QtWidgets.QMainWindow):
     def magUpStateTick(self):
         i_new, done = adrMagTick(self.lastHOut, i_target=self.maxHeatOutEdit.value, i_max=self.maxHeatOutEdit.value,
                                i_min=0.0, duration_s=self.magUpMinsEdit.value*60, step_time_s=self.tickDuration_s)
-        if self.tempControl.readyToRamp:
+        
+        if self.tempControl.readyToRamp and self.lastTemp_K <= 5:
             self.setManualHeaterOut(i_new)
             self.printStatus("magging up")
-        else:
+        elif not self.tempControl.readyToRamp:
             self.printStatus("should be magging up, but not readyToRamp, trying to setupRamp, heater out must be 0")
             self.tempControl.setupRamp()
+        elif self.lastTemp_K > 5:
+            self.printStatus("Holding mag-up until T<5 K")
+
+        if self.temp_based_hsw_activation is None and not self.heatSwitchIsClosedCheckBox.isChecked():
+            # The user unchecked the checkbox for whether the heat switch should be
+            # closed based on temperature instead of automatically DURING the ramp up
+            # If we don't do anything now, the heat switch will never close.
+            self.ensureHeatSwitchIsClosed()
+        
+        elif self.temp_based_hsw_activation is not None and not self.heatSwitchIsClosedCheckBox.isChecked():
+            #I'm looking at the checkbox value myself because otherwise the ensure command
+            # spams stdout
+            if self.lastTemp_K >= self.temp_based_hsw_activation:
+                self.ensureHeatSwitchIsClosed()
+        
         if done:
             self.SIG_magUpDone.emit()
             self.stateStartTime=time.time()
@@ -817,6 +834,10 @@ class ADR_Gui(PyQt5.QtWidgets.QMainWindow):
         self.tempControl.rampRate = r
         self.demag_min = adv.spinbox_demag_min.value()
         self.do_power_on = adv.check_power_on.isChecked()
+        if adv.check_hsw_temp.isChecked():
+            self.temp_based_hsw_activation=adv.spinbox_hsw_temp.value()
+        else:
+            self.temp_based_hsw_activation=None
         if self.show_actual_current != adv.check_show_actual_current.isChecked():
             warningBox = QMessageBox()
             warningBox.setText("restart adr_gui to show/hide actual current plot")
@@ -847,6 +868,11 @@ class ADR_Gui(PyQt5.QtWidgets.QMainWindow):
         adv.spinbox_demag_min.setValue(self.demag_min)
         adv.check_power_on.setChecked(self.do_power_on)
         adv.check_show_actual_current.setChecked(self.show_actual_current)
+        if self.temp_based_hsw_activation is None:
+            adv.check_hsw_temp.setChecked(False)
+        else:
+            adv.check_hsw_temp.setChecked(True)
+            adv.spinbox_hsw_temp.setValue(self.temp_based_hsw_activation)
 
 
 class AdvancedPopup(QDialog):
