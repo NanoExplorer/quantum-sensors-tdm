@@ -16,7 +16,9 @@ ADR_GUI_COMMANDS = {
     'echo':{'fname':'rpc_echo', 'args':['x'], 'help':'return the string representation of x, for testing'},
     'get_ramp_rate_kpm': {'fname':'rpc_get_ramp_rate_kpm', 'args':None, 'help':'return the most recent ramp rate in kelvin per minute'},
     'set_ramp_rate_kpm': {'fname':'rpc_set_ramp_rate_kpm', 'args':['ramp_rate_kpm'], 'help':'works in control mode only, set the ramp rate in kelvin per minute'},
-    }
+    'EMERGENCY_POWEROFF': {'fname':'rpc_emergency','args':None, 'help':'in the event of power failure, safely but quickly ramp magnet down'}
+}
+
 
 
 def build_zmq_addr(host='localhost', port=ADR_GUI_PORT):

@@ -336,6 +336,10 @@ class ADR_Gui(PyQt5.QtWidgets.QMainWindow):
         self.control_socket.resolve_message(success, extra_info)
 
     def rpc_get_temp_k(self):
+        self.pollTempControl() # this makes it a tiny bit slower but
+        # at least we don't return the same value multiple times to 
+        # scripts that want the finest temperature resolution
+        # like tcTickleAcquire
         return True, self.lastTemp_K
 
     def rpc_get_ramp_rate_kpm(self):
@@ -373,29 +377,28 @@ class ADR_Gui(PyQt5.QtWidgets.QMainWindow):
             return False, achieved_setpoint_mk*1e-3
 
     def rpc_set_ramp_rate_kpm(self, requested_ramp_rate_kpm):
-        '''
-        This is purely a test for now
-        '''
-        assert self.isControlState()
+        req_ramp_float = float(requested_ramp_rate_kpm)
+        # The temperature controller sends a string to the lakeshore anyway
+        self.tempControl.a.temperature_controller.setRamp(ramprate=requested_ramp_rate_kpm)
         
-        #self.tempControl.rampRate = requested_ramp_rate_kpm # easy but dumb way, doesn't work but gives no errors
+        self.advanced_settings_window.spinbox_ramp.setValue(req_ramp_float)
+        self.pidr[3] = req_ramp_float
+        assert self.isControlState()
 
-        # lo, hi = self.setRampRateKPMEdit.allowed_range
-        # if requested_ramp_rate_kpm > hi:
-        #     return False, f"requested ramp rate > than max, max = {hi}"
-        # if requested_ramp_rate_kpm < lo:
-        #     return False, f"requested ramp rate < than min, min = {lo}"
-        # self.setRampRateKPMEdit.setText(str(requested_ramp_rate_kpm))
-        # self.enforceAllowedRange(self.setRampRateKPMEdit)
-        # achieved_ramp_rate_kpm = self.setRampRateKPMEdit.value
-        # if achieved_ramp_rate_kpm == requested_setpoint_mk:
-        #     return True, achieved_ramp_rate_kpm
-        # else:
-        #     return False, achieved_ramp_rate_kpm        
         return True, requested_ramp_rate_kpm  
 
     def rpc_echo(self, x):
         return True, x
+    
+    def rpc_emergency(self):
+        """In the event of power failure, the UPS can maintain the system running
+        for ~ 15 minutes, but the pulse tube might already be off. We need to prepare for
+        imminent power failure by ensuring the heat switch is closed and draining current
+        from the magnet in a timely manner (probably around 10 minutes).
+        """
+        self.printStatus("POWER FAILURE, NYI!!!")
+
+        return True
 
     def enforceAllowedRange(self, line_edit):
         try:
@@ -693,6 +696,7 @@ class ADR_Gui(PyQt5.QtWidgets.QMainWindow):
         if currentHeaterPercent > thresholdHeaterPercent:
             return False
         if t.tm_hour == h and m<=t.tm_min<=m+2 and self.enableTimeBasedMagCheckbox.isChecked():
+            # On the hour and less than 2 minutes past (so we can keep trying but not the whole hour)
             if self.lastTemp_K > 4:
                 print(("not magging up because temp is %f, not below 4 K"%self.lastTemp_K))
                 self.ensureHeatSwitchIsClosed()
@@ -705,7 +709,7 @@ class ADR_Gui(PyQt5.QtWidgets.QMainWindow):
             self.printStatus("temp set point should = 0, waiting for heater out = 0.0 before switching to mag up")
             if self.tempControl.getSetTemp() > 0.001: self.tempControl.setSetTemp(0.001)
         elif self.lastHOut == 0.0:
-            LIMIT = 5.0 # this is arbitrary. Just a safeguard so you're not trying to magnetize when the 2nd stage is at like 6 or 8 K
+            LIMIT = 5.0 # 5 K is the value recommended by Joel
             if self.lastTemp_K>LIMIT:
                 print(f"in GoingToMagUp state, but temp = {self.lastTemp_K} is too high, needs to be below {LIMIT}")
                 self.ensureHeatSwitchIsClosed()
