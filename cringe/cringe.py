@@ -1019,6 +1019,10 @@ class Cringe(QtWidgets.QWidget):
         self.seqln_spin.setValue(int(length))
         return True, ""
 
+    def rpc_save_config(self, filename):
+        self._save_settings(filename)
+        return True, ""
+
     def seqln_changed(self):
         if self.seqln_timer == None:
             self.seqln_timer = QtCore.QTimer()
@@ -2290,7 +2294,14 @@ class Cringe(QtWidgets.QWidget):
             log.debug(tc.FAIL + "save file cancelled:", tc.ENDC)
 
             return
-        self.filenameEdit.setText(savename)
+        _save_settings(savename)
+
+    def _save_settings(filename)
+        """
+        The non-interactive parts of saveSettings have been split into their own function
+        (this function) so that saving can be commanded from an external script.
+        """
+        self.filenameEdit.setText(filename)
         self.packCrateConfig()
         self.packGlobals()
         self.loadGlobals = self.saveGlobals
@@ -2303,10 +2314,10 @@ class Cringe(QtWidgets.QWidget):
         currentState = {'CrateConfig': self.saveCrateConfig, 'globals': self.saveGlobals, 'classParameters': self.saveClassParameters,
                         "Tower": self.saveTower, "Tune": self.saveTune}
 
-        f = open(savename, "wb")
+        f = open(filename, "wb")
 
         log.debug(
-            tc.FCTCALL + ("Saving current settings in pickle format to %s" % savename), tc.ENDC)
+            tc.FCTCALL + ("Saving current settings in pickle format to %s" % filename), tc.ENDC)
 
         pickle.dump(currentState, f, protocol=0)
         f.close()

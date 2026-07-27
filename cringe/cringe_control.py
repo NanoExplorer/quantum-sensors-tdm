@@ -18,9 +18,10 @@ CRINGE_COMMANDS = {
     'set_fb_i':{'fname':'rpc_set_fb_i', 'args':['col', 'fb_i'], 'help':'set feedback parameter I for all rows in this column'},
     'set_tower_channel':{'fname':'rpc_set_tower_channel', 'args':['cardname', 'bayname', 'dacvalue'], 'help':'set the dac value for a tower card by cardname and bayname (strings)'},
     'set_tower_card_all_channels':{'fname':'rpc_set_tower_card_all_channels', 'args':['cardname', 'dacvalue'], 'help':'set the dac value for all tower channels in one card'},
-    'set_sequence_length':{'fname':'rpc_set_seq_len', 'args':['length'], 'help':'Set the number of rows to read.'}
+    'set_sequence_length':{'fname':'rpc_set_seq_len', 'args':['length'], 'help':'Set the number of rows to read.'},
 #    'devtest':{'fname':'devtest', 'args':['arg1'], 'help':'temporary for development testing'},      
 #    'cmd':{'fname':name, 'args':[], 'help':''},      
+    'save_configuration':{'fname':'rpc_save_config', 'args':['filename'], 'help':'Command cringe to save its current configuration to a pickle file.'}
     }
 
 
@@ -77,6 +78,9 @@ class CringeControl:
 
     def set_sequence_length(self, length):
         return self.send(" ".join(("set_sequence_length", str(int(length)))))
+
+    def save_configuration(self, filename):
+        return self.send(" ".join(("save_configuration",filename)))
 
     def test(self):
         command = 'devtest'
