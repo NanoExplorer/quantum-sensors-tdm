@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>CRINGE</string>
+   <string>CRINGE: Extended RPC edition</string>
   </property>
   <layout class="QGridLayout" name="layout">
    <property name="leftMargin"><number>0</number></property>
