@@ -70,6 +70,11 @@ CRINGE_COMMANDS = {
         'args':['filename'], 
         'help':'Command cringe to save its current configuration to a pickle file.'
     }
+    'set_channel_offset': {
+        'fname':'rpc_set_channel_offset', 
+        'args':['col','row','a_or_b','dac'], 
+        'help':'set 1 row DAC value'
+    }
     #    'devtest':{'fname':'devtest', 'args':['arg1'], 'help':'temporary for development testing'},
     #    'cmd':{'fname':name, 'args':[], 'help':''},
 }
@@ -107,6 +112,12 @@ class CringeControl:
     def set_tower_channel(self, cardname, bayname, dacvalue):
         return self.send(' '.join(
             ('set_tower_channel', cardname, bayname, str(int(dacvalue)))))
+
+    def set_channel_offset(self, col, row, a_or_b, dac):
+        a_or_b = a_or_b.lower()
+        assert a_or_b=="a" or a_or_b=="b"
+        return self.send(' '.join(
+            ('set_channel_offset', col, row, a_or_b, str(int(dac)))))
 
     def set_tower_card_all_channels(self, cardname, dacvalue):
         return self.send(' '.join(

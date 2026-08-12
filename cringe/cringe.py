@@ -384,6 +384,24 @@ class Cringe(QtWidgets.QWidget):
                                                int(dacvalue))
         return True, ""
 
+    def rpc_set_channel_offset(self, col, row, a_or_b, dac):
+        if a_or_b == "a":
+            set_a = dac
+            set_b = None
+        else: # cringe_control function asserts that a_or_b is either "a" or "b"
+            set_a = None
+            set_b = dac
+            # if you pass None to the changedfbrow function, it doesn't modify
+            # that value
+        self.tune_widget.mm.changedfbrow(
+            col=col,
+            row=row,
+            d2aA=set_a,
+            d2aB=set_b
+        )
+        return True, ""
+
+
     def rpc_set_tower_card_all_channels(self, cardname, dacvalue):
         self.tune_widget.mm.setTowerCardAllChannelsToSameDAC(
             cardname, int(dacvalue))
