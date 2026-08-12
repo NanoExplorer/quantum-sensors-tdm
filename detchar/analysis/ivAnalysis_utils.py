@@ -182,7 +182,7 @@ class IVCommon():
         ivTurnDex = []
         for ii in range(m):
             dex, val = self.find_first_zero(di[:,ii])
-            print(dex)
+            #print(dex)
             ivTurnDex.append(dex)
 
         if showplot:
@@ -422,7 +422,7 @@ class IVCurveAnalyzeSingle():
         with a value much less than the TES is wired in parallel with the TES and the input inductance 
         of a squid.  There may be a parasitic resistance (rx_ohm) in series with the TES.  
     '''
-    def __init__(self,x,y,rsh_ohm,rx_ohm=0,to_i_bias=1,to_i_tes=1,analyze_on_init=True):
+    def __init__(self,x,y,rsh_ohm,rx_ohm=0,to_i_bias=1,to_i_tes=1,analyze_on_init=True,r_n_override=None):
         ''' 
             x: the x-data in ascending order 
             y: the y-data in ascending order and ensured IV curve is "right-side up" 
@@ -442,13 +442,13 @@ class IVCurveAnalyzeSingle():
 
         # get basic quantities of interest
         # here things are flipped into ascending order in voltage bias
-        if analyze_on_init: self.analyze_iv()
+        if analyze_on_init: self.analyze_iv(r_n_override=r_n_override)
         else: self.v_tes=self.i_tes=self.p_tes=self.r_tes=self.si=self.rn=self.rl=self.x=self.y=None
 
     ### Main analysis methods ----------------------------------------------------------------
     ### ---------------------------------------------------------------------------------
 
-    def analyze_iv(self,plot=False,beta=0):
+    def analyze_iv(self,plot=False,beta=0,r_n_override=None):
         ''' based on algorithm in pySmurf from Ari Cukierman 
 
             creates member variables:
@@ -461,7 +461,7 @@ class IVCurveAnalyzeSingle():
         
         '''
         x,y = self.determine_iv_regimes()
-        y = self.remove_dc_offset(x,y)
+        y = self.remove_dc_offset(x,y,r_n_override=r_n_override)
     
         # calculate quantities of interest
         i_bias = x*self.to_i_bias # convert current bias to shunt network to physical units
@@ -486,7 +486,7 @@ class IVCurveAnalyzeSingle():
 
         # Responsivity estimate
         R_L_smooth = np.ones(len(r_tes_smooth))*R_L
-        print(self.sc_idx)
+        #print(self.sc_idx)
         if len(r_tes_smooth) <= self.sc_idx -2:
             print(self.sc_idx, len(r_tes_smooth))
             self.sc_idx = len(r_tes_smooth)-3
@@ -584,7 +584,7 @@ class IVCurveAnalyzeSingle():
 
         else: return x,y
 
-    def remove_dc_offset(self,x,y,plot=False):
+    def remove_dc_offset(self,x,y,plot=False,r_n_override=None):
         ''' remove DC offset of IV curve. x,y must be provided in ascending order and 
             right-side up.  This is done within self.determine_iv_regimes
         '''
@@ -594,7 +594,11 @@ class IVCurveAnalyzeSingle():
             self.sc_idx = 1 
 
         # fit normal regime, remove the offset
-        p_norm = np.polyfit(x[self.normal_idx:self.good_idxs[1]],y[self.normal_idx:self.good_idxs[1]],1)
+        if r_n_override is None:
+            p_norm = np.polyfit(x[self.normal_idx:self.good_idxs[1]],y[self.normal_idx:self.good_idxs[1]],1)
+        else:
+            p_norm = [r_n_override, -(x[-1]*r_n_override - y[-1]) ]
+
         if self.sc_idx == 0: 
             print('WARNING: no superconducting branch found.')
             y[:self.good_idxs[1]] -= p_norm[1] # subtract arbitrary offset using normal branch
@@ -872,7 +876,7 @@ class IVCurveColumnDataExplore(IVCommon):
         return fig, ax
 
 class IVSetAnalyzeRow(IVCommon):
-    def __init__(self,dac_values,fb_values_arr,state_list=None,iv_circuit=None,figtitle=None,use_IVCurveAnalyzeSingle=True):
+    def __init__(self,dac_values,fb_values_arr,state_list=None,iv_circuit=None,figtitle=None,use_IVCurveAnalyzeSingle=True,r_n_override=None):
         ''' Analyze IV set at different physical conditions for one row.
             This class is useful for inspection of IV families or for determining the power
             difference between two states (like a 300K to 77K IV chop).
@@ -933,7 +937,8 @@ class IVSetAnalyzeRow(IVCommon):
                     rsh_ohm=iv_circuit.rsh_ohm,
                     rx_ohm=iv_circuit.rx_ohm,
                     to_i_bias=iv_circuit.to_i_bias,
-                    to_i_tes=iv_circuit.to_i_tes
+                    to_i_tes=iv_circuit.to_i_tes,
+                    r_n_override=r_n_override,
                 ))
             self.fb_align, self.v, self.i, self.p, self.r = self._package_iv_globals_(self.ivs)
 
@@ -1046,7 +1051,7 @@ class IVSetAnalyzeColumn():
 class IVversusADRTempOneRow(IVSetAnalyzeRow):
     ''' analyze thermal transport from IV curve set from one row in which ADR temperature is varied '''
     def __init__(self,dac_values,fb_values_arr, temp_list_k, normal_resistance_fractions=[0.8,0.9],iv_circuit=None,
-                 figtitle=None,use_IVCurveAnalyzeSingle=True):
+                 figtitle=None,use_IVCurveAnalyzeSingle=True,r_n_override=None):
         ''' dac_values: np_array of dac_values (corresponding to voltage bias across TES),
                         a common dac_value for all IVs is required
             fb_values_arr: N_dac_val x N_sweep numpy array, column ordered in which columns are for different adr temperatures
@@ -1067,7 +1072,8 @@ class IVversusADRTempOneRow(IVSetAnalyzeRow):
             temp_list_k_str,
             iv_circuit,
             figtitle,
-            use_IVCurveAnalyzeSingle
+            use_IVCurveAnalyzeSingle,
+            r_n_override=r_n_override,
         )
         self.ro = self.r / self.r[0,:]
         self.v_clean, self.i_clean, self.p_clean, self.r_clean, _ = self.remove_bad_data(self.v,self.i,self.p,self.r,threshold=1)
@@ -1120,7 +1126,7 @@ class IVversusADRTempOneRow(IVSetAnalyzeRow):
         for ii in range(self.num_rn_fracs):
             if True or not np.isnan(self.p_at_rnfrac[ii,:]).any():
                 plt.plot(self.temp_list_k,self.p_at_rnfrac[ii,:],'o')
-                llabels.append('%.3f'%(self.rn_fracs[ii]))
+                llabels.append('R/Rn=%.2f'%(self.rn_fracs[ii]))
 
         if include_fits:
             for ii in range(self.num_rn_fracs):
@@ -1237,6 +1243,15 @@ class IVversusADRTempOneRow(IVSetAnalyzeRow):
             temp_list_k = list(tempr_arr[flag_arr])
             fb_values_arr = fb_values_arr[flag_arr]
             kwargs.pop("temp_cut")
+        except KeyError:
+            pass
+        try:
+            temp_cut = kwargs["temp_min"]
+            tempr_arr = np.array(temp_list_k)
+            flag_arr = tempr_arr >= temp_cut
+            temp_list_k = list(tempr_arr[flag_arr])
+            fb_values_arr = fb_values_arr[flag_arr]
+            kwargs.pop("temp_min")
         except KeyError:
             pass
         return cls(
@@ -1391,6 +1406,7 @@ class IVColdloadAnalyzeOneRow(IVCommon):
             Dp, dp = self.get_power_difference_1D(p_in, self.T_cl_index)
             analyze = True
         else:
+            print("in _handle_power_input, p_in is None I guess")
             Dp = dp = None
             analyze = False
         return analyze, p_in, Dp, dp
@@ -1929,13 +1945,15 @@ class IVColdloadSweepAnalyzer():
         dacs,fb = self.get_cl_sweep_dataset_for_row(row=row,bath_temp_index=bath_temp_index,cl_indices=cl_indices)
 
         if self.det_map:
-            row_name = 'Row%02d'%row
-            det_name = self.det_map.get_devname_from_row_index(row)
+            row_name = 'Row%02d'%self._row_to_sequence_index(row)
+            det_name = self.det_map.get_devname_from_row_index(self._row_to_sequence_index(row))
             position = self.det_map.map_dict[row_name]['position']
             band = self.det_map.map_dict[row_name]['band']
             typ = self.det_map.map_dict[row_name]['type']
+            print("calculating dark power I think")
             if typ == 'dark':
                 dark_power_w=None
+                predicted_power_w=None
 
             if dark_power_w is None:
                 pass 
@@ -1954,7 +1972,16 @@ class IVColdloadSweepAnalyzer():
                     foo = self.sweep_analysis_for_row(darkbolo_index,bath_temp_index,cl_indices,rn_fracs=[dark_rn_frac],dark_power_w=None)
                     dark_power_w = foo.get_power_vector_for_rnfrac(dark_rn_frac)
             
+            if predicted_power_w is None and not typ=='dark':
+                predicted_power_w=[]
+                for t,t2 in self.post_cl_temps_k:
+                    fstart, fend = self.det_map.map_dict[row_name]["freq_edges_ghz"]
+                    predicted_power_w.append(thermalPower(fstart*1e9,fend*1e9,t))
+                    print(predicted_power_w)
+                predicted_power_w = np.array(predicted_power_w)
+
         else:
+            print("No detector map object supplied. evrything will probably fail.")
             row_name=det_name=dark_power_w=None
 
         iva = IVColdloadAnalyzeOneRow(dacs,fb,

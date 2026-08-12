@@ -124,7 +124,11 @@ class IVAnalyzeDual(IVCurveAnalyzeSingle):
         if not x[1]-x[0] < 0:
             x = x[::-1]
             y = y[::-1]
-        
+        # determine IV polarity. if negative, flip
+        b = len(x)
+        pval = np.ma.polyfit(x[b-10:b],y[b-10:b],1)
+        if pval[0] < 0: y=y*-1
+
         #attempt to find the superconducting branch
         idx_arr[1] = find_good_start(x,y,self.sc_r)
         idx_arr[0] = len(x) # I think this is a good assumption.

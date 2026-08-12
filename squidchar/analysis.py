@@ -30,7 +30,7 @@ class DacCircuit:
 @dataclass
 class SeriesArrayCircuit(DacCircuit):
     # A single series array circuit
-    m: float = 2.35
+    m: float = 2.35 # M is M_in/M_fb
     r: float = 5100
 
     def ssa_fb_to_sq1_i(self, ssa_fb):
