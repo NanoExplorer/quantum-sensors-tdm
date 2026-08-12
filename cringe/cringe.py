@@ -257,8 +257,8 @@ class Cringe(QtWidgets.QWidget):
             # code got broken afterwards, but before migration to GitHub?
             # Anyway, main branch CRINGE still has the dfb/scream code.
             # Single Channel REAdout Module?
-            self.crate_widgets.append(card_widget)
-            self.crate_widget.addTab(card_widget, tab_lbl)
+            self.crate_widgets.append(self.card_widget)
+            self.crate_widget.addTab(self.card_widget, tab_lbl)
 
         self.tune_widget = TuneTab(self)
         self.crate_widget.addTab(self.tune_widget, "Tune")
@@ -1679,9 +1679,9 @@ class Cringe(QtWidgets.QWidget):
             log.debug(tc.FAIL + "save file cancelled:", tc.ENDC)
 
             return
-        _save_settings(savename)
+        self._save_settings(savename)
 
-    def _save_settings(filename)
+    def _save_settings(self,filename):
         """
         The non-interactive parts of saveSettings have been split into their own function
         (this function) so that saving can be commanded from an external script.

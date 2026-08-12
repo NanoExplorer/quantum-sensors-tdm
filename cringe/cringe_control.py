@@ -64,12 +64,12 @@ CRINGE_COMMANDS = {
         'fname': 'rpc_set_seq_len',
         'args': ['length'],
         'help': 'Set the number of rows to read.'
-    }
+    },
         'save_configuration': {
         'fname':'rpc_save_config', 
         'args':['filename'], 
         'help':'Command cringe to save its current configuration to a pickle file.'
-    }
+    },
     'set_channel_offset': {
         'fname':'rpc_set_channel_offset', 
         'args':['col','row','a_or_b','dac'], 
