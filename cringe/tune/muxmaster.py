@@ -56,6 +56,13 @@ class MuxMaster():
             chn.FBA_button.setChecked(False)
             chn.FBA_button.setChecked(True)
 
+    def relockFBBifLocked(self, col, row):
+        dfbrap = self.dfbraps[col]
+        chn = dfbrap.state_vectors[row]
+        if chn.FBB_button.isChecked():
+            chn.FBB_button.setChecked(False)
+            chn.FBB_button.setChecked(True)
+
     def relockFBA(self, col, row):
         dfbrap = self.dfbraps[col]
         chn = dfbrap.state_vectors[row]

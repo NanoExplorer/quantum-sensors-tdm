@@ -386,16 +386,16 @@ class Cringe(QtWidgets.QWidget):
 
     def rpc_set_channel_offset(self, col, row, a_or_b, dac):
         if a_or_b == "a":
-            set_a = dac
+            set_a = int(dac)
             set_b = None
         else: # cringe_control function asserts that a_or_b is either "a" or "b"
             set_a = None
-            set_b = dac
+            set_b = int(dac)
             # if you pass None to the changedfbrow function, it doesn't modify
             # that value
         self.tune_widget.mm.changedfbrow(
-            col=col,
-            row=row,
+            col=int(col),
+            row=int(row),
             d2aA=set_a,
             d2aB=set_b
         )
@@ -417,6 +417,11 @@ class Cringe(QtWidgets.QWidget):
     def rpc_relock_all_locked_fba(self, col):
         for row in range(self.seqln):
             self.tune_widget.mm.relockFBAifLocked(int(col), row)
+        return True, ""
+
+    def rpc_relock_all_locked_fbb(self, col):
+        for row in range(self.seqln):
+            self.tune_widget.mm.relockFBBifLocked(int(col), row)
         return True, ""
 
     def rpc_set_fb_i(self, col, fb_i):
@@ -448,6 +453,10 @@ class Cringe(QtWidgets.QWidget):
 
     def rpc_save_config(self, filename):
         self._save_settings(filename)
+        return True, ""
+
+    def rpc_resync(self):
+        self.resync_system.click()
         return True, ""
 
     def seqln_changed(self):

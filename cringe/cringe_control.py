@@ -4,7 +4,7 @@ Helper for talking to cringe remotely
 G Hilton 2020-12
 '''
 import zmq
-
+import time
 CRINGE_PORT = 5509
 
 CRINGE_COMMANDS = {
@@ -32,6 +32,11 @@ CRINGE_COMMANDS = {
         'fname': 'rpc_relock_fbb',
         'args': ['col', 'row'],
         'help': 'relock FBB for col and row, column matches dastard after tune'
+    },
+    'relock_all_locked_fbb': {
+        'fname': 'rpc_relock_all_locked_fbb',
+        'args': ['col'],
+        'help': 'relock FBB for each row in col that is locked'
     },
     'set_arl_off': {
         'fname': 'rpc_set_arl_off',
@@ -65,7 +70,7 @@ CRINGE_COMMANDS = {
         'args': ['length'],
         'help': 'Set the number of rows to read.'
     },
-        'save_configuration': {
+    'save_configuration': {
         'fname':'rpc_save_config', 
         'args':['filename'], 
         'help':'Command cringe to save its current configuration to a pickle file.'
@@ -77,6 +82,11 @@ CRINGE_COMMANDS = {
     }
     #    'devtest':{'fname':'devtest', 'args':['arg1'], 'help':'temporary for development testing'},
     #    'cmd':{'fname':name, 'args':[], 'help':''},
+    'resync': {
+        'fname': 'rpc_resync',
+        'args': None,
+        'help': 'command cringe to resync the crate'
+    },
 }
 
 
@@ -144,11 +154,19 @@ class CringeControl:
     def relock_all_locked_fba(self, col):
         return self.send(" ".join(("relock_all_locked_fba", str(int(col)))))
 
+    def relock_all_locked_fbb(self, col):
+        return self.send(" ".join(("relock_all_locked_fbb", str(int(col)))))
+
     def set_sequence_length(self, length):
         return self.send(" ".join(("set_sequence_length", str(int(length)))))
 
     def save_configuration(self, filename):
-        return self.send(" ".join(("save_configuration",filename)))
+        return self.send(" ".join(("save_configuration",str(filename))))
+        # The str is there to allow someone to pass a PosixPath in for the filename if they want
+
+    def resync(self):
+        return self.send(" ".join(("resync")))
+        time.sleep(5)
 
     def test(self):
         command = 'devtest'
