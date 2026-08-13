@@ -79,7 +79,7 @@ CRINGE_COMMANDS = {
         'fname':'rpc_set_channel_offset', 
         'args':['col','row','a_or_b','dac'], 
         'help':'set 1 row DAC value'
-    }
+    },
     #    'devtest':{'fname':'devtest', 'args':['arg1'], 'help':'temporary for development testing'},
     #    'cmd':{'fname':name, 'args':[], 'help':''},
     'resync': {
