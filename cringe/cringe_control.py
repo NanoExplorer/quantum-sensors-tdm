@@ -165,7 +165,7 @@ class CringeControl:
         # The str is there to allow someone to pass a PosixPath in for the filename if they want
 
     def resync(self):
-        response = self.send(" ".join(("resync")))
+        response = self.send("resync")
         time.sleep(5)
         return response
 
