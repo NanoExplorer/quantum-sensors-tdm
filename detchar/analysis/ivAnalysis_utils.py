@@ -584,6 +584,7 @@ class IVCurveAnalyzeSingle():
 
         else: return x,y
 
+    #Note: iv_analysis_dualtes overrides this function
     def remove_dc_offset(self,x,y,plot=False,r_n_override=None):
         ''' remove DC offset of IV curve. x,y must be provided in ascending order and 
             right-side up.  This is done within self.determine_iv_regimes

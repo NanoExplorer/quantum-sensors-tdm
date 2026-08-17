@@ -199,8 +199,9 @@ class IVAnalyzeDual(IVCurveAnalyzeSingle):
             ax.axvspan(xmin=self.x[self.lab_start],xmax=self.x[max(self.lab_end-1,0)],alpha=0.1,color="C4", label="lab TES")
             ax.legend()
 
-    def remove_dc_offset(self,x,y,plot=False):
+    def remove_dc_offset(self,x,y,plot=False,r_n_override=None):
         """
+        r_n_override should override the science tes
         find the correct DC offset for the Lab TES and then call the original method to do the rest
 
         args: x,y please just pass in self.x and self.y... I'd remove the args if it wasn't certain to break something else somewhere
@@ -220,7 +221,7 @@ class IVAnalyzeDual(IVCurveAnalyzeSingle):
         else:
             self.p_lab = None
         try:
-            y = super().remove_dc_offset(x,y,plot=False) # We'll do our own plotting to incorporate the extra information here
+            y = super().remove_dc_offset(x,y,plot=False,r_n_override=r_n_override) # We'll do our own plotting to incorporate the extra information here
             #If we call super()remove, it WILL define self.p_norm and self.p_sc, but they might be NONe
         except TypeError:
             self.p_norm = None
